@@ -1,0 +1,27 @@
+jwt:
+  secret: 'nestjs'
+
+http:
+  host: 'localhost'
+  port: 8085
+  prefix: ''
+
+# db
+mysql:
+  host: 'localhost'
+  port: 3306
+  username: 'root'
+  password: ''
+  database: 'admin'
+  charset: 'utf8'
+  sync: true
+
+redis:
+  url: 'redis://default:123456@localhost:6379'
+
+files:
+  destination: 'uploads'
+
+qianfan:
+  api_key: ''
+  api_secret: ''

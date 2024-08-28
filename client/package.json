@@ -1,0 +1,101 @@
+{
+  "name": "admin",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "description": "a template based on Vue3, Vite5, Typescript, and Naive UI.",
+  "license": "MIT",
+  "keywords": [
+    "Vue",
+    "Vue3",
+    "Vite",
+    "Vite5",
+    "typescript",
+    "TypeScript",
+    "naive-ui",
+    "NaiveUI",
+    "unocss",
+    "UnoCSS",
+    "admin",
+    "chatapp"
+  ],
+  "scripts": {
+    "dev": "vite --mode dev --config ./build/vite.config.dev.ts",
+    "build": "vue-tsc --noEmit && vite build --mode prod --config ./build/vite.config.prod.ts",
+    "preview": "vite preview --port 9981",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "lint:check": "npx @eslint/config-inspector"
+  },
+  "dependencies": {
+    "@traptitech/markdown-it-katex": "^3.6.0",
+    "@vicons/antd": "^0.12.0",
+    "@vicons/ionicons5": "^0.12.0",
+    "@vueuse/core": "^11.0.3",
+    "axios": "^1.7.5",
+    "colord": "^2.9.3",
+    "crypto-js": "^4.2.0",
+    "dayjs": "^1.11.13",
+    "echarts": "^5.5.1",
+    "highlight.js": "^11.10.0",
+    "markdown-it": "^14.1.0",
+    "markdown-it-link-attributes": "^4.0.1",
+    "naive-ui": "^2.39.0",
+    "pinia": "^2.2.2",
+    "pinia-plugin-persist": "^1.0.0",
+    "qs": "^6.13.0",
+    "quill": "^2.0.2",
+    "radash": "^12.1.0",
+    "vue": "^3.4.38",
+    "vue-i18n": "^9.14.0",
+    "vue-router": "^4.4.3"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.27.3",
+    "@iconify-json/icon-park-outline": "^1.1.16",
+    "@iconify/vue": "^4.1.2",
+    "@types/crypto-js": "^4.2.2",
+    "@types/markdown-it-link-attributes": "^3.0.5",
+    "@types/node": "^22.5.1",
+    "@types/qs": "^6.9.15",
+    "@vitejs/plugin-vue": "^5.1.2",
+    "@vitejs/plugin-vue-jsx": "^4.0.1",
+    "eslint": "^8.57.0",
+    "lint-staged": "^15.2.9",
+    "md-editor-v3": "^4.19.1",
+    "postcss": "^8.4.41",
+    "prettier": "^3.3.3",
+    "rollup-plugin-visualizer": "^5.12.0",
+    "sass": "^1.77.8",
+    "simple-git-hooks": "^2.11.1",
+    "typescript": "^5.5.4",
+    "unocss": "0.62.3",
+    "unplugin-auto-import": "^0.18.2",
+    "unplugin-icons": "^0.19.2",
+    "unplugin-vue-components": "^0.27.4",
+    "vite": "^5.4.2",
+    "vite-plugin-cdn-import": "^1.0.1",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-eslint": "^1.8.1",
+    "vite-plugin-html": "^3.2.2",
+    "vite-plugin-imagemin": "^0.6.1",
+    "vite-plugin-remove-console": "^2.2.0",
+    "vite-plugin-svg-icons": "^2.0.1",
+    "vite-plugin-vue-devtools": "7.3.9",
+    "vite-svg-loader": "^5.1.0",
+    "vue-tsc": "^2.0.29"
+  },
+  "peerDependencies": {
+    "eslint": "^9.0.0",
+    "postcss": "^8.4.40"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
+  },
+  "volta": {
+    "node": "20.12.2"
+  }
+}
