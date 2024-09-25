@@ -2,7 +2,6 @@ import { Body, Controller, Get, Param, Post, Req, Res, UseGuards } from '@nestjs
 import { ConfigService } from '@nestjs/config'
 import * as svgCaptcha from 'svg-captcha'
 import { responseFail } from '@/utils'
-import { ErrorInfo } from '@/common/constants/result-code'
 import { JwtGuard, LocalGuard } from '@/common/guards'
 import { ChangePasswordDto, RegisterUserDto } from './auth.dto'
 import { UserService } from '@/modules/user/user.service'
@@ -13,7 +12,6 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private userService: UserService,
-    private configService: ConfigService,
   ) {}
 
   @Post('register')
@@ -26,7 +24,7 @@ export class AuthController {
   async login(@Req() req: any, @Body() body) {
     // 判断验证码是否正确
     if (req.session?.code?.toLocaleLowerCase() !== body.captcha?.toLocaleLowerCase()) {
-      return responseFail(ErrorInfo.ERR_10003)
+      return responseFail(500, '验证码错误')
     }
     return this.authService.login(req.user, req.session?.code)
   }
@@ -64,7 +62,7 @@ export class AuthController {
   async changePassword(@Req() req: any, @Body() body: ChangePasswordDto) {
     const ret = await this.authService.validateUser(req.user.username, body.oldPassword)
     if (!ret) {
-      return responseFail(ErrorInfo.ERR_10004)
+      return responseFail(500, '密码验证失败')
     }
     // 修改密码
     await this.userService.resetPassword(req.user.id, body.newPassword)

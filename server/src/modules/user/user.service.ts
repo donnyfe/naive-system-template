@@ -20,7 +20,7 @@ export class UserService {
     })
 
     if (existUser) {
-      return responseFail(ErrorInfo.ERR_10001)
+      return responseFail(500, '用户已存在')
     }
 
     if (userDto.password) {
@@ -31,7 +31,7 @@ export class UserService {
       const userRepo = this.userRepo.create(userDto)
       await this.userRepo.save(userRepo)
     } catch (err) {
-      return responseFail(ErrorInfo.ERR_10005)
+      return responseFail(500, '用户创建失败')
     }
     return responseSuccess(null, '用户注册成功')
   }
@@ -44,7 +44,7 @@ export class UserService {
     })
 
     if (existUser) {
-      return responseFail(ErrorInfo.ERR_10001)
+      return responseFail(500, '用户已存在')
     }
 
     try {
@@ -56,7 +56,7 @@ export class UserService {
       await this.userRepo.save(userRepo)
     } catch (err) {
       console.log(err)
-      return responseFail(ErrorInfo.ERR_10005)
+      return responseFail(500, '用户创建失败')
     }
     return responseSuccess('用户创建成功')
   }
@@ -67,7 +67,7 @@ export class UserService {
     })
     // 不能删除自己
     if (id === user.id) {
-      return responseFail(ErrorInfo.ERR_11006, '不能删除自己')
+      return responseFail(500, '不能删除自己')
     }
     await this.userRepo.delete(id)
     return true

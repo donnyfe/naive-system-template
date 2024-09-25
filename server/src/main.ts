@@ -1,3 +1,4 @@
+import { NestExpressApplication } from '@nestjs/platform-express'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app.module'
@@ -9,13 +10,20 @@ import { mw as requestIpMw } from 'request-ip'
 import { ValidationPipe } from '@nestjs/common'
 import { ExceptionsFilter } from './common/filters/exceptions-filter'
 import { HttpExceptionsFilter } from './common/filters/http-exceptions-filter'
+import path from 'path'
 
 async function bootstrap() {
   // 创建nest实例
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: true, // 开启跨域访问
   })
   const configService = app.get(ConfigService)
+
+  // 配置静态资源访问
+  app.useStaticAssets(path.join(__dirname, '../uploads'), {
+    prefix: '/uploads', //设置虚拟前缀路径
+    maxAge: 1000 * 60, //设置缓存时间
+  })
 
   // 配置插件
   app.use(

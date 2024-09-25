@@ -22,6 +22,17 @@ export const staticRoutes: RowRoute[] = [
 		id: 2
 	},
 	{
+		name: 'file',
+		path: '/file',
+		title: '文件上传',
+		hide: false,
+		requiresAuth: true,
+		icon: 'icon-park-outline:file-addition',
+		componentPath: '/file/index.vue',
+		pid: null,
+		id: 97
+	},
+	{
 		name: 'userCenter',
 		path: '/user-center',
 		title: '个人中心',

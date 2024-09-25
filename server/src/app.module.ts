@@ -5,6 +5,7 @@ import { AuthModule } from './modules/auth/auth.module'
 import { UserModule } from './modules/user/user.module'
 import { ChatModule } from './modules/chat/chat.module'
 import { PromptModule } from './modules/chat-prompt/prompt.module'
+import { UploadModule } from './modules/upload/upload.module'
 import configuration from './config/configuration'
 
 @Module({
@@ -19,6 +20,7 @@ import configuration from './config/configuration'
     UserModule,
     ChatModule,
     PromptModule,
+    UploadModule,
   ],
 })
 export class AppModule {}

@@ -18,7 +18,7 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: number, @Request() req: any) {
     if (req.user.userId === id) {
-      return responseFail(ErrorInfo.ERR_11006, '非法操作，不能删除自己！')
+      return responseFail(500, '不能删除自己！')
     }
     return this.userService.remove(id)
   }

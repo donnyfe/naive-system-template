@@ -31,7 +31,7 @@
 		conic-gradient(from -45deg at bottom, #0000, #000 .5deg 90deg, #0000 90.5deg) 0 100%;
 	mask-size: 25% 50%;
 	mask-repeat: repeat-x;
-	background: linear-gradient(#b344cb 0 0) left/0% 100% no-repeat #f7f7f7;
+	background: linear-gradient(#ddd 0 0) left/0% 100% no-repeat #f7f7f7;
 	animation: l13 2s infinite linear;
 }
 

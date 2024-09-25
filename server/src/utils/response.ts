@@ -18,9 +18,9 @@ export function responseSuccess<T>(data?: T, message?: string): Result<T> {
   return result
 }
 
-export function responseFail<T>(errInfo?: ErrInfo, message?: string, code?: number, data?: any): Result<T> {
-  const resCode = errInfo?.code || code || 500
-  const resMessage = errInfo?.message || message || 'fail'
+export function responseFail<T>(code?: number, message?: string, data?: any): Result<T> {
+  const resCode = code || 500
+  const resMessage = message || 'fail'
 
   const result: Result<T> = {
     code: resCode,

@@ -7,10 +7,15 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { RedisService } from './redis.service'
 import { createClient } from 'redis'
 import { HttpModule } from '@nestjs/axios'
+import { MulterModule } from '@nestjs/platform-express'
 
 @Global()
 @Module({
   imports: [
+    MulterModule.register({
+      dest: './uploads', // 设置文件上传的目录
+    }),
+
     HttpModule.registerAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
@@ -21,6 +26,7 @@ import { HttpModule } from '@nestjs/axios'
         }
       },
     }),
+
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
