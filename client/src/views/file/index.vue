@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ArchiveOutline as ArchiveIcon } from '@vicons/ionicons5'
 import type { UploadFileInfo } from 'naive-ui'
-import { createChunks, promisePool } from './file.utils'
+import { createChunks, promisePool } from '@/utils'
 import {
 	getUploadId,
 	uploadFile,
@@ -11,12 +11,13 @@ import {
 	getUploadProgress
 } from './api'
 
-
 let percentage = ref(0)
 let uploadPercentage = ref(0)
 
 const handleUploadFile = async (file: File) => {
-	const { data: { uploadId } } = await getUploadId()
+	const {
+		data: { uploadId }
+	} = await getUploadId()
 
 	const formData = new FormData()
 	formData.set('file', file)
@@ -26,13 +27,13 @@ const handleUploadFile = async (file: File) => {
 	uploadFile(formData, {
 		isUpload: true,
 		onUploadProgress: (event: ProgressEvent) => {
-			uploadPercentage.value = Math.ceil((event.loaded / event.total) * 100);
+			uploadPercentage.value = Math.ceil((event.loaded / event.total) * 100)
 		}
 	})
 }
 
-const handleUploadChunk = async (data) => {
-	const { hash, file, chunks } = data;
+const handleUploadChunk = async (data: any) => {
+	const { hash, file, chunks } = data
 
 	const { data: chunkList } = await checkChunk({
 		hash,
@@ -41,7 +42,9 @@ const handleUploadChunk = async (data) => {
 	})
 
 	const requestTask: Function[] = []
-	const { data: { uploadId } } = await getUploadId()
+	const {
+		data: { uploadId }
+	} = await getUploadId()
 
 	chunks.map((chunk: Blob, index: number) => {
 		if (!chunkList[index]) {
@@ -56,7 +59,10 @@ const handleUploadChunk = async (data) => {
 				return uploadChunk(formData, {
 					isUpload: true,
 					onUploadProgress: (event: ProgressEvent) => {
-						console.log(`chunk(${index})上传进度:`, Math.ceil(event.loaded / event.total * 100) + '%');
+						console.log(
+							`chunk(${index})上传进度:`,
+							Math.ceil((event.loaded / event.total) * 100) + '%'
+						)
 					}
 				})
 			}
@@ -66,7 +72,9 @@ const handleUploadChunk = async (data) => {
 
 	// 轮询上传进度
 	const intervalId = setInterval(async () => {
-		const { data: { progress } } = await getUploadProgress({
+		const {
+			data: { progress }
+		} = await getUploadProgress({
 			hash,
 			totalSize: file.size
 		})
@@ -90,14 +98,12 @@ const handleUploadChunk = async (data) => {
 
 const useHashWorker = (file: File) => {
 	return new Promise(async (resolve, reject) => {
-
 		const url = new URL('./hash.worker.ts', import.meta.url)
 		const worker = new Worker(url, { type: 'module' })
 		// 切片大小
 		const chunkSize = 1024 * 1024 * 30
 		// 切片列表
 		const chunks = createChunks(file, chunkSize)
-
 
 		chunks.forEach((chunk, index) => {
 			worker.postMessage({
@@ -112,7 +118,7 @@ const useHashWorker = (file: File) => {
 				...e.data,
 				chunks,
 				chunkSize,
-				file,
+				file
 			})
 		}
 
@@ -121,8 +127,6 @@ const useHashWorker = (file: File) => {
 		}
 	})
 }
-
-
 
 const onUploadChunk = async (options: { fileList: UploadFileInfo[] }) => {
 	const file = options.fileList[0].file as File
@@ -138,17 +142,13 @@ const onUploadChunk = async (options: { fileList: UploadFileInfo[] }) => {
 	}
 }
 
-
 const onUploadFile = (options: { fileList: UploadFileInfo[] }) => {
 	const file = options.fileList[0].file as File
 	handleUploadFile(file)
 }
-
-
 </script>
 
 <template>
-
 	<n-flex>
 		<n-card title="单文件上传">
 			<n-upload multiple directory-dnd :max="5" @change="onUploadFile" :default-upload="false">
@@ -161,10 +161,13 @@ const onUploadFile = (options: { fileList: UploadFileInfo[] }) => {
 					<n-text> 点击或者拖动文件到该区域来上传 </n-text>
 				</n-upload-dragger>
 			</n-upload>
-			<n-progress v-if="uploadPercentage > 0" type="line" :percentage="uploadPercentage" indicator-placement="inside" />
-
+			<n-progress
+				v-if="uploadPercentage > 0"
+				type="line"
+				:percentage="uploadPercentage"
+				indicator-placement="inside"
+			/>
 		</n-card>
-
 
 		<n-card title="大文件切片上传">
 			<n-upload multiple directory-dnd :max="5" @change="onUploadChunk" :default-upload="false">
@@ -177,159 +180,12 @@ const onUploadFile = (options: { fileList: UploadFileInfo[] }) => {
 					<n-text> 点击或者拖动文件到该区域来上传 </n-text>
 				</n-upload-dragger>
 			</n-upload>
-			<n-progress v-if="percentage > 0" type="line" :percentage="percentage" indicator-placement="inside" />
-		</n-card>
-	</n-flex>
-</template>
-
-<style lang="scss" scoped></style>
-</script>
-
-<template>
-
-	<n-flex>
-		<n-card title="单文件上传">
-			<n-upload multiple directory-dnd :max="5" @change="onUploadFile" :default-upload="false">
-				<n-upload-dragger>
-					<div class="mt-12px">
-						<n-icon size="48" :depth="3">
-							<ArchiveIcon />
-						</n-icon>
-					</div>
-					<n-text> 点击或者拖动文件到该区域来上传 </n-text>
-				</n-upload-dragger>
-			</n-upload>
-			<n-progress v-if="uploadPercentage > 0" type="line" :percentage="uploadPercentage" indicator-placement="inside" />
-
-		</n-card>
-
-
-		<n-card title="大文件切片上传">
-			<n-upload multiple directory-dnd :max="5" @change="onUploadChunk" :default-upload="false">
-				<n-upload-dragger>
-					<div class="mt-12px">
-						<n-icon size="48" :depth="3">
-							<ArchiveIcon />
-						</n-icon>
-					</div>
-					<n-text> 点击或者拖动文件到该区域来上传 </n-text>
-				</n-upload-dragger>
-			</n-upload>
-			<n-progress v-if="percentage > 0" type="line" :percentage="percentage" indicator-placement="inside" />
-		</n-card>
-	</n-flex>
-</template>
-
-<style lang="scss" scoped></style>
-</script>
-
-<template>
-
-	<n-flex>
-		<n-card title="单文件上传">
-			<n-upload multiple directory-dnd :max="5" @change="onUploadFile" :default-upload="false">
-				<n-upload-dragger>
-					<div class="mt-12px">
-						<n-icon size="48" :depth="3">
-							<ArchiveIcon />
-						</n-icon>
-					</div>
-					<n-text> 点击或者拖动文件到该区域来上传 </n-text>
-				</n-upload-dragger>
-			</n-upload>
-			<n-progress v-if="uploadPercentage > 0" type="line" :percentage="uploadPercentage" indicator-placement="inside" />
-
-		</n-card>
-
-
-		<n-card title="大文件切片上传">
-			<n-upload multiple directory-dnd :max="5" @change="onUploadChunk" :default-upload="false">
-				<n-upload-dragger>
-					<div class="mt-12px">
-						<n-icon size="48" :depth="3">
-							<ArchiveIcon />
-						</n-icon>
-					</div>
-					<n-text> 点击或者拖动文件到该区域来上传 </n-text>
-				</n-upload-dragger>
-			</n-upload>
-			<n-progress v-if="percentage > 0" type="line" :percentage="percentage" indicator-placement="inside" />
-		</n-card>
-	</n-flex>
-</template>
-
-<style lang="scss" scoped></style>
-</script>
-
-<template>
-
-	<n-flex>
-		<n-card title="单文件上传">
-			<n-upload multiple directory-dnd :max="5" @change="onUploadFile" :default-upload="false">
-				<n-upload-dragger>
-					<div class="mt-12px">
-						<n-icon size="48" :depth="3">
-							<ArchiveIcon />
-						</n-icon>
-					</div>
-					<n-text> 点击或者拖动文件到该区域来上传 </n-text>
-				</n-upload-dragger>
-			</n-upload>
-			<n-progress v-if="uploadPercentage > 0" type="line" :percentage="uploadPercentage" indicator-placement="inside" />
-
-		</n-card>
-
-
-		<n-card title="大文件切片上传">
-			<n-upload multiple directory-dnd :max="5" @change="onUploadChunk" :default-upload="false">
-				<n-upload-dragger>
-					<div class="mt-12px">
-						<n-icon size="48" :depth="3">
-							<ArchiveIcon />
-						</n-icon>
-					</div>
-					<n-text> 点击或者拖动文件到该区域来上传 </n-text>
-				</n-upload-dragger>
-			</n-upload>
-			<n-progress v-if="percentage > 0" type="line" :percentage="percentage" indicator-placement="inside" />
-		</n-card>
-	</n-flex>
-</template>
-
-<style lang="scss" scoped></style>
-</script>
-
-<template>
-
-	<n-flex>
-		<n-card title="单文件上传">
-			<n-upload multiple directory-dnd :max="5" @change="onUploadFile" :default-upload="false">
-				<n-upload-dragger>
-					<div class="mt-12px">
-						<n-icon size="48" :depth="3">
-							<ArchiveIcon />
-						</n-icon>
-					</div>
-					<n-text> 点击或者拖动文件到该区域来上传 </n-text>
-				</n-upload-dragger>
-			</n-upload>
-			<n-progress v-if="uploadPercentage > 0" type="line" :percentage="uploadPercentage" indicator-placement="inside" />
-
-		</n-card>
-
-
-		<n-card title="大文件切片上传">
-			<n-upload multiple directory-dnd :max="5" @change="onUploadChunk" :default-upload="false">
-				<n-upload-dragger>
-					<div class="mt-12px">
-						<n-icon size="48" :depth="3">
-							<ArchiveIcon />
-						</n-icon>
-					</div>
-					<n-text> 点击或者拖动文件到该区域来上传 </n-text>
-				</n-upload-dragger>
-			</n-upload>
-			<n-progress v-if="percentage > 0" type="line" :percentage="percentage" indicator-placement="inside" />
+			<n-progress
+				v-if="percentage > 0"
+				type="line"
+				:percentage="percentage"
+				indicator-placement="inside"
+			/>
 		</n-card>
 	</n-flex>
 </template>

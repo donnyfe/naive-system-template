@@ -26,33 +26,33 @@ const options = computed(() => {
 		{
 			label: t('common.reload'),
 			key: 'reload',
-			icon: () => h(IconRedo),
+			icon: () => h(IconRedo)
 		},
 		{
 			label: t('common.close'),
 			key: 'closeCurrent',
-			icon: () => h(IconClose),
+			icon: () => h(IconClose)
 		},
 		{
 			label: t('app.closeOther'),
 			key: 'closeOther',
-			icon: () => h(IconDelete),
+			icon: () => h(IconDelete)
 		},
 		{
 			label: t('app.closeLeft'),
 			key: 'closeLeft',
-			icon: () => h(IconLeft),
+			icon: () => h(IconLeft)
 		},
 		{
 			label: t('app.closeRight'),
 			key: 'closeRight',
-			icon: () => h(IconRight),
+			icon: () => h(IconRight)
 		},
 		{
 			label: t('app.closeAll'),
 			key: 'closeAll',
-			icon: () => h(IconFullwith),
-		},
+			icon: () => h(IconFullwith)
+		}
 	]
 })
 const showDropdown = ref(false)
@@ -83,7 +83,7 @@ function handleSelect(key: string) {
 		},
 		closeAll() {
 			tabStore.closeAllTabs()
-		},
+		}
 	}
 	handleFn[key]()
 }
@@ -104,16 +104,35 @@ function onClickoutside() {
 
 <template>
 	<div class="wh-full flex items-end">
-		<n-tabs type="card" size="small" :tabs-padding="10" :value="tabStore.currentTabPath" @close="handleClose">
-			<n-tab v-for="item in tabStore.pinTabs" :key="item.path" :name="item.path" @click="router.push(item.path)">
+		<n-tabs
+			type="card"
+			size="small"
+			:tabs-padding="10"
+			:value="tabStore.currentTabPath"
+			@close="handleClose"
+		>
+			<n-tab
+				v-for="item in tabStore.pinTabs"
+				:key="item.path"
+				:name="item.path"
+				@click="router.push(item.path)"
+			>
 				<div class="flex-x-center gap-2">
-					<naive-icon :icon="item.meta.icon" /> {{ $t(`route.${String(item.name)}`, item.meta.title as string) }}
+					<naive-icon :icon="item.meta.icon as string" />
+					{{ $t(`route.${String(item.name)}`, item.meta.title as string) }}
 				</div>
 			</n-tab>
-			<n-tab v-for="item in tabStore.tabs" :key="item.path" closable :name="item.path" @click="handleTab(item)"
-				@contextmenu="handleContextMenu($event, item)">
+			<n-tab
+				v-for="item in tabStore.tabs"
+				:key="item.path"
+				closable
+				:name="item.path"
+				@click="handleTab(item)"
+				@contextmenu="handleContextMenu($event, item)"
+			>
 				<div class="flex-x-center gap-2">
-					<naive-icon :icon="item.meta.icon" /> {{ $t(`route.${String(item.name)}`, item.meta.title as string) }}
+					<naive-icon :icon="item.meta.icon as string" />
+					{{ $t(`route.${String(item.name)}`, item.meta.title as string) }}
 				</div>
 			</n-tab>
 			<template #suffix>
@@ -121,7 +140,15 @@ function onClickoutside() {
 				<DropTabs />
 			</template>
 		</n-tabs>
-		<n-dropdown placement="bottom-start" trigger="manual" :x="x" :y="y" :options="options" :show="showDropdown"
-			:on-clickoutside="onClickoutside" @select="handleSelect" />
+		<n-dropdown
+			placement="bottom-start"
+			trigger="manual"
+			:x="x"
+			:y="y"
+			:options="options"
+			:show="showDropdown"
+			:on-clickoutside="onClickoutside"
+			@select="handleSelect"
+		/>
 	</div>
 </template>

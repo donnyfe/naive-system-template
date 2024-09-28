@@ -5,17 +5,21 @@ import qs from 'qs'
 export const getUploadId = () => http.get<Result<any>>('/upload/getUploadId')
 
 /** 上传文件 */
-export const uploadFile = (data, options) => http.post<Result<any>>('/upload/file', data, options)
+export const uploadFile = (data: object | undefined, options: any) =>
+	http.post<Result<any>>('/upload/file', data, options)
 
 /** 检查切片 */
-export const checkChunk = (data) =>
+export const checkChunk = (data: object | undefined) =>
 	http.get<Result<any>>(`/upload/chunk/check?${qs.stringify(data)}`)
 
 /** 上传文件切片 */
-export const uploadChunk = (data, options) => http.post<Result<any>>('/upload/chunk', data, options)
+export const uploadChunk = (data: object | undefined, options: any) =>
+	http.post<Result<any>>('/upload/chunk', data, options)
 
 /** 合并文件切片 */
-export const mergeChunk = (data) => http.post<Result<any>>('/upload/chunk/merge', data)
+export const mergeChunk = (data: object | undefined) =>
+	http.post<Result<any>>('/upload/chunk/merge', data)
 
 /** 获取上传进度 */
-export const getUploadProgress = (data) => http.get<Result<any>>('/upload/progress', data)
+export const getUploadProgress = (data: object | undefined) =>
+	http.get<Result<any>>('/upload/progress', data)

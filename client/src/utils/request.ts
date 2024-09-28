@@ -118,11 +118,11 @@ class Http {
 			config.headers.Authorization = `Bearer ${local.get('accessToken') || ''}`
 		}
 
-		if (config.isUpload) {
+		if ((config as any).isUpload) {
 			config.headers['Content-Type'] = 'multipart/form-data'
 		}
 
-		if (config.isJson === false) {
+		if ((config as any).isJson === false) {
 			config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
 		}
 		return config
@@ -203,4 +203,50 @@ export async function httpStream(url: string, data: any) {
 		throw new Error(`HTTP error! status: ${res.status}`)
 	}
 	return res
+}
+
+/**
+ * Promise并发控制
+ * @param fns
+ * @param limit
+ * @returns
+ */
+export const promisePool = async function (fns: Function[], limit: number) {
+	let index = 0
+	let results: Promise<any>[] = []
+
+	const requestList = [...new Array(limit)].map(async () => {
+		while (index < fns.length) {
+			const currentIndex = index
+			index++
+			try {
+				results[currentIndex] = await fns[currentIndex]()
+			} catch (error: any) {
+				throw new Error(error)
+			}
+		}
+	})
+	await Promise.all(requestList)
+
+	return results
+}
+
+/**
+ * Promise串行执行
+ * @param fns
+ * @returns
+ */
+export const inOrderPromise = function (fns: Function[]) {
+	const res: any[] = []
+	return new Promise((resolve) => {
+		fns
+			.reduce((pre, cur) => {
+				return pre
+					.then(() => cur())
+					.then((data) => {
+						res.push(data)
+					})
+			}, Promise.resolve())
+			.then(() => resolve(res))
+	})
 }

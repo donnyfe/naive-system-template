@@ -18,9 +18,16 @@ export default defineConfig({
 		useAutoImportPlugin(),
 		useResolverPlugin()
 	],
+	css: {
+		preprocessorOptions: {
+			scss: {
+				api: 'modern-compiler' // or 'modern'
+			}
+		}
+	},
 	resolve: {
 		alias: {
 			'@': resolve('./src')
 		}
-	},
+	}
 })

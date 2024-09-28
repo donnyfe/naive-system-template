@@ -1,16 +1,16 @@
 import SparkMD5 from 'spark-md5'
-import { getArrayBufferFromBlobs } from './file.utils'
+import { getArrayBufferFromBlobs } from '@/utils'
 
 let chunks: Blob[] = []
 
 self.onmessage = async (e) => {
 	const { chunk, chunkTotal } = e.data
-
 	chunks.push(chunk)
 
 	if (chunks.length === chunkTotal) {
 		console.time('Worker 计算文件Hash耗时：')
 		const arrayBuffer = await getArrayBufferFromBlobs(chunks)
+		// @ts-ignore
 		const hash = SparkMD5.ArrayBuffer.hash(arrayBuffer)
 		console.timeEnd('Worker 计算文件Hash耗时：')
 

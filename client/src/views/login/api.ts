@@ -13,5 +13,5 @@ export const updateToken = (data: any) => http.post<Result<LoginData>>('/auth/re
 export const queryUserInfo = () => http.get<Result<UserData>>('/user/detail')
 
 export function queryUserRoutes(params: { id: number }) {
-  return http.get<Result<RowRoute[]>>('/getUserRoutes', { params })
+	return http.get<Result<RowRoute[]>>('/getUserRoutes', { params })
 }
