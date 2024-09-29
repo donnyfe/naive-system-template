@@ -24,7 +24,8 @@
 		"users": "用户管理",
 		"userCenter": "个人中心",
 		"about": "关于",
-		"file": "文件上传"
+		"file": "文件上传",
+		"imageRecognition": "图像识别"
 	},
 	"http": {
 		"400": "请求出现语法错误",

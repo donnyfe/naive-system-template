@@ -1,16 +1,5 @@
 export const staticRoutes: RowRoute[] = [
-	{
-		name: 'chat',
-		path: '/chat',
-		title: '聊天助手',
-		requiresAuth: true,
-		icon: 'icon-park-outline:user',
-		pinTab: true,
-		menuType: 'page',
-		componentPath: '/chat/index.vue',
-		pid: null,
-		id: 1
-	},
+	
 	{
 		name: 'users',
 		path: '/users',
@@ -19,7 +8,7 @@ export const staticRoutes: RowRoute[] = [
 		icon: 'icon-park-outline:every-user',
 		componentPath: '/users/index.vue',
 		pid: null,
-		id: 2
+		id: 1
 	},
 	{
 		name: 'file',
@@ -30,7 +19,31 @@ export const staticRoutes: RowRoute[] = [
 		icon: 'icon-park-outline:file-addition',
 		componentPath: '/file/index.vue',
 		pid: null,
-		id: 97
+		id: 2
+	},
+	{
+		name: 'chat',
+		path: '/chat',
+		title: '聊天助手',
+		requiresAuth: true,
+		icon: 'icon-park-outline:user',
+		pinTab: true,
+		menuType: 'page',
+		componentPath: '/chat/index.vue',
+		pid: null,
+		id: 3
+	},
+	{
+		name: 'imageRecognition',
+		path: '/image-recognition',
+		title: '图像识别',
+		requiresAuth: true,
+		icon: 'icon-park-outline:image-files',
+		pinTab: true,
+		menuType: 'page',
+		componentPath: '/image-recognition/index.vue',
+		pid: null,
+		id: 3
 	},
 	{
 		name: 'userCenter',

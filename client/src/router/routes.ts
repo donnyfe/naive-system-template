@@ -16,17 +16,6 @@ export const routes: RouteRecordRaw[] = [
 			withoutTab: true
 		}
 	},
-	// {
-	// 	path: '/chat',
-	// 	name: 'chat',
-	// 	component: () => import('@/views/chat/index.vue'),
-	// 	meta: {
-	// 		title: '聊天助手',
-	// 		icon: 'icon-park-outline:user',
-	// 		requiresAuth: true,
-	// 		pinTab: true
-	// 	}
-	// },
 	{
 		path: '/403',
 		name: '403',

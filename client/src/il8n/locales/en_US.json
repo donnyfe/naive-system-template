@@ -24,7 +24,8 @@
 		"users": "User settings",
 		"userCenter": "Personal Center",
 		"about": "About",
-		"file": "Upload"
+		"file": "Upload",
+		"imageRecognition": "Image Recognition"
 	},
 	"http": {
 		"400": "Syntax error in the request",
