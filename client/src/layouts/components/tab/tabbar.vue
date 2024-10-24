@@ -109,17 +109,15 @@ function onClickoutside() {
 			size="small"
 			:tabs-padding="10"
 			:value="tabStore.currentTabPath"
-			@close="handleClose"
-		>
+			@close="handleClose">
 			<n-tab
 				v-for="item in tabStore.pinTabs"
 				:key="item.path"
 				:name="item.path"
-				@click="router.push(item.path)"
-			>
+				@click="router.push(item.path)">
 				<div class="flex-x-center gap-2">
 					<naive-icon :icon="item.meta.icon as string" />
-					{{ $t(`route.${String(item.name)}`, item.meta.title as string) }}
+					{{ $t(`route.${String(item.name)}`, (item.meta.title as string)) }}
 				</div>
 			</n-tab>
 			<n-tab
@@ -132,7 +130,7 @@ function onClickoutside() {
 			>
 				<div class="flex-x-center gap-2">
 					<naive-icon :icon="item.meta.icon as string" />
-					{{ $t(`route.${String(item.name)}`, item.meta.title as string) }}
+					{{ $t(`route.${String(item.name)}`, (item.meta.title as string)) }}
 				</div>
 			</n-tab>
 			<template #suffix>
