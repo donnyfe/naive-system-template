@@ -1,4 +1,3 @@
-
 type MenuType = 'dir' | 'page'
 
 /** 单个路由所携带的meta标识 */

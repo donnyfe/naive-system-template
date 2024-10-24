@@ -6,7 +6,6 @@
 import compressPlugin from 'vite-plugin-compression'
 
 export function useCompressPlugin(compress: 'gzip' | 'brotli', deleteOriginFile = false) {
-
 	if (compress === 'gzip') {
 		return compressPlugin({
 			ext: '.gz',

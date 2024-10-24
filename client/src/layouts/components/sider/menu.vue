@@ -8,21 +8,21 @@ const routeStore = useRouteStore()
 
 const menuInstRef = ref<MenuInst | null>(null)
 watch(
-  () => route.path,
-  () => {
-    menuInstRef.value?.showOption(routeStore.activeMenu as string)
-  },
-  { immediate: true },
+	() => route.path,
+	() => {
+		menuInstRef.value?.showOption(routeStore.activeMenu as string)
+	},
+	{ immediate: true }
 )
 </script>
 
 <template>
-  <n-menu
-    ref="menuInstRef"
-    :collapsed="appStore.collapsed"
-    :indent="20"
-    :collapsed-width="64"
-    :options="routeStore.menus"
-    :value="routeStore.activeMenu"
-  />
+	<n-menu
+		ref="menuInstRef"
+		:collapsed="appStore.collapsed"
+		:indent="20"
+		:collapsed-width="64"
+		:options="routeStore.menus"
+		:value="routeStore.activeMenu"
+	/>
 </template>

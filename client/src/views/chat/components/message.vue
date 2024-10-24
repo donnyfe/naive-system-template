@@ -1,19 +1,17 @@
 <script setup lang="ts">
+import type { Message } from '../types'
+import { copyToClip } from '@/utils'
 import { CopyOutline, Refresh } from '@vicons/ionicons5'
 import ChatAvatar from './avatar.vue'
 import Text from './text.vue'
-import { copyToClip } from '@/utils'
-import type { Message } from '../types'
 
 interface Props {
 	item: Message
 	loading: boolean
 }
-const { t } = useI18n()
 const props = defineProps<Props>()
-
 const emit = defineEmits(['regenerate'])
-
+const { t } = useI18n()
 const message = useMessage()
 
 const textRef = ref<HTMLElement>()
@@ -39,7 +37,6 @@ async function handleCopy() {
 <template>
 	<div ref="messageRef" class="message w-full">
 		<div class="w-full flex justify-start px-12 pr-18 py-4">
-
 			<div class="w-32px h-32px mr-16px">
 				<ChatAvatar visible :type="item.sender" />
 			</div>
@@ -53,8 +50,10 @@ async function handleCopy() {
 					<Text v-else ref="textRef" :type="isAi ? 'markdown' : 'text'" :text="item?.messageText" :loading="loading" />
 				</div>
 
-				<div v-if="isAi && !loading"
-					class="w-full flex flex-row items-center justify-between py-2 pb-0  border-gray-200">
+				<div
+					v-if="isAi && !loading"
+					class="w-full flex flex-row items-center justify-between py-2 pb-0  border-gray-200"
+				>
 					<n-button :bordered="false" class="w-5 h-5 text-gray-500  dark:text-gray-400" @click="handleRegenerate">
 						<template #icon>
 							<n-icon size="14">

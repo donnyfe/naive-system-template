@@ -1,15 +1,14 @@
 <script lang="ts" setup>
-import { type PopoverInst } from 'naive-ui'
-import { ChatbubblesOutline, GridOutline, PaperPlaneOutline, StopCircleOutline } from '@vicons/ionicons5'
-import ChatMessage from './message.vue'
-import ChatPrompt from './prompt.vue'
+import type { PopoverInst } from 'naive-ui'
+import type { ChatParams, Message, Prompt } from '../types'
 import { useScroll } from '@/hooks'
 import { useChatStore } from '@/store/chat'
 import { usePromptStore } from '@/store/prompt'
 import Queue from '@/utils/queue'
+import { ChatbubblesOutline, GridOutline, PaperPlaneOutline, StopCircleOutline } from '@vicons/ionicons5'
 import { chatSubmit } from '../api'
-import type { ChatParams, Message, Prompt } from '../types'
-
+import ChatMessage from './message.vue'
+import ChatPrompt from './prompt.vue'
 
 const { t } = useI18n()
 const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom } = useScroll()
@@ -28,7 +27,6 @@ function showChatSidebar() {
 	chatStore.showChatSidebar()
 }
 
-
 const popoverPromptRef = ref<PopoverInst | null>(null)
 const promptStore = usePromptStore()
 const prompt = ref<string>('')
@@ -42,12 +40,12 @@ const promptOptions = computed(() => {
 		}
 		return promptList
 			.filter((item: Prompt) =>
-				item.content.toLowerCase().includes(prompt.value.substring(1).toLowerCase()),
+				item.content.toLowerCase().includes(prompt.value.substring(1).toLowerCase())
 			)
 			.map((item: Prompt) => {
 				return {
 					label: item.content,
-					value: item.content,
+					value: item.content
 				}
 			})
 	}
@@ -62,8 +60,6 @@ function onSelectPrompt(item: Prompt) {
 	popoverPromptRef.value?.setShow(false)
 }
 
-
-
 const chat = computed(() => chatStore.chat)
 const chatId = ref<string | undefined>(chatStore.activeId)
 
@@ -73,7 +69,7 @@ const answer = ref<Message>({
 	messageId: '',
 	messageText: '',
 	sender: '',
-	completed: 0,
+	completed: 0
 })
 
 watch(() => chatStore.chat, (newVal) => {
@@ -81,15 +77,15 @@ watch(() => chatStore.chat, (newVal) => {
 		const chat = toRaw(newVal)
 		chatId.value = chat.chatId
 
-		const lastMessage = chat.messages?.filter((i) => i.sender === 'assistant').pop()
+		const lastMessage = chat.messages?.filter(i => i.sender === 'assistant').pop()
 		if (lastMessage) {
 			answer.value = lastMessage
 		}
-	} else {
+	}
+	else {
 		chatStore.chat = null
 	}
 })
-
 
 onMounted(async () => {
 	scrollToBottom()
@@ -97,7 +93,6 @@ onMounted(async () => {
 		inputRef.value?.focus()
 	}
 })
-
 
 // 提交信息
 async function handleSubmit() {
@@ -112,7 +107,7 @@ async function handleSubmit() {
 	// 不存在对话则创建新对话
 	if (!chatId) {
 		await chatStore.createChat({
-			chatName: message.slice(0, 30),
+			chatName: message.slice(0, 30)
 		})
 	}
 
@@ -121,7 +116,7 @@ async function handleSubmit() {
 		chatId: chatStore.activeId as string,
 		messageText: message,
 		sender: 'user',
-		completed: 1,
+		completed: 1
 	}
 	const userMessage = await chatStore.createMessage(params)
 
@@ -131,7 +126,7 @@ async function handleSubmit() {
 		previousId: userMessage?.messageId,
 		messageText: '',
 		sender: 'assistant',
-		completed: 0,
+		completed: 0
 	})
 
 	scrollToBottom()
@@ -139,8 +134,6 @@ async function handleSubmit() {
 	answer.value = aiMessage as Message
 	submitChat(answer.value)
 }
-
-
 
 async function submitChat(answer: Message) {
 	prompt.value = ''
@@ -245,17 +238,16 @@ function handleStop() {
 		loading.value = false
 	}
 }
-
-
-
 </script>
 
 <template>
 	<div class="relative wh-full flex overflow-hidden dark:bg-dark">
 		<div class="absolute z-10 flex justify-between w-full lg:py-4 lg:px-6 bg-#f7f7f7 dark:bg-dark border-b border-#ddd">
 			<div class="flex gap-3">
-				<n-button v-if="!sidebarVisible" class="w-10 h-10 bg-#fff dark:bg-dark hover:opacity-70 rounded"
-					@click="showChatSidebar">
+				<n-button
+					v-if="!sidebarVisible" class="w-10 h-10 bg-#fff dark:bg-dark hover:opacity-70 rounded"
+					@click="showChatSidebar"
+				>
 					<template #icon>
 						<n-icon>
 							<ChatbubblesOutline />
@@ -267,7 +259,8 @@ function handleStop() {
 				<n-popover ref="popoverPromptRef" trigger="click" placement="bottom-end" :width="400">
 					<template #trigger>
 						<n-button
-							class="action-button w-10 h-10 bg-white dark:bg-dark dark:hover:border-emerald  hover:opacity-70 rounded">
+							class="action-button w-10 h-10 bg-white dark:bg-dark dark:hover:border-emerald  hover:opacity-70 rounded"
+						>
 							<template #icon>
 								<n-icon size="18">
 									<GridOutline />
@@ -292,18 +285,22 @@ function handleStop() {
 					</div>
 				</template>
 				<template v-else>
-					<ChatMessage v-for="(item, index) of chat?.messages" :key="index"
+					<ChatMessage
+						v-for="(item, index) of chat?.messages" :key="index"
 						:item="item.messageId === answer?.messageId ? (answer as Message) : item" :loading="item.completed === 0"
-						@regenerate="onRegenerate" />
+						@regenerate="onRegenerate"
+					/>
 				</template>
 			</div>
 			<div class="w-full py-4 bg-#f7f7f7 dark:bg-dark border-t border-#ddd">
 				<div class="flex-center">
-					<n-auto-complete class="w-60%" v-model:value="prompt" :options="promptOptions">
+					<n-auto-complete v-model:value="prompt" class="w-60%" :options="promptOptions">
 						<template #default="{ handleInput, handleBlur, handleFocus }">
-							<n-input ref="inputRef" v-model:value="prompt" type="textarea" rows="1" autosize round
+							<n-input
+								ref="inputRef" v-model:value="prompt" type="textarea" rows="1" autosize round
 								class="py-2 rounded-2" placeholder="输入消息或“/”以选择提示..." @input="handleInput" @focus="handleFocus"
-								@blur="handleBlur" @keypress="handleEnter">
+								@blur="handleBlur" @keypress="handleEnter"
+							>
 								<template #suffix>
 									<n-button :bordered="false" :loading="loading" class="w-20px" @click="handleSubmit">
 										<template #icon>

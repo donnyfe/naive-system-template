@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { FormInst } from 'naive-ui'
+import { useAuthStore } from '@/store'
 import {
-	local,
+	local
 	// throttle
 } from '@/utils'
-import { useAuthStore } from '@/store'
 import { encrypt } from '@/utils/aes'
 import { useThrottleFn } from '@vueuse/core'
 
@@ -22,19 +22,19 @@ const rules = computed(() => {
 		username: {
 			required: true,
 			trigger: 'blur',
-			message: t('login.accountRuleTip'),
+			message: t('login.accountRuleTip')
 		},
 		password: {
 			required: true,
 			trigger: 'blur',
-			message: t('login.passwordRuleTip'),
-		},
+			message: t('login.passwordRuleTip')
+		}
 	}
 })
 const form = reactive({
 	username: '',
 	password: '',
-	captcha: '',
+	captcha: ''
 })
 
 const captchaUrl = ref('')
@@ -86,8 +86,10 @@ function handleLogin() {
 			</n-form-item>
 
 			<n-form-item path="password">
-				<n-input v-model:value="form.password" type="password" clearable show-password-on="click"
-					autocomplete="current-password" :minleng="6" :maxlength="20" :placeholder="$t('login.passwordPlaceholder')">
+				<n-input
+					v-model:value="form.password" type="password" clearable show-password-on="click"
+					autocomplete="current-password" :minleng="6" :maxlength="20" :placeholder="$t('login.passwordPlaceholder')"
+				>
 					<template #password-invisible-icon>
 						<icon-park-outline-preview-close-one />
 					</template>
@@ -98,10 +100,14 @@ function handleLogin() {
 			</n-form-item>
 
 			<n-form-item path="captcha">
-				<n-input v-model:value="form.captcha" class="w-60%" :maxlength="4" clearable
-					:placeholder="$t('login.captchaPlaceholder')" @keydown.enter="handleLogin()" />
-				<img v-if="captchaUrl" :src="captchaUrl" alt="验证码" class="w-auto h-38px ml-12px cursor-pointer"
-					@click="initCaptcha">
+				<n-input
+					v-model:value="form.captcha" class="w-60%" :maxlength="4" clearable
+					:placeholder="$t('login.captchaPlaceholder')" @keydown.enter="handleLogin()"
+				/>
+				<img
+					v-if="captchaUrl" :src="captchaUrl" alt="验证码" class="w-auto h-38px ml-12px cursor-pointer"
+					@click="initCaptcha"
+				>
 			</n-form-item>
 
 			<n-space vertical :size="20">

@@ -1,17 +1,18 @@
-import http, { Result } from '@/utils/request'
-import { RegisterParam, LoginParam, LoginData } from './types'
-import { UserData } from '../users/types'
+import type { Result } from '@/utils/request'
+import type { UserData } from '../users/types'
+import type { LoginData, LoginParam, RegisterParam } from './types'
+import http from '@/utils/request'
 
-export const register = (params: RegisterParam) => http.post<Result<any>>('/auth/register', params)
+export const register = async (params: RegisterParam) => http.post<Result<any>>('/auth/register', params)
 
-export const login = (params: LoginParam) => http.post<Result<LoginData>>('/auth/login', params)
+export const login = async (params: LoginParam) => http.post<Result<LoginData>>('/auth/login', params)
 
-export const logout = () => http.post<Result<any>>('/auth/logout')
+export const logout = async () => http.post<Result<any>>('/auth/logout')
 
-export const updateToken = (data: any) => http.post<Result<LoginData>>('/auth/refresh/token', data)
+export const updateToken = async (data: any) => http.post<Result<LoginData>>('/auth/refresh/token', data)
 
-export const queryUserInfo = () => http.get<Result<UserData>>('/user/detail')
+export const queryUserInfo = async () => http.get<Result<UserData>>('/user/detail')
 
-export function queryUserRoutes(params: { id: number }) {
+export async function queryUserRoutes(params: { id: number }) {
 	return http.get<Result<RowRoute[]>>('/getUserRoutes', { params })
 }

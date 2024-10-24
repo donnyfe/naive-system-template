@@ -5,12 +5,12 @@ const appStore = useAppStore()
 const options = [
 	{
 		label: 'English',
-		value: 'enUS',
+		value: 'enUS'
 	},
 	{
 		label: '中文',
-		value: 'zhCN',
-	},
+		value: 'zhCN'
+	}
 ]
 </script>
 

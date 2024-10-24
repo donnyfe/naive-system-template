@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import leftMenu from './left-menu.vue'
-import topMenu from './top-menu.vue'
-import mixMenu from './mix-menu.vue'
-import { SettingDrawer } from './components'
 import { useAppStore } from '@/store/app'
+import { SettingDrawer } from './components'
+import leftMenu from './left-menu.vue'
+import mixMenu from './mix-menu.vue'
+import topMenu from './top-menu.vue'
 
 const appStore = useAppStore()
 const layoutMap = {
 	leftMenu,
 	topMenu,
-	mixMenu,
+	mixMenu
 }
 </script>
 

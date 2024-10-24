@@ -1,5 +1,5 @@
 import 'vue-router'
 
 declare module 'vue-router' {
-  interface RouteMeta extends RouteMeta {}
+	interface RouteMeta extends RouteMeta {}
 }

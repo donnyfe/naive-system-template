@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import type { RouteLocationNormalized } from 'vue-router'
-import Reload from './reload.vue'
-import DropTabs from './drop-tabs.vue'
 import { useAppStore, useTabStore } from '@/store'
-import IconRedo from '~icons/icon-park-outline/redo'
 import IconClose from '~icons/icon-park-outline/close'
 import IconDelete from '~icons/icon-park-outline/delete-four'
+import IconFullwith from '~icons/icon-park-outline/fullwidth'
+import IconRedo from '~icons/icon-park-outline/redo'
 import IconLeft from '~icons/icon-park-outline/to-left'
 import IconRight from '~icons/icon-park-outline/to-right'
-import IconFullwith from '~icons/icon-park-outline/fullwidth'
+import DropTabs from './drop-tabs.vue'
+import Reload from './reload.vue'
 
 const tabStore = useTabStore()
 const appStore = useAppStore()
@@ -109,12 +109,14 @@ function onClickoutside() {
 			size="small"
 			:tabs-padding="10"
 			:value="tabStore.currentTabPath"
-			@close="handleClose">
+			@close="handleClose"
+		>
 			<n-tab
 				v-for="item in tabStore.pinTabs"
 				:key="item.path"
 				:name="item.path"
-				@click="router.push(item.path)">
+				@click="router.push(item.path)"
+			>
 				<div class="flex-x-center gap-2">
 					<naive-icon :icon="item.meta.icon as string" />
 					{{ $t(`route.${String(item.name)}`, (item.meta.title as string)) }}

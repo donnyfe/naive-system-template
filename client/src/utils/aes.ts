@@ -5,24 +5,24 @@ const iv = CryptoJS.enc.Utf8.parse('O3V2GCL1K2HNZ9Y7') // 十六位十六进制�
 
 // 加密方法
 export function encrypt(word: string) {
-  const srcs = CryptoJS.enc.Utf8.parse(word)
-  const encrypted = CryptoJS.AES.encrypt(srcs, key, {
-    iv,
-    mode: CryptoJS.mode.CBC,
-    padding: CryptoJS.pad.Pkcs7,
-  })
-  return encrypted.ciphertext.toString().toUpperCase()
+	const srcs = CryptoJS.enc.Utf8.parse(word)
+	const encrypted = CryptoJS.AES.encrypt(srcs, key, {
+		iv,
+		mode: CryptoJS.mode.CBC,
+		padding: CryptoJS.pad.Pkcs7
+	})
+	return encrypted.ciphertext.toString().toUpperCase()
 }
 
 // 解密方法
 export function decrypt(word: string) {
-  const encryptedHexStr = CryptoJS.enc.Hex.parse(word)
-  const srcs = CryptoJS.enc.Base64.stringify(encryptedHexStr)
-  const decrypt = CryptoJS.AES.decrypt(srcs, key, {
-    iv,
-    mode: CryptoJS.mode.CBC,
-    padding: CryptoJS.pad.Pkcs7,
-  })
-  const decryptedStr = decrypt.toString(CryptoJS.enc.Utf8)
-  return decryptedStr.toString()
+	const encryptedHexStr = CryptoJS.enc.Hex.parse(word)
+	const srcs = CryptoJS.enc.Base64.stringify(encryptedHexStr)
+	const decrypt = CryptoJS.AES.decrypt(srcs, key, {
+		iv,
+		mode: CryptoJS.mode.CBC,
+		padding: CryptoJS.pad.Pkcs7
+	})
+	const decryptedStr = decrypt.toString(CryptoJS.enc.Utf8)
+	return decryptedStr.toString()
 }

@@ -1,6 +1,6 @@
 import { mergeConfig } from 'vite'
+import { useCdnPlugin, useCompressPlugin, useImageminPlugin, useRemoveConsolePlugin, useVisualizerPlugin } from './plugins'
 import baseConfig from './vite.config.base'
-import { useRemoveConsolePlugin, useImageminPlugin, useCompressPlugin, useVisualizerPlugin, useCdnPlugin } from './plugins'
 
 export default mergeConfig({
 	mode: 'prod',

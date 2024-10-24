@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { EditOutlined } from '@vicons/antd'
-import { ChevronBackOutline, Close } from '@vicons/ionicons5'
-import { createPrompt, updatePrompt } from '@/views/chat/api'
-import { usePromptStore } from '@/store/prompt'
 import type { FormInst } from 'naive-ui'
 import type { Prompt } from '../types'
+import { usePromptStore } from '@/store/prompt'
+import { createPrompt, updatePrompt } from '@/views/chat/api'
+import { EditOutlined } from '@vicons/antd'
+import { ChevronBackOutline, Close } from '@vicons/ionicons5'
 
 const emit = defineEmits(['selectPrompt'])
 
@@ -19,18 +19,17 @@ const promptList = computed(() => {
 
 const promptRules = {
 	title: { required: true, message: '标题必填', trigger: 'blur' },
-	content: { required: true, message: '内容必填', trigger: 'blur' },
+	content: { required: true, message: '内容必填', trigger: 'blur' }
 }
 
 // 新增/修改数据初始化
 const formData = {
 	promptId: '',
 	title: '',
-	content: '',
+	content: ''
 }
 
 const promptFormData = ref(formData)
-
 
 onMounted(async () => {
 	await promptStore.getPromptList()
@@ -52,7 +51,7 @@ function handleSelect(prompt: Prompt) {
 function handleSave(e: MouseEvent) {
 	e.preventDefault()
 	const messageReactive = message.loading('处理中', {
-		duration: 0,
+		duration: 0
 	})
 
 	promptFormRef.value?.validate(async (errors) => {
@@ -76,7 +75,7 @@ function handleEdit(item: Prompt, event?: MouseEvent) {
 	promptFormData.value = {
 		promptId: item.promptId as string,
 		title: item.title,
-		content: item.content,
+		content: item.content
 	}
 	isAdd.value = true
 }
@@ -85,7 +84,6 @@ function handleDelete(promptId: string, event?: MouseEvent) {
 	event?.stopPropagation()
 	promptStore.removePrompt(promptId)
 }
-
 </script>
 
 <template>
@@ -105,8 +103,10 @@ function handleDelete(promptId: string, event?: MouseEvent) {
 						<n-input v-model:value="promptFormData.title" :placeholder="$t('common.inputPlaceholder')" />
 					</n-form-item>
 					<n-form-item path="content" :label="$t('common.content')">
-						<n-input v-model:value="promptFormData.content" type="textarea"
-							:placeholder="$t('common.inputPlaceholder')" />
+						<n-input
+							v-model:value="promptFormData.content" type="textarea"
+							:placeholder="$t('common.inputPlaceholder')"
+						/>
 					</n-form-item>
 					<n-form-item>
 						<n-button type="primary" class="w-full px-2 py-2 border rounded-2" @click="handleSave">
@@ -122,13 +122,17 @@ function handleDelete(promptId: string, event?: MouseEvent) {
 			</div>
 
 			<n-scrollbar class="h-600px">
-				<div class="mb-10px flex justify-between rounded-lg cursor-pointer border border-gray-200"
-					v-for="(item, index) of promptList" :key="index">
+				<div
+					v-for="(item, index) of promptList"
+					:key="index" class="mb-10px flex justify-between rounded-lg cursor-pointer border border-gray-200"
+				>
 					<div class="w-85% overflow-hidden" @click="handleSelect(item)">
 						<span class="prompt-tag px-2 py-1 block">
 							{{ item.title }}：
 						</span>
-						<p class="ellipsis px-10px py-4px">{{ item.content }}</p>
+						<p class="ellipsis px-10px py-4px">
+							{{ item.content }}
+						</p>
 					</div>
 					<div class="hidden items-center cursor-pointer group-hover:flex">
 						<n-button text @click="handleEdit(item, $event)">

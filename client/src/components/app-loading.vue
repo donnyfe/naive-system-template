@@ -4,7 +4,7 @@
 <template>
 	<naive-provider>
 		<div id="loading-container">
-			<div class="loader"></div>
+			<div class="loader" />
 		</div>
 	</naive-provider>
 </template>

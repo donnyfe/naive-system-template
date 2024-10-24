@@ -19,6 +19,6 @@ export const createChunks = function (file: File, chunkSize: number): Blob[] {
  * Blob转ArrayBuffer
  * @param chunks
  */
-export const getArrayBufferFromBlobs = (chunks: Blob[]): Promise<ArrayBuffer[]> => {
-	return Promise.all(chunks.map((chunk) => chunk.arrayBuffer()))
+export async function getArrayBufferFromBlobs(chunks: Blob[]): Promise<ArrayBuffer[]> {
+	return Promise.all(chunks.map(async chunk => chunk.arrayBuffer()))
 }

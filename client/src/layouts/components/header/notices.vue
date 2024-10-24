@@ -11,7 +11,7 @@ const MassageData = ref<MessageData[]>([
 		tagTitle: '未开始',
 		tagType: 'info',
 		description: '这里是描述内容',
-		date: new Date().toISOString(),
+		date: new Date().toISOString()
 	},
 	{
 		id: 1,
@@ -20,7 +20,7 @@ const MassageData = ref<MessageData[]>([
 		icon: 'icon-park-outline:comment-one',
 		tagTitle: '未开始',
 		tagType: 'success',
-		date: new Date().toISOString(),
+		date: new Date().toISOString()
 	},
 	{
 		id: 2,
@@ -30,7 +30,7 @@ const MassageData = ref<MessageData[]>([
 		tagTitle: '未开始',
 		tagType: 'warning',
 		description: '这里是描述内容',
-		date: new Date().toISOString(),
+		date: new Date().toISOString()
 	},
 	{
 		id: 3,
@@ -40,7 +40,7 @@ const MassageData = ref<MessageData[]>([
 		tagTitle: '未开始',
 		tagType: 'error',
 		description: '这里是描述内容',
-		date: new Date().toISOString(),
+		date: new Date().toISOString()
 	},
 	{
 		id: 4,
@@ -49,7 +49,7 @@ const MassageData = ref<MessageData[]>([
 		icon: 'icon-park-outline:tips-one',
 		tagTitle: '未开始',
 		description: '这里是描述内容',
-		date: new Date().toISOString(),
+		date: new Date().toISOString()
 	},
 	{
 		id: 5,
@@ -57,7 +57,7 @@ const MassageData = ref<MessageData[]>([
 		title: '您有新的消息，请注意查收',
 		icon: 'icon-park-outline:comment',
 		description: '这里是描述内容',
-		date: new Date().toISOString(),
+		date: new Date().toISOString()
 	},
 	{
 		id: 6,
@@ -65,7 +65,7 @@ const MassageData = ref<MessageData[]>([
 		title: '您有新的消息，请注意查收',
 		icon: 'icon-park-outline:comment',
 		description: '这里是描述内容',
-		date: new Date().toISOString(),
+		date: new Date().toISOString()
 	},
 	{
 		id: 7,
@@ -74,8 +74,8 @@ const MassageData = ref<MessageData[]>([
 		icon: 'icon-park-outline:beach-umbrella',
 		tagTitle: '未开始',
 		description: '项目稳定推进中，很快就能看到正式版了',
-		date: new Date().toISOString(),
-	},
+		date: new Date().toISOString()
+	}
 ])
 const currentTab = ref(0)
 function handleRead(id: number) {

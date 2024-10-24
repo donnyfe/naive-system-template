@@ -1,8 +1,8 @@
 import type { GlobalThemeOverrides } from 'naive-ui'
+import { local, setLocale } from '@/utils'
 import { colord } from 'colord'
 import { set } from 'radash'
 import themeConfig from './theme.json'
-import { local, setLocale } from '@/utils'
 
 type TransitionAnimation =
 	| ''
@@ -113,7 +113,8 @@ export const useAppStore = defineStore('app-store', {
 				setTimeout(() => {
 					this.loadFlag = true
 				}, delay)
-			} else {
+			}
+			else {
 				this.loadFlag = true
 			}
 		},

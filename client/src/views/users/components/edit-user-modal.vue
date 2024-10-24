@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { createUser, updateUser } from '../api'
+import type { UserData } from '../types'
 import { useBoolean } from '@/hooks'
-import { UserData } from '../types';
+import { createUser, updateUser } from '../api'
 
 interface Props {
 	title?: string
@@ -11,7 +11,7 @@ type ModalType = 'add' | 'view' | 'edit'
 
 // 定义组件属性
 const props = withDefaults(defineProps<Props>(), {
-	title: '',
+	title: ''
 })
 
 // 定义事件函数
@@ -29,7 +29,7 @@ const modalTitle = computed(() => {
 	const titleMap: Record<ModalType, string> = {
 		add: '添加',
 		view: '查看',
-		edit: '编辑',
+		edit: '编辑'
 	}
 	return `${titleMap[modalType.value]}${props.title}`
 })
@@ -38,15 +38,15 @@ const rules = {
 	username: {
 		required: true,
 		message: '请输入用户名',
-		trigger: 'blur',
-	},
+		trigger: 'blur'
+	}
 }
 
 const formDefault: UserData = {
 	username: '',
 	sex: undefined,
 	email: '',
-	phone: '',
+	phone: ''
 	// roles: [],
 }
 const form = ref<UserData>({ ...formDefault })
@@ -73,7 +73,7 @@ async function openModal(type: ModalType = 'add', data: any) {
 			if (!data)
 				return
 			form.value = { ...data }
-		},
+		}
 	}
 	await handlers[type]()
 }
@@ -86,7 +86,7 @@ function closeModal() {
 
 // 导出方法
 defineExpose({
-	openModal,
+	openModal
 })
 
 const formRef = ref()
@@ -109,7 +109,7 @@ async function onSubmit() {
 		},
 		async view() {
 			return true
-		},
+		}
 	}
 	await formRef.value?.validate()
 	startLoading()
@@ -131,19 +131,32 @@ async function onSubmit() {
 </script>
 
 <template>
-	<n-modal v-model:show="modalVisible" :mask-closable="false" preset="card" :title="modalTitle" class="w-700px"
+	<n-modal v-model:show="modalVisible"
+		:mask-closable="false"
+		preset="card"
+		:title="modalTitle"
+		class="w-700px"
 		:segmented="{
 			content: true,
 			action: true,
 		}">
-		<n-form ref="formRef" :rules="rules" label-placement="left" :model="form" :label-width="100"
+		<n-form ref="formRef"
+			:rules="rules"
+			label-placement="left"
+			:model="form"
+			:label-width="100"
 			:disabled="modalType === 'view'">
-			<n-grid :cols="2" :x-gap="18">
-				<n-form-item-grid-item :span="1" label="用户名" path="username">
+			<n-grid :cols="2"
+				:x-gap="18">
+				<n-form-item-grid-item :span="1"
+					label="用户名"
+					path="username">
 					<n-input v-model:value="form.username" />
 				</n-form-item-grid-item>
 
-				<n-form-item-grid-item :span="1" label="性别" path="sex">
+				<n-form-item-grid-item :span="1"
+					label="性别"
+					path="sex">
 					<n-radio-group v-model:value="form.sex">
 						<n-space>
 							<n-radio value="0">
@@ -156,11 +169,15 @@ async function onSubmit() {
 					</n-radio-group>
 				</n-form-item-grid-item>
 
-				<n-form-item-grid-item :span="1" label="联系方式" path="phone">
+				<n-form-item-grid-item :span="1"
+					label="联系方式"
+					path="phone">
 					<n-input v-model:value="form.phone" />
 				</n-form-item-grid-item>
 
-				<n-form-item-grid-item :span="1" label="邮箱" path="email">
+				<n-form-item-grid-item :span="1"
+					label="邮箱"
+					path="email">
 					<n-input v-model:value="form.email" />
 				</n-form-item-grid-item>
 
@@ -168,8 +185,11 @@ async function onSubmit() {
 					<n-select v-model:value="form.roles" multiple filterable label-field="name" value-field="value"
 						:options="options" />
 				</n-form-item-grid-item> -->
-				<n-form-item-grid-item :span="2" label="备注" path="remark">
-					<n-input v-model:value="form.remark" type="textarea" />
+				<n-form-item-grid-item :span="2"
+					label="备注"
+					path="remark">
+					<n-input v-model:value="form.remark"
+						type="textarea" />
 				</n-form-item-grid-item>
 			</n-grid>
 		</n-form>
@@ -178,7 +198,9 @@ async function onSubmit() {
 				<n-button @click="closeModal">
 					取消
 				</n-button>
-				<n-button type="primary" :loading="submitLoading" @click="onSubmit">
+				<n-button type="primary"
+					:loading="submitLoading"
+					@click="onSubmit">
 					提交
 				</n-button>
 			</n-space>

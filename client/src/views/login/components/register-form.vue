@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import type { FormInst } from 'naive-ui'
 import { useAuthStore } from '@/store'
-import { FormInst } from 'naive-ui';
 
 const emit = defineEmits(['update:modelValue'])
 const { t } = useI18n()
@@ -11,23 +11,23 @@ const rules = {
 	username: {
 		required: true,
 		trigger: 'blur',
-		message: t('login.accountRuleTip'),
+		message: t('login.accountRuleTip')
 	},
 	password: {
 		required: true,
 		trigger: 'blur',
-		message: t('login.passwordRuleTip'),
+		message: t('login.passwordRuleTip')
 	},
 	resetPassword: {
 		required: true,
 		trigger: 'blur',
-		message: t('login.checkPasswordRuleTip'),
-	},
+		message: t('login.checkPasswordRuleTip')
+	}
 }
 const form = ref({
 	username: '',
 	password: '',
-	resetPassword: '',
+	resetPassword: ''
 })
 
 const isLoading = ref(false)
@@ -73,8 +73,10 @@ function toLogin() {
 			</n-form-item>
 
 			<n-form-item path="password">
-				<n-input v-model:value="form.password" type="password" :placeholder="$t('login.passwordPlaceholder')" clearable
-					autocomplete="current-password" show-password-on="click">
+				<n-input
+					v-model:value="form.password" type="password" :placeholder="$t('login.passwordPlaceholder')" clearable
+					autocomplete="current-password" show-password-on="click"
+				>
 					<template #password-invisible-icon>
 						<icon-park-outline-preview-close-one />
 					</template>
@@ -85,8 +87,10 @@ function toLogin() {
 			</n-form-item>
 
 			<n-form-item path="resetPassword">
-				<n-input v-model:value="form.resetPassword" type="password" :placeholder="$t('login.checkPasswordPlaceholder')"
-					clearable autocomplete="current-password" show-password-on="click">
+				<n-input
+					v-model:value="form.resetPassword" type="password" :placeholder="$t('login.checkPasswordPlaceholder')"
+					clearable autocomplete="current-password" show-password-on="click"
+				>
 					<template #password-invisible-icon>
 						<icon-park-outline-preview-close-one />
 					</template>

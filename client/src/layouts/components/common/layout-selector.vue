@@ -8,11 +8,13 @@ const value = defineModel<LayoutMode>('value', { required: true })
 	<div class="flex-center gap-4">
 		<n-tooltip placement="bottom" trigger="hover">
 			<template #trigger>
-				<n-el :class="{
-					'outline outline-2': value === 'leftMenu',
-				}"
+				<n-el
+					:class="{
+						'outline outline-2': value === 'leftMenu',
+					}"
 					class="grid grid-cols-[20%_1fr] grid-rows-[20%_1fr] outline-[var(--primary-color)] hover:(outline outline-2) cursor-pointer"
-					@click="value = 'leftMenu'">
+					@click="value = 'leftMenu'"
+				>
 					<div class="bg-[var(--primary-color)] row-span-2" />
 					<div class="bg-[var(--primary-color-suppl)]" />
 					<div class="bg-[var(--divider-color)]" />
@@ -23,10 +25,12 @@ const value = defineModel<LayoutMode>('value', { required: true })
 
 		<n-tooltip placement="bottom" trigger="hover">
 			<template #trigger>
-				<n-el :class="{
-					'outline outline-2': value === 'topMenu',
-				}" class="grid grid-rows-[30%_1fr] outline-[var(--primary-color)] hover:(outline outline-2) cursor-pointer"
-					@click="value = 'topMenu'">
+				<n-el
+					:class="{
+						'outline outline-2': value === 'topMenu',
+					}" class="grid grid-rows-[30%_1fr] outline-[var(--primary-color)] hover:(outline outline-2) cursor-pointer"
+					@click="value = 'topMenu'"
+				>
 					<div class="bg-[var(--primary-color)]" />
 					<div class="bg-[var(--divider-color)]" />
 				</n-el>
@@ -36,11 +40,13 @@ const value = defineModel<LayoutMode>('value', { required: true })
 
 		<n-tooltip placement="bottom" trigger="hover">
 			<template #trigger>
-				<n-el :class="{
-					'outline outline-2': value === 'mixMenu',
-				}"
+				<n-el
+					:class="{
+						'outline outline-2': value === 'mixMenu',
+					}"
 					class="grid grid-cols-[20%_1fr] grid-rows-[15%_15%_1fr] outline-[var(--primary-color)] hover:(outline outline-2) cursor-pointer"
-					@click="value = 'mixMenu'">
+					@click="value = 'mixMenu'"
+				>
 					<div class="bg-[var(--primary-color)] row-span-3" />
 					<div class="bg-[var(--primary-color)]" />
 					<div class="bg-[var(--primary-color-suppl)]" />

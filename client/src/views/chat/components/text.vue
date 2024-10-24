@@ -1,10 +1,10 @@
 <script lang="ts" setup>
+import mdKatex from '@traptitech/markdown-it-katex'
+import { useClipboard } from '@vueuse/core'
+import hljs from 'highlight.js'
 import MarkdownIt from 'markdown-it'
 import mila from 'markdown-it-link-attributes'
-import mdKatex from '@traptitech/markdown-it-katex'
-import hljs from 'highlight.js'
 import 'highlight.js/styles/atom-one-dark.css'
-import { useClipboard } from '@vueuse/core'
 
 interface Props {
 	text?: string
@@ -12,8 +12,8 @@ interface Props {
 	type?: 'markdown' | 'text'
 }
 
-const { copy } = useClipboard({})
 const props = defineProps<Props>()
+const { copy } = useClipboard({})
 const textRef = ref<HTMLElement>()
 
 const mdi = new MarkdownIt({
@@ -26,7 +26,7 @@ const mdi = new MarkdownIt({
 			return highlightBlock(hljs.highlight(code, { language: lang }).value, lang)
 		}
 		return highlightBlock(hljs.highlightAuto(code).value, '')
-	},
+	}
 })
 
 mdi.use(mila, { attrs: { target: '_blank', rel: 'noopener' } })
@@ -91,9 +91,9 @@ onUnmounted(() => {
 
 <template>
 	<div ref="textRef" class="flex-1 w-auto max-w-full text-sm dark:prose-invert md:text-base">
-		<div v-if="props.type === 'markdown'" class="prose max-w-full" v-html="text"></div>
-		<div v-else v-text="text"></div>
-		<span v-if="loading" class="w-4px h-20px block animate-blink"></span>
+		<div v-if="props.type === 'markdown'" class="prose max-w-full" v-html="text" />
+		<div v-else v-text="text" />
+		<span v-if="loading" class="w-4px h-20px block animate-blink" />
 	</div>
 </template>
 

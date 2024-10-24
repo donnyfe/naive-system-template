@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import LayoutSelector from './layout-selector.vue'
-import { local } from '@/utils'
 import { useAppStore, useAuthStore } from '@/store'
+import { local } from '@/utils'
+import LayoutSelector from './layout-selector.vue'
 
 const appStore = useAppStore()
 
@@ -11,32 +11,32 @@ const transitionSelectorOptions = computed(() => {
 	return [
 		{
 			label: t('app.transitionNull'),
-			value: '',
+			value: ''
 		},
 		{
 			label: t('app.transitionFadeSlide'),
-			value: 'fade-slide',
+			value: 'fade-slide'
 		},
 		{
 			label: t('app.transitionFadeBottom'),
-			value: 'fade-bottom',
+			value: 'fade-bottom'
 		},
 		{
 			label: t('app.transitionFadeScale'),
-			value: 'fade-scale',
+			value: 'fade-scale'
 		},
 		{
 			label: t('app.transitionZoomFade'),
-			value: 'zoom-fade',
+			value: 'zoom-fade'
 		},
 		{
 			label: t('app.transitionZoomOut'),
-			value: 'zoom-out',
+			value: 'zoom-out'
 		},
 		{
 			label: t('app.transitionSoft'),
-			value: 'fade',
-		},
+			value: 'fade'
+		}
 	]
 })
 
@@ -56,7 +56,7 @@ const palette = [
 	'#706fd3',
 	'#4834d4',
 	'#130f40',
-	'#4b4b4b',
+	'#4b4b4b'
 ]
 
 function resetSetting() {
@@ -68,7 +68,7 @@ function resetSetting() {
 		onPositiveClick: () => {
 			appStore.resetAlltheme()
 			window.$message.success(t('app.resetSettingMeaasge'))
-		},
+		}
 	})
 }
 
@@ -95,13 +95,17 @@ function clearCache() {
 				</n-space>
 				<n-space align="center" justify="space-between">
 					{{ $t('app.themeColor') }}
-					<n-color-picker v-model:value="appStore.primaryColor" class="w-10em" :swatches="palette"
-						@update:value="appStore.setPrimaryColor" />
+					<n-color-picker
+						v-model:value="appStore.primaryColor" class="w-10em" :swatches="palette"
+						@update:value="appStore.setPrimaryColor"
+					/>
 				</n-space>
 				<n-space align="center" justify="space-between">
 					{{ $t('app.pageTransition') }}
-					<n-select v-model:value="appStore.transitionAnimation" class="w-10em" :options="transitionSelectorOptions"
-						@update:value="appStore.reloadPage" />
+					<n-select
+						v-model:value="appStore.transitionAnimation" class="w-10em" :options="transitionSelectorOptions"
+						@update:value="appStore.reloadPage"
+					/>
 				</n-space>
 
 				<n-divider>{{ $t('app.interfaceDisplay') }}</n-divider>

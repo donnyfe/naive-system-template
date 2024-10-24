@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import avatar from '@/assets/images/avatar.jpg'
 import { useAuthStore } from '@/store'
-import IconUser from '~icons/icon-park-outline/user'
 import IconLogout from '~icons/icon-park-outline/logout'
 import IconSetting from '~icons/icon-park-outline/setting'
-import avatar from '@/assets/images/avatar.jpg'
+import IconUser from '~icons/icon-park-outline/user'
 
 const { t } = useI18n()
 
@@ -15,26 +15,26 @@ const menus = computed(() => {
 		{
 			label: t('app.userCenter'),
 			key: 'userCenter',
-			icon: () => h(IconUser),
+			icon: () => h(IconUser)
 		},
 		{
 			type: 'divider',
-			key: 'd1',
+			key: 'd1'
 		},
 		{
 			label: t('app.systemInfo'),
 			key: 'system',
-			icon: () => h(IconSetting),
+			icon: () => h(IconSetting)
 		},
 		{
 			type: 'divider',
-			key: 'd1',
+			key: 'd1'
 		},
 		{
 			label: t('app.loginOut'),
 			key: 'loginOut',
-			icon: () => h(IconLogout),
-		},
+			icon: () => h(IconLogout)
+		}
 	]
 })
 
@@ -53,7 +53,7 @@ function handleSelect(key: string | number) {
 			negativeText: t('common.cancel'),
 			onPositiveClick: () => {
 				logout()
-			},
+			}
 		})
 	}
 }

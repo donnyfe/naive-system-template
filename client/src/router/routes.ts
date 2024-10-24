@@ -10,7 +10,7 @@ export const routes: RouteRecordRaw[] = [
 	{
 		path: '/login',
 		name: 'login',
-		component: () => import('@/views/login/index.vue'), // 注意这里要带上 文件后缀.vue
+		component: async () => import('@/views/login/index.vue'), // 注意这里要带上 文件后缀.vue
 		meta: {
 			title: '登录',
 			withoutTab: true
@@ -19,7 +19,7 @@ export const routes: RouteRecordRaw[] = [
 	{
 		path: '/403',
 		name: '403',
-		component: () => import('@/views/error/403/index.vue'),
+		component: async () => import('@/views/error/403/index.vue'),
 		meta: {
 			title: '用户无权限',
 			withoutTab: true
@@ -28,7 +28,7 @@ export const routes: RouteRecordRaw[] = [
 	{
 		path: '/404',
 		name: '404',
-		component: () => import('@/views/error/404/index.vue'),
+		component: async () => import('@/views/error/404/index.vue'),
 		meta: {
 			title: '找不到页面',
 			icon: 'icon-park-outline:ghost',
@@ -38,7 +38,7 @@ export const routes: RouteRecordRaw[] = [
 	{
 		path: '/500',
 		name: '500',
-		component: () => import('@/views/error/500/index.vue'),
+		component: async () => import('@/views/error/500/index.vue'),
 		meta: {
 			title: '服务器错误',
 			icon: 'icon-park-outline:close-wifi',
@@ -47,7 +47,7 @@ export const routes: RouteRecordRaw[] = [
 	},
 	{
 		path: '/:pathMatch(.*)*',
-		component: () => import('@/views/error/404/index.vue'),
+		component: async () => import('@/views/error/404/index.vue'),
 		name: '404',
 		meta: {
 			title: '找不到页面',

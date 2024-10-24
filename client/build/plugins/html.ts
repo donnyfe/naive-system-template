@@ -24,7 +24,7 @@ export function useHtmlPlugin() {
 		inject: {
 			data: {
 				title: 'Vue3Admin',
-				injectScript: `<script type="module" src="./inject.js"></script>`
+				injectScript: '<script type="module" src="./inject.js"></script>'
 			},
 			tags: [
 				{

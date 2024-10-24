@@ -1,6 +1,5 @@
 /// <reference path="../global.d.ts"/>
 
-
 interface MessageData {
 	id: number
 	type: 0 | 1 | 2

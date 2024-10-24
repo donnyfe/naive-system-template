@@ -1,16 +1,16 @@
 <script setup lang="tsx">
-import { NButton, NPopconfirm, NSpace, NTag, type DataTableColumns, type FormInst } from 'naive-ui'
+import type { UserData } from './types'
 import CopyText from '@/components/custom/copy-text.vue'
-import EditUserModal from './components/edit-user-modal.vue'
 import { SEX } from '@/constants'
 import { useBoolean } from '@/hooks'
-import { removeUser, queryUserList } from './api'
-import { UserData } from './types'
+import { type DataTableColumns, type FormInst, NButton, NPopconfirm, NSpace, NTag } from 'naive-ui'
+import { queryUserList, removeUser } from './api'
+import EditUserModal from './components/edit-user-modal.vue'
 
 const { bool: loading, setTrue: startLoading, setFalse: endLoading } = useBoolean(false)
 
 const formModel = {
-	username: '',
+	username: ''
 }
 const model = ref({ ...formModel })
 
@@ -34,7 +34,7 @@ const columns: DataTableColumns<UserData> = [
 	{
 		key: 'username',
 		title: '姓名',
-		align: 'center',
+		align: 'center'
 	},
 	{
 		key: 'sex',
@@ -43,7 +43,7 @@ const columns: DataTableColumns<UserData> = [
 		render: (row) => {
 			const tagType = {
 				0: 'primary',
-				1: 'success',
+				1: 'success'
 			} as const
 			if (row.sex) {
 				return (
@@ -52,7 +52,7 @@ const columns: DataTableColumns<UserData> = [
 					</NTag>
 				)
 			}
-		},
+		}
 	},
 	{
 		key: 'phone',
@@ -62,7 +62,7 @@ const columns: DataTableColumns<UserData> = [
 			return (
 				<CopyText value={row.phone} />
 			)
-		},
+		}
 	},
 	{
 		key: 'email',
@@ -72,7 +72,7 @@ const columns: DataTableColumns<UserData> = [
 			return (
 				<CopyText value={row.email} />
 			)
-		},
+		}
 	},
 	{
 		key: 'actions',
@@ -90,13 +90,13 @@ const columns: DataTableColumns<UserData> = [
 					<NPopconfirm onPositiveClick={() => delteteUser(row.id!)}>
 						{{
 							default: () => '确认删除',
-							trigger: () => <NButton size="small" type="error">删除</NButton>,
+							trigger: () => <NButton size="small" type="error">删除</NButton>
 						}}
 					</NPopconfirm>
 				</NSpace>
 			)
-		},
-	},
+		}
+	}
 ]
 
 const total: Ref<number> = ref(0)
@@ -107,7 +107,7 @@ async function queryList() {
 	const params = {
 		...toRaw(model.value),
 		pageNumber: 1,
-		pageSize: 10,
+		pageSize: 10
 	}
 	try {
 		const { data } = await queryUserList(params)

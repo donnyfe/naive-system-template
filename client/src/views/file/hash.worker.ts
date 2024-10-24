@@ -1,7 +1,7 @@
-import SparkMD5 from 'spark-md5'
 import { getArrayBufferFromBlobs } from '@/utils'
+import SparkMD5 from 'spark-md5'
 
-let chunks: Blob[] = []
+const chunks: Blob[] = []
 
 self.onmessage = async (e) => {
 	const { chunk, chunkTotal } = e.data

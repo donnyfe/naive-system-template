@@ -1,25 +1,24 @@
 <script setup lang="ts">
+import type { IFormType } from './types'
+import { useAppStore } from '@/store'
 import LoginForm from './components/login-form.vue'
 import RegisterForm from './components/register-form.vue'
 import ResetPasswordForm from './components/reset-password-form.vue'
-import { IFormType } from './types';
-import { useAppStore } from '@/store';
 
 const { theme } = useAppStore()
-const primaryColor = theme?.common?.primaryColor;
-
+const primaryColor = theme?.common?.primaryColor
 
 const formType: Ref<IFormType> = ref('loginForm')
 
 const formComponets = {
 	loginForm: LoginForm,
 	registerForm: RegisterForm,
-	resetPasswordForm: ResetPasswordForm,
+	resetPasswordForm: ResetPasswordForm
 }
 </script>
 
 <template>
-	<n-el ref="loginWrapper" class="wh-full flex-center dark:bg-dark" :style="{ 'background': primaryColor }">
+	<n-el ref="loginWrapper" class="wh-full flex-center dark:bg-dark" :style="{ background: primaryColor }">
 		<div class="fixed top-40px right-40px text-lg flex flex-start">
 			<DarkModeSwitch />
 			<LangsSwitch />

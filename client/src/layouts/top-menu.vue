@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { useAppStore, useRouteStore } from '@/store'
 import {
 	BackTop,
 	FullScreen,
@@ -8,21 +9,19 @@ import {
 	Search,
 	Setting,
 	TabBar,
-	UserCenter,
+	UserCenter
 } from './components'
-import { useAppStore, useRouteStore } from '@/store'
 
 const routeStore = useRouteStore()
 const appStore = useAppStore()
-
 </script>
 
 <template>
 	<n-layout class="wh-full" embedded>
-
-		<n-layout class="h-full " content-style="display: flex;flex-direction: column;min-height:100%;" embedded
-			:native-scrollbar="false">
-
+		<n-layout
+			class="h-full " content-style="display: flex;flex-direction: column;min-height:100%;" embedded
+			:native-scrollbar="false"
+		>
 			<div class="flex flex-col h-100vh">
 				<n-layout-header bordered>
 					<div class="h-60px flex-y-center justify-between">
@@ -39,7 +38,7 @@ const appStore = useAppStore()
 						</div>
 					</div>
 					<!-- 页签栏 -->
-					<TabBar ref="tabRef" v-if="appStore.showTabs" class="h-45px" />
+					<TabBar v-if="appStore.showTabs" ref="tabRef" class="h-45px" />
 				</n-layout-header>
 
 				<div class="grow-1 overflow-hidden p-16px bg-white dark:bg-dark">
@@ -54,7 +53,7 @@ const appStore = useAppStore()
 					</div>
 				</div>
 
-				<n-layout-footer class="h-40px flex-center" v-if="appStore.showFooter" bordered>
+				<n-layout-footer v-if="appStore.showFooter" class="h-40px flex-center" bordered>
 					{{ appStore.footerText }}
 				</n-layout-footer>
 			</div>

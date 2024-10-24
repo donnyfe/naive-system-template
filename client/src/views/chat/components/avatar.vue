@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import avatar from '@/assets/images/avatar.jpg'
 import aiAvatar from '@/assets/images/ai_avatar.png'
+import avatar from '@/assets/images/avatar.jpg'
 
 interface Props {
 	visible: boolean
@@ -9,7 +9,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
 	visible: true,
-	type: 'user',
+	type: 'user'
 })
 
 const avatarImg = computed(() => {
@@ -18,5 +18,5 @@ const avatarImg = computed(() => {
 </script>
 
 <template>
-	<n-avatar class="rounded-50" v-show="props.visible" :src="avatarImg" />
+	<n-avatar v-show="props.visible" class="rounded-50" :src="avatarImg" />
 </template>

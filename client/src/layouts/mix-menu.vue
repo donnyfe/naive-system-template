@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { MenuInst, MenuOption } from 'naive-ui'
+import { useAppStore, useRouteStore } from '@/store'
 import {
 	BackTop,
 	CollapaseButton,
@@ -9,9 +10,8 @@ import {
 	Search,
 	Setting,
 	TabBar,
-	UserCenter,
+	UserCenter
 } from './components'
-import { useAppStore, useRouteStore } from '@/store'
 
 const routeStore = useRouteStore()
 const appStore = useAppStore()
@@ -25,12 +25,11 @@ watch(
 	() => {
 		menuInstRef.value?.showOption(routeStore.activeMenu as string)
 	},
-	{ immediate: true },
+	{ immediate: true }
 )
 
 const topMenu = ref<MenuOption[]>([])
 const activeTopMenu = ref<string>('')
-
 
 function handleTopMenu() {
 	const menus = routeStore.menus as any
@@ -42,13 +41,11 @@ function handleTopMenu() {
 }
 
 onMounted(() => {
-
 	handleTopMenu()
 
 	// 根据当前页面获取选中菜单和对应侧边菜单
 	const currentMenuKey = pageRoute.matched[1].path
 	updateTopMenu(currentMenuKey)
-
 })
 
 const sideMenu = ref<MenuOption[]>([])
@@ -69,24 +66,31 @@ function updateTopMenu(key: string) {
 <template>
 	<n-layout has-sider class="wh-full" embedded>
 		<!-- 侧边栏 -->
-		<n-layout-sider bordered :collapsed="appStore.collapsed" collapse-mode="width" :collapsed-width="64" :width="240"
-			content-style="display: flex;flex-direction: column;min-height:100%;">
+		<n-layout-sider
+			bordered :collapsed="appStore.collapsed" collapse-mode="width" :collapsed-width="64" :width="240"
+			content-style="display: flex;flex-direction: column;min-height:100%;"
+		>
 			<Logo v-if="appStore.showLogo" />
 			<n-scrollbar class="flex-1">
-				<n-menu ref="menuInstRef" :collapsed="appStore.collapsed" :indent="20" :collapsed-width="64" :options="sideMenu"
-					:value="routeStore.activeMenu" />
+				<n-menu
+					ref="menuInstRef" :collapsed="appStore.collapsed" :indent="20" :collapsed-width="64" :options="sideMenu"
+					:value="routeStore.activeMenu"
+				/>
 			</n-scrollbar>
 		</n-layout-sider>
 
-		<n-layout class="h-full" content-style="display: flex;flex-direction: column;min-height:100%;" embedded
-			:native-scrollbar="false">
-
+		<n-layout
+			class="h-full" content-style="display: flex;flex-direction: column;min-height:100%;" embedded
+			:native-scrollbar="false"
+		>
 			<div class="flex flex-col h-100vh">
 				<n-layout-header bordered>
 					<div class="h-60px flex-y-center justify-between">
 						<CollapaseButton />
-						<n-menu ref="menuInstRef" mode="horizontal" responsive :options="topMenu" :value="activeTopMenu"
-							@update:value="updateTopMenu" />
+						<n-menu
+							ref="menuInstRef" mode="horizontal" responsive :options="topMenu" :value="activeTopMenu"
+							@update:value="updateTopMenu"
+						/>
 						<div class="flex-y-center gap-1 h-full p-x-xl">
 							<Search />
 							<Notices />
@@ -97,7 +101,7 @@ function updateTopMenu(key: string) {
 							<UserCenter />
 						</div>
 					</div>
-					<TabBar ref="tabRef" v-if="appStore.showTabs" class="h-45px" />
+					<TabBar v-if="appStore.showTabs" ref="tabRef" class="h-45px" />
 				</n-layout-header>
 
 				<div class="grow-1 overflow-hidden p-16px bg-white dark:bg-dark">
@@ -112,7 +116,7 @@ function updateTopMenu(key: string) {
 					</div>
 				</div>
 
-				<n-layout-footer class="h-40px flex-center" v-if="appStore.showFooter" bordered>
+				<n-layout-footer v-if="appStore.showFooter" class="h-40px flex-center" bordered>
 					{{ appStore.footerText }}
 				</n-layout-footer>
 			</div>

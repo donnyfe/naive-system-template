@@ -4,10 +4,10 @@ import type {
 	CustomParamsSerializer,
 	InternalAxiosRequestConfig
 } from 'axios'
-import axios from 'axios'
-import { stringify } from 'qs'
 import { $t } from '@/utils'
 import { local } from '@/utils/storage'
+import axios from 'axios'
+import { stringify } from 'qs'
 
 export interface Result<T> {
 	code: number
@@ -56,7 +56,7 @@ class Http {
 			timeout: 60 * 1000,
 			// 请求头
 			headers: {
-				Accept: 'application/json, text/plain, */*',
+				'Accept': 'application/json, text/plain, */*',
 				'Content-Type': 'application/json',
 				'X-Requested-With': 'XMLHttpRequest'
 			},
@@ -83,7 +83,7 @@ class Http {
 				config = this.resolveRequestData(config)
 				return config
 			},
-			(error: AxiosError) => {
+			async (error: AxiosError) => {
 				return Promise.reject(error)
 			}
 		)
@@ -92,7 +92,7 @@ class Http {
 	// 响应拦截
 	private httpInterceptorsResponse(): void {
 		this.axiosInstance.interceptors.response.use(
-			(response) => {
+			async (response) => {
 				const { data, status } = response
 				if (status !== 200) {
 					return Promise.reject(data)
@@ -161,23 +161,23 @@ class Http {
 		window.$message.error(errMsg)
 	}
 
-	get<T>(url: string, params?: object, config?: InternalAxiosRequestConfig): Promise<T> {
+	async get<T>(url: string, params?: object, config?: InternalAxiosRequestConfig): Promise<T> {
 		return this.axiosInstance.get(url, { params, ...config })
 	}
 
-	post<T>(url: string, data?: object, config?: InternalAxiosRequestConfig): Promise<T> {
+	async post<T>(url: string, data?: object, config?: InternalAxiosRequestConfig): Promise<T> {
 		return this.axiosInstance.post(url, data, config)
 	}
 
-	put<T>(url: string, params?: object, config?: InternalAxiosRequestConfig): Promise<T> {
+	async put<T>(url: string, params?: object, config?: InternalAxiosRequestConfig): Promise<T> {
 		return this.axiosInstance.put(url, params, config)
 	}
 
-	patch<T>(url: string, params?: object): Promise<T> {
+	async patch<T>(url: string, params?: object): Promise<T> {
 		return this.axiosInstance.patch(url, params)
 	}
 
-	delete<T>(url: string, params?: object): Promise<T> {
+	async delete<T>(url: string, params?: object): Promise<T> {
 		return this.axiosInstance.delete(url, { params })
 	}
 }
@@ -193,8 +193,8 @@ export async function httpStream(url: string, data: any) {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
-			Accept: 'text/event-stream',
-			Authorization: `Bearer ${token}`
+			'Accept': 'text/event-stream',
+			'Authorization': `Bearer ${token}`
 		},
 		body: JSON.stringify(data)
 	})
@@ -213,7 +213,7 @@ export async function httpStream(url: string, data: any) {
  */
 export const promisePool = async function (fns: Function[], limit: number) {
 	let index = 0
-	let results: Promise<any>[] = []
+	const results: Promise<any>[] = []
 
 	const requestList = [...new Array(limit)].map(async () => {
 		while (index < fns.length) {
@@ -221,7 +221,8 @@ export const promisePool = async function (fns: Function[], limit: number) {
 			index++
 			try {
 				results[currentIndex] = await fns[currentIndex]()
-			} catch (error: any) {
+			}
+			catch (error: any) {
 				throw new Error(error)
 			}
 		}
@@ -236,11 +237,11 @@ export const promisePool = async function (fns: Function[], limit: number) {
  * @param fns
  * @returns
  */
-export const inOrderPromise = function (fns: Function[]) {
+export const inOrderPromise = async function (fns: Function[]) {
 	const res: any[] = []
 	return new Promise((resolve) => {
 		fns
-			.reduce((pre, cur) => {
+			.reduce(async (pre, cur) => {
 				return pre
 					.then(() => cur())
 					.then((data) => {
