@@ -1,32 +1,38 @@
 # 简介
 
-本项目使用 Vue3 + Vite5 + TypeScript + NaiveUI + Unocss搭建。
+本项目是一个全栈后台管理应用，结合了多种前端和后端技术，旨在提供一个综合性实践学习的平台，用于对 Web 技术进行持续性的探索学习及应用。
 
-## 特性
+## 技术栈
 
-- 使用 Vue3.4 开发
-- 使用 Vite5 作为项目开发、打包工具（配置 gzip 代码压缩、 图像压缩、cdn、打包分析……）
-- 使用 VueRouter 配置动态路由权限拦截、路由懒加载，支持页面按钮权限控制
-- 使用 KeepAlive 对页面进行缓存
-- 使用 UnoCSS 实现原子化CSS样式编写
-- 支持多主题布局、暗黑模式、i18n 国际化
-- 支持 TypeScript
+- 前端框架: 使用 Vue3.5 开发, 支持 TypeScript
+- UI 组件库: 使用 NaiveUI 作为UI组件库，使用UnoCSS实现原子化CSS样式，支持自定义主题和暗黑模式
+- 工具工具: 使用 Vite5 作为项目开发和打包工具，配置了 gzip 代码压缩、 图像压缩、CDN、打包分析等功能
+- 路由管理: 使用 VueRouter 配置动态路由权限拦截、路由懒加载，支持页面按钮权限控制
+- 页面缓存: 使用 KeepAlive 技术实现
+- 状态管理: 使用 Pinia 作为状态管理库，使用 Pinia-plugin-persistedstate 插件持久化 Pinia 状态
+- 国际化: 使用 Vue-i18n 插件实现。
 
-## 安装 & 运行
+## 功能特性
 
-本地开发环境建议:
+- 支持自定义布局、自定义主题、暗黑模式切换
+- 实现了用户登录、注册及用户管理模块
+- 实现了Chat聊天助手功能
+- 实现了图片对象检测功能
+- 支持大文件上传技术，支持分片上传, 并使用Web worker 计算文件内容 MD5
+
+## 安装
+
+```sh
+pnpm i
+```
+
+本开发环境建议:
 
 - pnpm > 8.x
 - Node.js > 20.x
 
+## 运行
+
 ```sh
-# install dependencies
-pnpm i
-
-# Run
 pnpm dev
-
-# Build product
-pnpm build
-
 ```
