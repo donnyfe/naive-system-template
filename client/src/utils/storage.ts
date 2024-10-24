@@ -59,7 +59,7 @@ function createSessionStorage<T extends SessionStorageData>() {
     window.sessionStorage.setItem(`${STORAGE_PREFIX}${String(key)}`, json)
   }
   function get<K extends keyof T>(key: K) {
-    const json = sessionStorage.getItem(`${STORAGE_PREFIX}${String(key)}`)
+    const json = window.sessionStorage.getItem(`${STORAGE_PREFIX}${String(key)}`)
     if (!json)
       return null
 
