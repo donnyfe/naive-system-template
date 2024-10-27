@@ -18,6 +18,7 @@ import type {
 	ToolboxComponentOption,
 	TooltipComponentOption
 } from 'echarts/components'
+
 import { useAppStore } from '@/store'
 
 import {

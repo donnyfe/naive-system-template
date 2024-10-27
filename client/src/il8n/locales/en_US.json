@@ -120,6 +120,7 @@
 		"signUp": "Sign up",
 		"noAccountText": "Don't have an account?",
 		"accountPlaceholder": "Enter the account",
+		"captcha": "Captcha",
 		"captchaPlaceholder": "Enter the captcha",
 		"checkPasswordPlaceholder": "Please enter password again",
 		"checkPasswordRuleTip": "Please confirm password again",

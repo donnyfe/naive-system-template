@@ -1,4 +1,4 @@
-import http, { type Result } from '@/utils/request'
+import http, { type Result } from '@/http/request'
 import qs from 'qs'
 
 /** 获取文件上传任务Id */

@@ -113,6 +113,7 @@
 		"signInTitle": "登录",
 		"accountPlaceholder": "输入账号",
 		"passwordPlaceholder": "输入密码",
+		"captcha": "验证码",
 		"captchaPlaceholder": "输入验证码",
 		"accountRuleTip": "请输入账户",
 		"passwordRuleTip": "请输入密码",

@@ -1,5 +1,5 @@
 import type { Chat, ChatParams, Message, Prompt } from './types'
-import http, { httpStream, type Result } from '@/utils/request'
+import http, { httpStream, type Result } from '@/http/request'
 
 /**
  * Conversation对话相关接口

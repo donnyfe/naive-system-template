@@ -1,8 +1,6 @@
 export * from './array'
 export * from './file'
-export * from './i18n'
 export * from './icon'
-export * from './request'
 export * from './storage'
 
 export async function copyToClip(text: string) {

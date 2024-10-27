@@ -1,6 +1,6 @@
-import type { Result } from '@/utils/request'
+import type { Result } from '@/http/request'
 import type { UserData, UserParams } from './types'
-import http from '@/utils/request'
+import http from '@/http/request'
 
 // 获取用户列表
 export const queryUserList = async (params: UserParams) =>

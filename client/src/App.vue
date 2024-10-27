@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { naiveI18nOptions } from '@/utils'
+import { naiveI18nOptions } from '@/il8n'
 import { darkTheme } from 'naive-ui'
 import { useAppStore } from './store'
 

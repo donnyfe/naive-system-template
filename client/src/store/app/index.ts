@@ -1,5 +1,6 @@
 import type { GlobalThemeOverrides } from 'naive-ui'
-import { local, setLocale } from '@/utils'
+import { setLocale } from '@/il8n'
+import { local } from '@/utils'
 import { colord } from 'colord'
 import { set } from 'radash'
 import themeConfig from './theme.json'

@@ -1,4 +1,4 @@
-import type { Result } from '@/utils/request'
+import type { Result } from '@/http/request'
 import type { LoginData, LoginParam } from '@/views/login/types'
 import { router } from '@/router'
 import { local } from '@/utils'
@@ -37,8 +37,7 @@ export const useAuthStore = defineStore('auth-store', {
 		/* 用户登录 */
 		async login(params: LoginParam) {
 			const { success, data } = await doLogin(params)
-			if (!success)
-				return
+			if (!success) return
 
 			// 处理登录信息
 			await this.handleLoginInfo(data)
@@ -51,8 +50,7 @@ export const useAuthStore = defineStore('auth-store', {
 			this.token = loginData.accessToken
 
 			const { success, data } = await queryUserInfo()
-			if (!success)
-				return
+			if (!success) return
 
 			this.userInfo = data
 			local.set('userInfo', data)

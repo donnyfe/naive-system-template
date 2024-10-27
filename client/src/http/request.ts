@@ -4,7 +4,7 @@ import type {
 	CustomParamsSerializer,
 	InternalAxiosRequestConfig
 } from 'axios'
-import { $t } from '@/utils'
+import { $t } from '@/il8n'
 import { local } from '@/utils/storage'
 import axios from 'axios'
 import { stringify } from 'qs'
@@ -56,7 +56,7 @@ class Http {
 			timeout: 60 * 1000,
 			// 请求头
 			headers: {
-				'Accept': 'application/json, text/plain, */*',
+				Accept: 'application/json, text/plain, */*',
 				'Content-Type': 'application/json',
 				'X-Requested-With': 'XMLHttpRequest'
 			},
@@ -193,8 +193,8 @@ export async function httpStream(url: string, data: any) {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
-			'Accept': 'text/event-stream',
-			'Authorization': `Bearer ${token}`
+			Accept: 'text/event-stream',
+			Authorization: `Bearer ${token}`
 		},
 		body: JSON.stringify(data)
 	})
@@ -221,8 +221,7 @@ export const promisePool = async function (fns: Function[], limit: number) {
 			index++
 			try {
 				results[currentIndex] = await fns[currentIndex]()
-			}
-			catch (error: any) {
+			} catch (error: any) {
 				throw new Error(error)
 			}
 		}
