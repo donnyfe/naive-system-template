@@ -37,5 +37,6 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 .env
-deploy.js
+.tmp
+deploy.mjs
 dist.tar.gz
