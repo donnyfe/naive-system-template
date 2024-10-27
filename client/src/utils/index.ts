@@ -2,6 +2,7 @@ export * from './array'
 export * from './file'
 export * from './icon'
 export * from './storage'
+export * from './http'
 
 export async function copyToClip(text: string) {
 	return new Promise((resolve, reject) => {

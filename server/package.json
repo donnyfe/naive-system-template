@@ -4,7 +4,6 @@
   "description": "",
   "author": "",
   "private": true,
-  "type": "module",
   "license": "MIT",
   "keywords": [
     "nest",
@@ -20,11 +19,12 @@
     "Redis"
   ],
   "scripts": {
-    "build": "nest build && ncc build ./dist/main.js -o ncc-dist && node deploy.js",
     "start": "nest start",
     "start:dev": "cross-env NODE_ENV=development nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "cross-env NODE_ENV=production node dist/main",
+    "build": "nest build && ncc build ./dist/main.js -o ncc-dist",
+    "deploy": "npm run build && node deploy.js",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\""
   },

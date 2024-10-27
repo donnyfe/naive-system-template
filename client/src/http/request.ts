@@ -205,48 +205,4 @@ export async function httpStream(url: string, data: any) {
 	return res
 }
 
-/**
- * Promise并发控制
- * @param fns
- * @param limit
- * @returns
- */
-export const promisePool = async function (fns: Function[], limit: number) {
-	let index = 0
-	const results: Promise<any>[] = []
 
-	const requestList = [...new Array(limit)].map(async () => {
-		while (index < fns.length) {
-			const currentIndex = index
-			index++
-			try {
-				results[currentIndex] = await fns[currentIndex]()
-			} catch (error: any) {
-				throw new Error(error)
-			}
-		}
-	})
-	await Promise.all(requestList)
-
-	return results
-}
-
-/**
- * Promise串行执行
- * @param fns
- * @returns
- */
-export const inOrderPromise = async function (fns: Function[]) {
-	const res: any[] = []
-	return new Promise((resolve) => {
-		fns
-			.reduce(async (pre, cur) => {
-				return pre
-					.then(() => cur())
-					.then((data) => {
-						res.push(data)
-					})
-			}, Promise.resolve())
-			.then(() => resolve(res))
-	})
-}

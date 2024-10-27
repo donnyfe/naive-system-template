@@ -50,7 +50,6 @@ function createLocalStorage<T extends LocalStorageData>() {
 /**
  * sessionStorage部分操作
  */
-
 function createSessionStorage<T extends SessionStorageData>() {
 	function set<K extends keyof T>(key: K, value: T[K]) {
 		const json = JSON.stringify(value)
@@ -66,9 +65,11 @@ function createSessionStorage<T extends SessionStorageData>() {
 
 		return null
 	}
+
 	function remove(key: keyof T) {
 		window.sessionStorage.removeItem(`${STORAGE_PREFIX}${String(key)}`)
 	}
+
 	function clear() {
 		window.sessionStorage.clear()
 	}

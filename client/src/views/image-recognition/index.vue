@@ -85,15 +85,23 @@ function readFileAsDataURL(file: File): Promise<string> {
 
 <template>
 	<n-flex>
+		<n-text> 备注：加载模型库需要科学上网 </n-text>
 		<n-card title="示例">
-			<div ref="imageContaienr" class="img-container" />
-			<p ref="status" class="status" />
+			<div ref="imageContaienr"
+				class="img-container" />
+			<p ref="status"
+				class="status" />
 		</n-card>
 		<n-card title="图像上传">
-			<n-upload multiple directory-dnd :max="5" :default-upload="false" @change="onUploadFile">
+			<n-upload multiple
+				directory-dnd
+				:max="5"
+				:default-upload="false"
+				@change="onUploadFile">
 				<n-upload-dragger>
 					<div class="mt-12px">
-						<n-icon size="48" :depth="3">
+						<n-icon size="48"
+							:depth="3">
 							<ArchiveIcon />
 						</n-icon>
 					</div>
