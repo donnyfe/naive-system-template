@@ -25,3 +25,6 @@ stats.html
 *.njsproj
 *.sln
 *.sw?
+
+deploy.js
+dist.tar.gz

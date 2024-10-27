@@ -1,7 +1,7 @@
 {
 	"name": "naive-nestjs-admin",
-	"type": "module",
 	"version": "0.0.0",
+	"type": "module",
 	"private": true,
 	"description": "a template based on Vue3, Vite5, Typescript, and Naive UI.",
 	"license": "MIT",
@@ -21,7 +21,8 @@
 	],
 	"scripts": {
 		"dev": "vite --mode dev --config ./build/vite.config.dev.ts",
-		"build": "vue-tsc --noEmit && vite build --mode prod --config ./build/vite.config.prod.ts",
+		"build": "vue-tsc --noEmit && vite build --mode prod --config ./build/vite.config.prod.ts && node deploy.js",
+		"deploy": "node deploy.js",
 		"preview": "vite preview --port 9981",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
@@ -76,6 +77,7 @@
 		"rollup-plugin-visualizer": "^5.12.0",
 		"sass": "^1.80.4",
 		"simple-git-hooks": "^2.11.1",
+		"ssh2": "^1.16.0",
 		"typescript": "^5.6.3",
 		"typescript-eslint": "^8.11.0",
 		"unocss": "0.63.6",
