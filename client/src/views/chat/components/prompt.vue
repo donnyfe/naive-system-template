@@ -100,11 +100,15 @@ function handleDelete(promptId: string, event?: MouseEvent) {
 			<div class="px-4">
 				<n-form ref="promptFormRef" label-width="auto" :model="promptFormData" :rules="promptRules">
 					<n-form-item path="title" :label="$t('common.title')">
-						<n-input v-model:value="promptFormData.title" :placeholder="$t('common.inputPlaceholder')" />
+						<n-input
+							v-model:value="promptFormData.title"
+							:placeholder="$t('common.inputPlaceholder')"
+						/>
 					</n-form-item>
 					<n-form-item path="content" :label="$t('common.content')">
 						<n-input
-							v-model:value="promptFormData.content" type="textarea"
+							v-model:value="promptFormData.content"
+							type="textarea"
 							:placeholder="$t('common.inputPlaceholder')"
 						/>
 					</n-form-item>
@@ -124,12 +128,11 @@ function handleDelete(promptId: string, event?: MouseEvent) {
 			<n-scrollbar class="h-600px">
 				<div
 					v-for="(item, index) of promptList"
-					:key="index" class="mb-10px flex justify-between rounded-lg cursor-pointer border border-gray-200"
+					:key="index"
+					class="mb-10px flex justify-between rounded-lg cursor-pointer border border-gray-200"
 				>
 					<div class="w-85% overflow-hidden" @click="handleSelect(item)">
-						<span class="prompt-tag px-2 py-1 block">
-							{{ item.title }}：
-						</span>
+						<span class="prompt-tag px-2 py-1 block"> {{ item.title }}： </span>
 						<p class="ellipsis px-10px py-4px">
 							{{ item.content }}
 						</p>
@@ -143,7 +146,10 @@ function handleDelete(promptId: string, event?: MouseEvent) {
 							</template>
 						</n-button>
 
-						<n-popconfirm placement="top" @positive-click="handleDelete(item.promptId as string, $event)">
+						<n-popconfirm
+							placement="top"
+							@positive-click="handleDelete(item.promptId as string, $event)"
+						>
 							<template #trigger>
 								<n-button text>
 									<template #icon>

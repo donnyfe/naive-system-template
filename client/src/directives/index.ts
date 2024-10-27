@@ -5,5 +5,5 @@ const modules = import.meta.glob<{ install: (app: App) => void }>('./modules/*.t
 })
 
 export function setupDirectives(app: App) {
-	Object.values(modules).map(i => app.use(i))
+	Object.values(modules).map((i) => app.use(i))
 }

@@ -30,8 +30,7 @@ export const useRouteStore = defineStore('route-store', {
 			this.$reset()
 		},
 		resetRoutes() {
-			if (router.hasRoute('appRoot'))
-				router.removeRoute('appRoot')
+			if (router.hasRoute('appRoot')) router.removeRoute('appRoot')
 		},
 		// set the currently highlighted menu key
 		setActiveMenu(key: string) {
@@ -53,12 +52,10 @@ export const useRouteStore = defineStore('route-store', {
 				const { data } = await queryUserRoutes({
 					id: userInfo.id
 				})
-				if (!data)
-					return
+				if (!data) return
 
 				return data
-			}
-			else {
+			} else {
 				// 静态路由
 				this.rowRoutes = staticRoutes
 				return staticRoutes

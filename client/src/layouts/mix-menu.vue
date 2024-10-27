@@ -67,20 +67,30 @@ function updateTopMenu(key: string) {
 	<n-layout has-sider class="wh-full" embedded>
 		<!-- 侧边栏 -->
 		<n-layout-sider
-			bordered :collapsed="appStore.collapsed" collapse-mode="width" :collapsed-width="64" :width="240"
+			bordered
+			:collapsed="appStore.collapsed"
+			collapse-mode="width"
+			:collapsed-width="64"
+			:width="240"
 			content-style="display: flex;flex-direction: column;min-height:100%;"
 		>
 			<Logo v-if="appStore.showLogo" />
 			<n-scrollbar class="flex-1">
 				<n-menu
-					ref="menuInstRef" :collapsed="appStore.collapsed" :indent="20" :collapsed-width="64" :options="sideMenu"
+					ref="menuInstRef"
+					:collapsed="appStore.collapsed"
+					:indent="20"
+					:collapsed-width="64"
+					:options="sideMenu"
 					:value="routeStore.activeMenu"
 				/>
 			</n-scrollbar>
 		</n-layout-sider>
 
 		<n-layout
-			class="h-full" content-style="display: flex;flex-direction: column;min-height:100%;" embedded
+			class="h-full"
+			content-style="display: flex;flex-direction: column;min-height:100%;"
+			embedded
 			:native-scrollbar="false"
 		>
 			<div class="flex flex-col h-100vh">
@@ -88,7 +98,11 @@ function updateTopMenu(key: string) {
 					<div class="h-60px flex-y-center justify-between">
 						<CollapaseButton />
 						<n-menu
-							ref="menuInstRef" mode="horizontal" responsive :options="topMenu" :value="activeTopMenu"
+							ref="menuInstRef"
+							mode="horizontal"
+							responsive
+							:options="topMenu"
+							:value="activeTopMenu"
 							@update:value="updateTopMenu"
 						/>
 						<div class="flex-y-center gap-1 h-full p-x-xl">

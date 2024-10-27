@@ -21,8 +21,7 @@ export function setupRouterGuard(router: Router) {
 		// 判断有无TOKEN,登录鉴权
 		const isLogin = Boolean(local.get('accessToken'))
 		if (!isLogin) {
-			if (to.name === 'login')
-				next()
+			if (to.name === 'login') next()
 
 			if (to.name !== 'login') {
 				const redirect = to.name === '404' ? undefined : to.fullPath

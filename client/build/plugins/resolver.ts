@@ -19,13 +19,7 @@ export function useAutoImportPlugin() {
 			'@vueuse/core',
 			'vue-i18n',
 			{
-				'naive-ui': [
-					'useDialog',
-					'useMessage',
-					'useNotification',
-					'useLoadingBar',
-					'useModal'
-				]
+				'naive-ui': ['useDialog', 'useMessage', 'useNotification', 'useLoadingBar', 'useModal']
 			}
 		],
 		include: [/\.[tj]sx?$/, /\.vue$/, /\.vue\?vue/, /\.md$/],

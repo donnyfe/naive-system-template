@@ -55,7 +55,7 @@ const useLibs = ['vue', 'vue-router', 'vue-i18n', 'pinia', 'axios', 'dayjs', 'ec
 /**
  * 平台采用国内cdn：https://www.bootcdn.cn，也可以选择 https://unpkg.com 或 https://www.jsdelivr.com
  */
-const modules = libs.filter(item => useLibs.includes(item.name))
+const modules = libs.filter((item) => useLibs.includes(item.name))
 
 export function useCdnPlugin() {
 	return importToCDN({

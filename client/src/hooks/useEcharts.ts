@@ -90,8 +90,7 @@ export function useEcharts(el: Ref<HTMLElement | null>, chartOptions: Ref<ECOpti
 	}
 
 	function update(updateOptions: ECOption) {
-		if (isRendered.value)
-			chart!.setOption({ ...updateOptions, backgroundColor: 'transparent' })
+		if (isRendered.value) chart!.setOption({ ...updateOptions, backgroundColor: 'transparent' })
 	}
 
 	function destroy() {
@@ -100,8 +99,7 @@ export function useEcharts(el: Ref<HTMLElement | null>, chartOptions: Ref<ECOpti
 	}
 
 	watch([width, height], async ([newWidth, newHeight]) => {
-		if (isRendered.value && newWidth && newHeight)
-			chart?.resize()
+		if (isRendered.value && newWidth && newHeight) chart?.resize()
 	})
 
 	watch(chartOptions, (newValue) => {

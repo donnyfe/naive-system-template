@@ -96,14 +96,18 @@ function clearCache() {
 				<n-space align="center" justify="space-between">
 					{{ $t('app.themeColor') }}
 					<n-color-picker
-						v-model:value="appStore.primaryColor" class="w-10em" :swatches="palette"
+						v-model:value="appStore.primaryColor"
+						class="w-10em"
+						:swatches="palette"
 						@update:value="appStore.setPrimaryColor"
 					/>
 				</n-space>
 				<n-space align="center" justify="space-between">
 					{{ $t('app.pageTransition') }}
 					<n-select
-						v-model:value="appStore.transitionAnimation" class="w-10em" :options="transitionSelectorOptions"
+						v-model:value="appStore.transitionAnimation"
+						class="w-10em"
+						:options="transitionSelectorOptions"
 						@update:value="appStore.reloadPage"
 					/>
 				</n-space>

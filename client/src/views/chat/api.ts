@@ -58,13 +58,15 @@ export async function updateMessage(params: Message) {
  */
 
 // 新增指令
-export const createPrompt = async (params: Prompt) => http.post<Result<Prompt>>('/prompt/create', params)
+export const createPrompt = async (params: Prompt) =>
+	http.post<Result<Prompt>>('/prompt/create', params)
 
 // 移除指令
 export const removePrompt = async (promptId: string) => http.post(`/prompt/remove/${promptId}`)
 
 // 修改指令
-export const updatePrompt = async (params: Prompt) => http.post<Result<Prompt>>('/prompt/update', params)
+export const updatePrompt = async (params: Prompt) =>
+	http.post<Result<Prompt>>('/prompt/update', params)
 
 // 获取指令列表
 export const queryPromptList = async () => http.post<Result<Prompt[]>>('/prompt/list')

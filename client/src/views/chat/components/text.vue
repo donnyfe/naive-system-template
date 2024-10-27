@@ -34,8 +34,7 @@ mdi.use(mdKatex, { blockClass: 'katexmath-block rounded-md p-10px', errorColor: 
 
 const text = computed(() => {
 	const value = props.text ?? ''
-	if (props.type === 'markdown')
-		return mdi.render(value)
+	if (props.type === 'markdown') return mdi.render(value)
 	return value
 })
 
@@ -71,7 +70,7 @@ function removeCopyEvents() {
 	if (textRef.value) {
 		const copyBtn = textRef.value.querySelectorAll('.code-block-header__copy')
 		copyBtn.forEach((btn) => {
-			btn.removeEventListener('click', () => { })
+			btn.removeEventListener('click', () => {})
 		})
 	}
 }

@@ -23,12 +23,14 @@ const nameList = ['icon-park-outline', 'carbon']
 
 // 获取单个图标库数据
 async function fetchIconList(name: string): Promise<IconList> {
-	return await fetch(`https://api.iconify.design/collection?prefix=${name}`).then(res => res.json())
+	return await fetch(`https://api.iconify.design/collection?prefix=${name}`).then((res) =>
+		res.json()
+	)
 }
 
 // 获取所有图标库数据
 async function fetchIconAllList(nameList: string[]) {
-	const namePromises = nameList.map(name => fetchIconList(name))
+	const namePromises = nameList.map((name) => fetchIconList(name))
 	const targets = await Promise.all(namePromises)
 
 	return targets.map((i) => {
@@ -95,17 +97,15 @@ function handleSelectIconTag(icon: string) {
 // 包含当前分类或所有图标列表
 const icons = computed(() => {
 	const hasTag = !!currentTag.value
-	if (hasTag)
-		return iconList.value[currentTab.value]?.categories[currentTag.value]
-	else
-		return iconList.value[currentTab.value].icons
+	if (hasTag) return iconList.value[currentTab.value]?.categories[currentTag.value]
+	else return iconList.value[currentTab.value].icons
 })
 
 // 符合搜索条件的图标列表
 const visibleIcons = computed(() => {
 	return icons.value
-		?.filter(i => i.includes(searchValue.value))
-		?.slice((currentPage.value - 1) * 200, (currentPage.value) * 200)
+		?.filter((i) => i.includes(searchValue.value))
+		?.slice((currentPage.value - 1) * 200, currentPage.value * 200)
 })
 
 const showModal = ref(false)
@@ -130,14 +130,22 @@ function clearIcon() {
 				<naive-icon :icon="value" />
 			</template>
 		</n-button>
-		<n-input :value="value" readonly :placeholder="$t('components.iconSelector.inputPlaceholder')" />
+		<n-input
+			:value="value"
+			readonly
+			:placeholder="$t('components.iconSelector.inputPlaceholder')"
+		/>
 		<n-button type="primary" ghost :disabled="props.disabled" @click="showModal = true">
 			{{ $t('common.choose') }}
 		</n-button>
 	</n-input-group>
 	<n-modal
-		v-model:show="showModal" preset="card" :title="$t('components.iconSelector.selectorTitle')" size="small"
-		class="w-800px" :bordered="false"
+		v-model:show="showModal"
+		preset="card"
+		:title="$t('components.iconSelector.selectorTitle')"
+		size="small"
+		class="w-800px"
+		:bordered="false"
 	>
 		<template #header-extra>
 			<n-button type="warning" size="small" ghost @click="clearIcon">
@@ -145,23 +153,41 @@ function clearIcon() {
 			</n-button>
 		</template>
 
-		<n-tabs :value="currentTab" type="line" animated placement="left" @update:value="handleChangeTab">
+		<n-tabs
+			:value="currentTab"
+			type="line"
+			animated
+			placement="left"
+			@update:value="handleChangeTab"
+		>
 			<n-tab-pane name="local" tab="local">
 				<n-flex :size="2">
 					<n-el
-						v-for="(_icon, key) in LocalIconList" :key="key"
+						v-for="(_icon, key) in LocalIconList"
+						:key="key"
 						class="hover:(text-[var(--primary-color)] ring-1) ring-[var(--primary-color)] p-1 rounded flex-center"
-						:title="`local:${key}`" @click="handleSelectIcon(`local:${key}`)"
+						:title="`local:${key}`"
+						@click="handleSelectIcon(`local:${key}`)"
 					>
 						<naive-icon :icon="`local:${key}`" :size="24" />
 					</n-el>
 				</n-flex>
 			</n-tab-pane>
-			<n-tab-pane v-for="(list, index) in iconList" :key="list.prefix" :name="index" :tab="list.title">
+			<n-tab-pane
+				v-for="(list, index) in iconList"
+				:key="list.prefix"
+				:name="index"
+				:tab="list.title"
+			>
 				<n-flex vertical>
 					<n-flex size="small">
 						<n-tag
-							v-for="(_v, k) in list.categories" :key="k" :checked="currentTag === k" round checkable size="small"
+							v-for="(_v, k) in list.categories"
+							:key="k"
+							:checked="currentTag === k"
+							round
+							checkable
+							size="small"
 							@update:checked="handleSelectIconTag(k)"
 						>
 							{{ k }}
@@ -169,16 +195,20 @@ function clearIcon() {
 					</n-flex>
 
 					<n-input
-						v-model:value="searchValue" type="text" clearable
+						v-model:value="searchValue"
+						type="text"
+						clearable
 						:placeholder="$t('components.iconSelector.searchPlaceholder')"
 					/>
 
 					<div>
 						<n-flex :size="2">
 							<n-el
-								v-for="(icon) in visibleIcons" :key="icon"
+								v-for="icon in visibleIcons"
+								:key="icon"
 								class="hover:(text-[var(--primary-color)] ring-1) ring-[var(--primary-color)] p-1 rounded flex-center"
-								:title="`${list.prefix}:${icon}`" @click="handleSelectIcon(`${list.prefix}:${icon}`)"
+								:title="`${list.prefix}:${icon}`"
+								@click="handleSelectIcon(`${list.prefix}:${icon}`)"
 							>
 								<naive-icon :icon="`${list.prefix}:${icon}`" :size="24" />
 							</n-el>

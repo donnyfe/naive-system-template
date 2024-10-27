@@ -19,7 +19,9 @@ const appStore = useAppStore()
 <template>
 	<n-layout class="wh-full" embedded>
 		<n-layout
-			class="h-full " content-style="display: flex;flex-direction: column;min-height:100%;" embedded
+			class="h-full"
+			content-style="display: flex;flex-direction: column;min-height:100%;"
+			embedded
 			:native-scrollbar="false"
 		>
 			<div class="flex flex-col h-100vh">

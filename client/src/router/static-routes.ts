@@ -1,5 +1,4 @@
 export const staticRoutes: RowRoute[] = [
-
 	{
 		name: 'users',
 		path: '/users',

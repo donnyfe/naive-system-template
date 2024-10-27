@@ -5,7 +5,12 @@ import { useScroll } from '@/hooks'
 import { useChatStore } from '@/store/chat'
 import { usePromptStore } from '@/store/prompt'
 import Queue from '@/utils/queue'
-import { ChatbubblesOutline, GridOutline, PaperPlaneOutline, StopCircleOutline } from '@vicons/ionicons5'
+import {
+	ChatbubblesOutline,
+	GridOutline,
+	PaperPlaneOutline,
+	StopCircleOutline
+} from '@vicons/ionicons5'
 import { chatSubmit } from '../api'
 import ChatMessage from './message.vue'
 import ChatPrompt from './prompt.vue'
@@ -48,8 +53,7 @@ const promptOptions = computed(() => {
 					value: item.content
 				}
 			})
-	}
-	else {
+	} else {
 		return []
 	}
 })
@@ -72,20 +76,22 @@ const answer = ref<Message>({
 	completed: 0
 })
 
-watch(() => chatStore.chat, (newVal) => {
-	if (newVal) {
-		const chat = toRaw(newVal)
-		chatId.value = chat.chatId
+watch(
+	() => chatStore.chat,
+	(newVal) => {
+		if (newVal) {
+			const chat = toRaw(newVal)
+			chatId.value = chat.chatId
 
-		const lastMessage = chat.messages?.filter(i => i.sender === 'assistant').pop()
-		if (lastMessage) {
-			answer.value = lastMessage
+			const lastMessage = chat.messages?.filter((i) => i.sender === 'assistant').pop()
+			if (lastMessage) {
+				answer.value = lastMessage
+			}
+		} else {
+			chatStore.chat = null
 		}
 	}
-	else {
-		chatStore.chat = null
-	}
-})
+)
 
 onMounted(async () => {
 	scrollToBottom()
@@ -96,12 +102,10 @@ onMounted(async () => {
 
 // 提交信息
 async function handleSubmit() {
-	if (loading.value)
-		return
+	if (loading.value) return
 
 	const message = prompt.value.trim()
-	if (!message)
-		return
+	if (!message) return
 
 	const chatId = chatStore.activeId
 	// 不存在对话则创建新对话
@@ -149,8 +153,7 @@ async function submitChat(answer: Message) {
 		previousId: answer.previousId as string
 	}
 	const response = await chatSubmit(parmas)
-	if (!response)
-		return
+	if (!response) return
 
 	const reader = response.body!.getReader()
 	const textDecoder = new TextDecoder('utf-8')
@@ -180,8 +183,7 @@ async function submitChat(answer: Message) {
 			const char = charQueue.dequeue()
 			if (char) {
 				answer.messageText += char
-			}
-			else {
+			} else {
 				clearInterval(intervalId)
 				intervalId = null
 				loading.value = false
@@ -192,11 +194,9 @@ async function submitChat(answer: Message) {
 			}
 			scrollToBottomIfAtBottom()
 		}, 50)
-	}
-	catch (error) {
+	} catch (error) {
 		console.error('Error reading stream:', error)
-	}
-	finally {
+	} finally {
 		reader?.releaseLock() // 确保释放读取器
 		loading.value = false
 		scrollToBottomIfAtBottom()
@@ -242,10 +242,13 @@ function handleStop() {
 
 <template>
 	<div class="relative wh-full flex overflow-hidden dark:bg-dark">
-		<div class="absolute z-10 flex justify-between w-full lg:py-4 lg:px-6 bg-#f7f7f7 dark:bg-dark border-b border-#ddd">
+		<div
+			class="absolute z-10 flex justify-between w-full lg:py-4 lg:px-6 bg-#f7f7f7 dark:bg-dark border-b border-#ddd"
+		>
 			<div class="flex gap-3">
 				<n-button
-					v-if="!sidebarVisible" class="w-10 h-10 bg-#fff dark:bg-dark hover:opacity-70 rounded"
+					v-if="!sidebarVisible"
+					class="w-10 h-10 bg-#fff dark:bg-dark hover:opacity-70 rounded"
 					@click="showChatSidebar"
 				>
 					<template #icon>
@@ -259,7 +262,7 @@ function handleStop() {
 				<n-popover ref="popoverPromptRef" trigger="click" placement="bottom-end" :width="400">
 					<template #trigger>
 						<n-button
-							class="action-button w-10 h-10 bg-white dark:bg-dark dark:hover:border-emerald  hover:opacity-70 rounded"
+							class="action-button w-10 h-10 bg-white dark:bg-dark dark:hover:border-emerald hover:opacity-70 rounded"
 						>
 							<template #icon>
 								<n-icon size="18">
@@ -272,10 +275,14 @@ function handleStop() {
 				</n-popover>
 			</div>
 		</div>
-		<div class="w-full flex flex-col justify-center flex-auto overflow-hidden bg-#f7f7f7 dark:bg-dark p-t-20">
+		<div
+			class="w-full flex flex-col justify-center flex-auto overflow-hidden bg-#f7f7f7 dark:bg-dark p-t-20"
+		>
 			<div id="scrollRef" ref="scrollRef" class="w-full h-full overflow-x-hidden p-b-20">
 				<template v-if="!chat?.messages?.length">
-					<div class="flex flex-col justify-center h-full items-center mx-auto space-y-4 max-w-600px">
+					<div
+						class="flex flex-col justify-center h-full items-center mx-auto space-y-4 max-w-600px"
+					>
 						<div class="text-4xl font-semibold text-center text-gray-800 dark:color-emerald">
 							{{ $t('chat.title') }}
 						</div>
@@ -286,8 +293,10 @@ function handleStop() {
 				</template>
 				<template v-else>
 					<ChatMessage
-						v-for="(item, index) of chat?.messages" :key="index"
-						:item="item.messageId === answer?.messageId ? (answer as Message) : item" :loading="item.completed === 0"
+						v-for="(item, index) of chat?.messages"
+						:key="index"
+						:item="item.messageId === answer?.messageId ? (answer as Message) : item"
+						:loading="item.completed === 0"
 						@regenerate="onRegenerate"
 					/>
 				</template>
@@ -297,12 +306,26 @@ function handleStop() {
 					<n-auto-complete v-model:value="prompt" class="w-60%" :options="promptOptions">
 						<template #default="{ handleInput, handleBlur, handleFocus }">
 							<n-input
-								ref="inputRef" v-model:value="prompt" type="textarea" rows="1" autosize round
-								class="py-2 rounded-2" placeholder="输入消息或“/”以选择提示..." @input="handleInput" @focus="handleFocus"
-								@blur="handleBlur" @keypress="handleEnter"
+								ref="inputRef"
+								v-model:value="prompt"
+								type="textarea"
+								rows="1"
+								autosize
+								round
+								class="py-2 rounded-2"
+								placeholder="输入消息或“/”以选择提示..."
+								@input="handleInput"
+								@focus="handleFocus"
+								@blur="handleBlur"
+								@keypress="handleEnter"
 							>
 								<template #suffix>
-									<n-button :bordered="false" :loading="loading" class="w-20px" @click="handleSubmit">
+									<n-button
+										:bordered="false"
+										:loading="loading"
+										class="w-20px"
+										@click="handleSubmit"
+									>
 										<template #icon>
 											<n-icon size="16">
 												<PaperPlaneOutline />

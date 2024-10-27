@@ -23,8 +23,7 @@ const modalRef = ref()
 
 async function delteteUser(id: number) {
 	const { success } = await removeUser(id)
-	if (!success)
-		return
+	if (!success) return
 
 	window.$message.success('删除成功')
 	queryList()
@@ -46,11 +45,7 @@ const columns: DataTableColumns<UserData> = [
 				1: 'success'
 			} as const
 			if (row.sex) {
-				return (
-					<NTag type={tagType[row.sex]}>
-						{SEX[row.sex]}
-					</NTag>
-				)
+				return <NTag type={tagType[row.sex]}>{SEX[row.sex]}</NTag>
 			}
 		}
 	},
@@ -59,9 +54,7 @@ const columns: DataTableColumns<UserData> = [
 		title: '联系方式',
 		align: 'center',
 		render: (row) => {
-			return (
-				<CopyText value={row.phone} />
-			)
+			return <CopyText value={row.phone} />
 		}
 	},
 	{
@@ -69,9 +62,7 @@ const columns: DataTableColumns<UserData> = [
 		title: '邮箱',
 		align: 'center',
 		render: (row) => {
-			return (
-				<CopyText value={row.email} />
-			)
+			return <CopyText value={row.email} />
 		}
 	},
 	{
@@ -81,16 +72,17 @@ const columns: DataTableColumns<UserData> = [
 		render: (row) => {
 			return (
 				<NSpace justify="center">
-					<NButton
-						size="small"
-						onClick={() => modalRef.value.openModal('edit', row)}
-					>
+					<NButton size="small" onClick={() => modalRef.value.openModal('edit', row)}>
 						编辑
 					</NButton>
 					<NPopconfirm onPositiveClick={() => delteteUser(row.id!)}>
 						{{
 							default: () => '确认删除',
-							trigger: () => <NButton size="small" type="error">删除</NButton>
+							trigger: () => (
+								<NButton size="small" type="error">
+									删除
+								</NButton>
+							)
 						}}
 					</NPopconfirm>
 				</NSpace>
@@ -114,11 +106,9 @@ async function queryList() {
 		const { list, count } = data
 		pageData.value = list
 		total.value = count
-	}
-	catch (err) {
+	} catch (err) {
 		console.error(err)
-	}
-	finally {
+	} finally {
 		endLoading()
 	}
 }

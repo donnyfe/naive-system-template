@@ -40,15 +40,13 @@ function handleRegister() {
 	}
 
 	formRef.value?.validate(async (error: any) => {
-		if (error)
-			return
+		if (error) return
 		isLoading.value = true
 		const { username, password } = form.value
 		// 实现前端加密传给后端
 		// password = encrypt(password)
 		const { success, message } = await authStore.register(username, password)
-		if (!success)
-			return
+		if (!success) return
 		window.$message.success(message)
 
 		isLoading.value = false
@@ -65,17 +63,25 @@ function toLogin() {
 <template>
 	<div>
 		<n-h2 depth="3" class="text-center">
-			{{ $t("login.registerTitle") }}
+			{{ $t('login.registerTitle') }}
 		</n-h2>
 		<n-form ref="formRef" :rules="rules" :model="form" :show-label="false" size="large">
 			<n-form-item path="username">
-				<n-input v-model:value="form.username" clearable :placeholder="$t('login.accountPlaceholder')" />
+				<n-input
+					v-model:value="form.username"
+					clearable
+					:placeholder="$t('login.accountPlaceholder')"
+				/>
 			</n-form-item>
 
 			<n-form-item path="password">
 				<n-input
-					v-model:value="form.password" type="password" :placeholder="$t('login.passwordPlaceholder')" clearable
-					autocomplete="current-password" show-password-on="click"
+					v-model:value="form.password"
+					type="password"
+					:placeholder="$t('login.passwordPlaceholder')"
+					clearable
+					autocomplete="current-password"
+					show-password-on="click"
 				>
 					<template #password-invisible-icon>
 						<icon-park-outline-preview-close-one />
@@ -88,8 +94,12 @@ function toLogin() {
 
 			<n-form-item path="resetPassword">
 				<n-input
-					v-model:value="form.resetPassword" type="password" :placeholder="$t('login.checkPasswordPlaceholder')"
-					clearable autocomplete="current-password" show-password-on="click"
+					v-model:value="form.resetPassword"
+					type="password"
+					:placeholder="$t('login.checkPasswordPlaceholder')"
+					clearable
+					autocomplete="current-password"
+					show-password-on="click"
 				>
 					<template #password-invisible-icon>
 						<icon-park-outline-preview-close-one />
@@ -103,18 +113,18 @@ function toLogin() {
 			<n-form-item>
 				<n-space vertical :size="20" class="w-full">
 					<n-checkbox v-model:checked="isRead">
-						{{ $t("login.readAndAgree") }}
+						{{ $t('login.readAndAgree') }}
 						<n-button type="primary" text>
-							{{ $t("login.userAgreement") }}
+							{{ $t('login.userAgreement') }}
 						</n-button>
 					</n-checkbox>
 					<n-button block type="primary" @click="handleRegister">
-						{{ $t("login.signUp") }}
+						{{ $t('login.signUp') }}
 					</n-button>
 					<n-flex justify="center">
-						<n-text>{{ $t("login.haveAccountText") }}</n-text>
+						<n-text>{{ $t('login.haveAccountText') }}</n-text>
 						<n-button text type="primary" @click="toLogin">
-							{{ $t("login.signIn") }}
+							{{ $t('login.signIn') }}
 						</n-button>
 					</n-flex>
 				</n-space>

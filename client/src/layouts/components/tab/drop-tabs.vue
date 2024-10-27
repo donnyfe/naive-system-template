@@ -34,6 +34,4 @@ function handleDropTabs(key: string, option: any) {
 	</n-dropdown>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -7,12 +7,9 @@ export function arrayToTree(arr: any[]) {
 	arr.forEach((item) => {
 		const parent = item.pid && map.get(item.pid)
 		if (parent) {
-			if (parent?.children)
-				parent.children.push(item)
-			else
-				parent.children = [item]
-		}
-		else {
+			if (parent?.children) parent.children.push(item)
+			else parent.children = [item]
+		} else {
 			res.push(item)
 		}
 	})

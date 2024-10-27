@@ -82,8 +82,7 @@ export const useChatStore = defineStore('chat-store', {
 				this.chatList = list
 				this.activeId = list[0].chatId as string
 				this.queryMessage(this.activeId)
-			}
-			else {
+			} else {
 				this.$reset()
 			}
 		},

@@ -136,8 +136,7 @@ async function onUploadChunk(options: { fileList: UploadFileInfo[] }) {
 	if (file.size > limitSize) {
 		const result = await useHashWorker(file)
 		handleUploadChunk(result)
-	}
-	else {
+	} else {
 		// 小文件直接上传文件
 		handleUploadFile(file)
 	}

@@ -10,7 +10,7 @@ const value = defineModel<LayoutMode>('value', { required: true })
 			<template #trigger>
 				<n-el
 					:class="{
-						'outline outline-2': value === 'leftMenu',
+						'outline outline-2': value === 'leftMenu'
 					}"
 					class="grid grid-cols-[20%_1fr] grid-rows-[20%_1fr] outline-[var(--primary-color)] hover:(outline outline-2) cursor-pointer"
 					@click="value = 'leftMenu'"
@@ -27,8 +27,9 @@ const value = defineModel<LayoutMode>('value', { required: true })
 			<template #trigger>
 				<n-el
 					:class="{
-						'outline outline-2': value === 'topMenu',
-					}" class="grid grid-rows-[30%_1fr] outline-[var(--primary-color)] hover:(outline outline-2) cursor-pointer"
+						'outline outline-2': value === 'topMenu'
+					}"
+					class="grid grid-rows-[30%_1fr] outline-[var(--primary-color)] hover:(outline outline-2) cursor-pointer"
 					@click="value = 'topMenu'"
 				>
 					<div class="bg-[var(--primary-color)]" />
@@ -42,7 +43,7 @@ const value = defineModel<LayoutMode>('value', { required: true })
 			<template #trigger>
 				<n-el
 					:class="{
-						'outline outline-2': value === 'mixMenu',
+						'outline outline-2': value === 'mixMenu'
 					}"
 					class="grid grid-cols-[20%_1fr] grid-rows-[15%_15%_1fr] outline-[var(--primary-color)] hover:(outline outline-2) cursor-pointer"
 					@click="value = 'mixMenu'"
@@ -68,7 +69,7 @@ const value = defineModel<LayoutMode>('value', { required: true })
 	border-radius: var(--border-radius);
 }
 
-.grid>div {
+.grid > div {
 	border-radius: var(--border-radius);
 }
 </style>

@@ -8,11 +8,9 @@ export function useIconsPlugin() {
 		defaultStyle: 'display:inline-block',
 		compiler: 'vue3',
 		customCollections: {
-			'svg-icons': FileSystemIconLoader(resolve('src/assets/svg-icons'), svg =>
-				svg.replace(
-					/^<svg /,
-					'<svg fill="currentColor" width="1.2em" height="1.2em"'
-				))
+			'svg-icons': FileSystemIconLoader(resolve('src/assets/svg-icons'), (svg) =>
+				svg.replace(/^<svg /, '<svg fill="currentColor" width="1.2em" height="1.2em"')
+			)
 		}
 	})
 }

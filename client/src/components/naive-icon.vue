@@ -34,12 +34,7 @@ function getLocalIcon(icon: string) {
 </script>
 
 <template>
-	<n-icon
-		v-if="icon && !isLocal"
-		:size="size"
-		:depth="depth"
-		:color="color"
-	>
+	<n-icon v-if="icon && !isLocal" :size="size" :depth="depth" :color="color">
 		<template v-if="isLocal">
 			{{ getLocalIcon(icon) }}
 		</template>

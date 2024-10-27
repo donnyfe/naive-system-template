@@ -20,5 +20,5 @@ export const createChunks = function (file: File, chunkSize: number): Blob[] {
  * @param chunks
  */
 export async function getArrayBufferFromBlobs(chunks: Blob[]): Promise<ArrayBuffer[]> {
-	return Promise.all(chunks.map(async chunk => chunk.arrayBuffer()))
+	return Promise.all(chunks.map(async (chunk) => chunk.arrayBuffer()))
 }

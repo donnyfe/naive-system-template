@@ -21,19 +21,11 @@ const theme = computed(() => {
 	return appStore.colorMode ? 'dark' : 'light'
 })
 
-const toolbarsExclude: ToolbarNames[] = [
-	'mermaid',
-	'katex',
-	'github',
-	'htmlPreview',
-	'catalog'
-]
+const toolbarsExclude: ToolbarNames[] = ['mermaid', 'katex', 'github', 'htmlPreview', 'catalog']
 </script>
 
 <template>
-	<MdEditor
-		v-model="data" :theme="theme" :toolbars-exclude="toolbarsExclude"
-	/>
+	<MdEditor v-model="data" :theme="theme" :toolbars-exclude="toolbarsExclude" />
 </template>
 
 <style scoped></style>

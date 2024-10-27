@@ -21,7 +21,11 @@ const appStore = useAppStore()
 <template>
 	<n-layout has-sider class="wh-full" embedded>
 		<n-layout-sider
-			bordered :collapsed="appStore.collapsed" collapse-mode="width" :collapsed-width="64" :width="240"
+			bordered
+			:collapsed="appStore.collapsed"
+			collapse-mode="width"
+			:collapsed-width="64"
+			:width="240"
 			content-style="display: flex;flex-direction: column;min-height:100%;"
 		>
 			<Logo v-if="appStore.showLogo" />

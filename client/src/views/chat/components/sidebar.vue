@@ -36,8 +36,7 @@ function handleAdd() {
 }
 
 async function handleSelect({ chatId }: Chat) {
-	if (isActive(chatId))
-		return
+	if (isActive(chatId)) return
 
 	await chatStore.setActive(chatId as string)
 }
@@ -115,24 +114,35 @@ function handleClear() {
 		<n-scrollbar>
 			<div class="flex flex-col w-full gap-3 p-4">
 				<div v-for="(item, index) of chatList" :key="index" class="w-full">
-					<n-input v-if="item.isEdit" v-model:value="item.chatName" class="items-center w-full h-11">
+					<n-input
+						v-if="item.isEdit"
+						v-model:value="item.chatName"
+						class="items-center w-full h-11"
+					>
 						<template #suffix>
 							<n-icon
-								size="14" class="mr-2 text-blue-800 cursor-pointer hover:text-gray-500"
+								size="14"
+								class="mr-2 text-blue-800 cursor-pointer hover:text-gray-500"
 								@click="handleEdit(item, false, $event)"
 							>
 								<CheckmarkOutline />
 							</n-icon>
 
-							<n-icon size="14" class="text-blue-800  cursor-pointer hover:text-gray-500" @click="item.isEdit = false">
+							<n-icon
+								size="14"
+								class="text-blue-800 cursor-pointer hover:text-gray-500"
+								@click="item.isEdit = false"
+							>
 								<CloseOutline />
 							</n-icon>
 						</template>
 					</n-input>
 
 					<n-button
-						v-else class="w-full h-11  justify-start  hover:bg-#fff rounded-2"
-						:class="isActive(item.chatId) && ['selected']" @click="handleSelect(item)"
+						v-else
+						class="w-full h-11 justify-start hover:bg-#fff rounded-2"
+						:class="isActive(item.chatId) && ['selected']"
+						@click="handleSelect(item)"
 					>
 						<template #icon>
 							<n-icon size="14">
@@ -141,7 +151,8 @@ function handleClear() {
 						</template>
 
 						<n-ellipsis
-							:tooltip="false" class="text-12.5px"
+							:tooltip="false"
+							class="text-12.5px"
 							:class="isActive(item.chatId) && ['w-40', 'text-left', 'selected']"
 						>
 							{{ item.chatName }}
@@ -149,7 +160,8 @@ function handleClear() {
 
 						<div v-if="isActive(item.chatId)" class="flex">
 							<n-icon
-								size="14" class="mr-1 text-gray-500 dark:color-gray-3  cursor-pointer "
+								size="14"
+								class="mr-1 text-gray-500 dark:color-gray-3 cursor-pointer"
 								@click="handleEdit(item, true, $event)"
 							>
 								<EditOutlined />
@@ -157,7 +169,7 @@ function handleClear() {
 
 							<n-popconfirm placement="top" @positive-click="handleDelete(item, $event)">
 								<template #trigger>
-									<n-icon size="14" class="text-gray-500 dark:color-gray-3   cursor-pointer">
+									<n-icon size="14" class="text-gray-500 dark:color-gray-3 cursor-pointer">
 										<CloseOutline />
 									</n-icon>
 								</template>
@@ -184,6 +196,6 @@ function handleClear() {
 
 <style lang="scss" scoped>
 .selected {
-	color: var(--n-primary-color)
+	color: var(--n-primary-color);
 }
 </style>

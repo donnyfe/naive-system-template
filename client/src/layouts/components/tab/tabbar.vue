@@ -119,7 +119,7 @@ function onClickoutside() {
 			>
 				<div class="flex-x-center gap-2">
 					<naive-icon :icon="item.meta.icon as string" />
-					{{ $t(`route.${String(item.name)}`, (item.meta.title as string)) }}
+					{{ $t(`route.${String(item.name)}`, item.meta.title as string) }}
 				</div>
 			</n-tab>
 			<n-tab
@@ -132,7 +132,7 @@ function onClickoutside() {
 			>
 				<div class="flex-x-center gap-2">
 					<naive-icon :icon="item.meta.icon as string" />
-					{{ $t(`route.${String(item.name)}`, (item.meta.title as string)) }}
+					{{ $t(`route.${String(item.name)}`, item.meta.title as string) }}
 				</div>
 			</n-tab>
 			<template #suffix>

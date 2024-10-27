@@ -68,8 +68,7 @@ async function onUploadFile(options: { fileList: UploadFileInfo[] }) {
 			imageContaienr.value.appendChild(image)
 			detect(image)
 		}
-	}
-	catch (error) {
+	} catch (error) {
 		console.error('Error reading file:', error)
 	}
 }
@@ -77,8 +76,8 @@ async function onUploadFile(options: { fileList: UploadFileInfo[] }) {
 function readFileAsDataURL(file: File): Promise<string> {
 	return new Promise((resolve, reject) => {
 		const reader = new FileReader()
-		reader.onload = event => resolve(event.target?.result as string)
-		reader.onerror = error => reject(error)
+		reader.onload = (event) => resolve(event.target?.result as string)
+		reader.onerror = (error) => reject(error)
 		reader.readAsDataURL(file)
 	})
 }
@@ -87,29 +86,14 @@ function readFileAsDataURL(file: File): Promise<string> {
 <template>
 	<n-flex>
 		<n-card title="示例">
-			<div
-				ref="imageContaienr"
-				class="img-container"
-			/>
-			<p
-				ref="status"
-				class="status"
-			/>
+			<div ref="imageContaienr" class="img-container" />
+			<p ref="status" class="status" />
 		</n-card>
 		<n-card title="图像上传">
-			<n-upload
-				multiple
-				directory-dnd
-				:max="5"
-				:default-upload="false"
-				@change="onUploadFile"
-			>
+			<n-upload multiple directory-dnd :max="5" :default-upload="false" @change="onUploadFile">
 				<n-upload-dragger>
 					<div class="mt-12px">
-						<n-icon
-							size="48"
-							:depth="3"
-						>
+						<n-icon size="48" :depth="3">
 							<ArchiveIcon />
 						</n-icon>
 					</div>
@@ -121,21 +105,21 @@ function readFileAsDataURL(file: File): Promise<string> {
 </template>
 
 <style lang="scss" scoped>
-  .img-container {
-    position: relative;
-    width: 100%;
+.img-container {
+	position: relative;
+	width: 100%;
 
-    img {
-      width: 100%;
-    }
-    .bounding-box {
-      position: absolute;
-      box-sizing: border-box;
-    }
+	img {
+		width: 100%;
+	}
+	.bounding-box {
+		position: absolute;
+		box-sizing: border-box;
+	}
 
-    .bounding-box-label {
-      position: absolute;
-      font-size: 12px;
-    }
-  }
+	.bounding-box-label {
+		position: absolute;
+		font-size: 12px;
+	}
+}
 </style>

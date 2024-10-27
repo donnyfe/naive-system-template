@@ -114,8 +114,7 @@ export const useAppStore = defineStore('app-store', {
 				setTimeout(() => {
 					this.loadFlag = true
 				}, delay)
-			}
-			else {
+			} else {
 				this.loadFlag = true
 			}
 		},

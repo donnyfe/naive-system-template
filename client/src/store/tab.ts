@@ -15,23 +15,19 @@ export const useTabStore = defineStore('tab-store', {
 		}
 	},
 	getters: {
-		allTabs: state => [...state.pinTabs, ...state.tabs]
+		allTabs: (state) => [...state.pinTabs, ...state.tabs]
 	},
 	actions: {
 		addTab(route: RouteLocationNormalized) {
 			// 根据meta确定是否不添加，可用于错误页,登录页等
-			if (route.meta.withoutTab)
-				return
+			if (route.meta.withoutTab) return
 
 			// 如果标签名称已存在则不添加
-			if (this.hasExistTab(route.path))
-				return
+			if (this.hasExistTab(route.path)) return
 
 			// 根据meta.pinTab传递到不同的分组中
-			if (route.meta.pinTab)
-				this.pinTabs.push(route)
-			else
-				this.tabs.push(route)
+			if (route.meta.pinTab) this.pinTabs.push(route)
+			else this.tabs.push(route)
 		},
 		async closeTab(path: string) {
 			const tabsLength = this.tabs.length
@@ -44,8 +40,7 @@ export const useTabStore = defineStore('tab-store', {
 				if (this.currentTabPath === path && !isLast) {
 					// 跳转到后一个标签
 					router.push(this.tabs[index + 1].path)
-				}
-				else if (this.currentTabPath === path && isLast) {
+				} else if (this.currentTabPath === path && isLast) {
 					// 已经是最后一个了，就跳转前一个
 					router.push(this.tabs[index - 1].path)
 				}
@@ -55,8 +50,7 @@ export const useTabStore = defineStore('tab-store', {
 				return item.path !== path
 			})
 			// 删除后如果清空了，就跳转到默认首页
-			if (tabsLength - 1 === 0)
-				router.push('/')
+			if (tabsLength - 1 === 0) router.push('/')
 		},
 
 		closeOtherTabs(path: string) {

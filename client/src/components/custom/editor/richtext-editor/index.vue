@@ -58,8 +58,7 @@ function initEditor() {
 		editorModel.value = quill.getSemanticHTML()
 	})
 
-	if (props.disabled)
-		quill.enable(false)
+	if (props.disabled) quill.enable(false)
 
 	editorInst = quill
 }
@@ -68,22 +67,20 @@ watch(
 	() => model.value,
 	(newValue, _oldValue) => {
 		if (newValue && newValue !== editorModel.value) {
-			editorInst!.setContents(editorInst!.clipboard.convert({
-				html: newValue
-			}))
-		}
-		else if (!newValue) {
+			editorInst!.setContents(
+				editorInst!.clipboard.convert({
+					html: newValue
+				})
+			)
+		} else if (!newValue) {
 			editorInst!.setContents([])
 		}
 	}
 )
 
 watch(editorModel, (newValue, oldValue) => {
-	if (newValue && newValue !== oldValue)
-		model.value = newValue
-
-	else if (!newValue)
-		editorInst!.setContents([])
+	if (newValue && newValue !== oldValue) model.value = newValue
+	else if (!newValue) editorInst!.setContents([])
 })
 
 watch(
@@ -93,7 +90,7 @@ watch(
 	}
 )
 
-onBeforeUnmount(() => editorInst = null)
+onBeforeUnmount(() => (editorInst = null))
 </script>
 
 <template>

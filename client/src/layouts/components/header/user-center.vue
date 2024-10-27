@@ -41,11 +41,9 @@ const menus = computed(() => {
 function handleSelect(key: string | number) {
 	if (key === 'system') {
 		router.push({ path: '/about' })
-	}
-	else if (key === 'userCenter') {
+	} else if (key === 'userCenter') {
 		router.push({ path: '/user-center' })
-	}
-	else if (key === 'loginOut') {
+	} else if (key === 'loginOut') {
 		window.$dialog?.info({
 			title: t('app.loginOutTitle'),
 			content: t('app.loginOutContent'),

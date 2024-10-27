@@ -26,7 +26,8 @@
 		"preview": "vite preview --port 9981",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
-		"lint:check": "npx @eslint/config-inspector"
+		"lint:check": "npx @eslint/config-inspector",
+		"format": "prettier --write ."
 	},
 	"peerDependencies": {
 		"eslint": "^9.0.0",

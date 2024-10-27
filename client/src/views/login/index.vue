@@ -18,12 +18,18 @@ const formComponets = {
 </script>
 
 <template>
-	<n-el ref="loginWrapper" class="wh-full flex-center dark:bg-dark" :style="{ background: primaryColor }">
+	<n-el
+		ref="loginWrapper"
+		class="wh-full flex-center dark:bg-dark"
+		:style="{ background: primaryColor }"
+	>
 		<div class="fixed top-40px right-40px text-lg flex flex-start">
 			<DarkModeSwitch />
 			<LangsSwitch />
 		</div>
-		<n-el class="p-2xl h-full w-full sm:w-450px sm:h-600px bg-[var(--card-color)] shadow-[var(--box-shadow-1)]">
+		<n-el
+			class="p-2xl h-full w-full sm:w-450px sm:h-600px bg-[var(--card-color)] shadow-[var(--box-shadow-1)]"
+		>
 			<div class="w-full flex flex-col items-center">
 				<transition name="fade-slide" mode="out-in">
 					<component :is="formComponets[formType]" v-model="formType" class="w-85%" />
