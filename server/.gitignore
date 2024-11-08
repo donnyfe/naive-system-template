@@ -36,7 +36,8 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-.env
-.tmp
-deploy.mjs
 dist.tar.gz
+.tmp
+
+config.development.yaml
+config.production.yaml
