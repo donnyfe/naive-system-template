@@ -1,0 +1,39 @@
+env: development
+
+jwt:
+  secret: nestjs
+
+session:
+  secret: admin
+
+http:
+  host: '0.0.0.0'
+  port: 3000
+  prefix:
+
+files:
+  destination: 'uploads'
+  # location 文件上传后存储目录，相对路径（相对本项目根目录）或绝对路径
+  location: './uploads'
+  # 文件服务器地址，这是开发环境的配置 生产环境请自行配置成可访问域名
+  domain: 'http://0.0.0.0:3000'
+  # 文件虚拟路径, 必须以 / 开头， 如 http://0.0.0.0:3000/static/****.jpg  , 如果不需要则 设置 ''
+  serveRoot: '/static'
+  # 文件大小限制，单位M
+  maxSize: 100
+
+mysql:
+  database: admin
+  username: root
+  password:
+  host: localhost
+  port: 3306
+  charset: utf8
+  sync: true
+
+redis:
+  url: redis://default:123456@localhost:6379
+
+qianfan:
+  apiKey: your_api_key
+  apiSecret: your_api_secret
