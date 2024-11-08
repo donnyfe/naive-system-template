@@ -21,8 +21,8 @@ export class ChatService {
     private dataSource: DataSource,
     @InjectRepository(ChatEntity) private chatRepo: Repository<ChatEntity>,
   ) {
-    this.apiKey = this.configService.get('qianfan.api_key')
-    this.apiSecret = this.configService.get('qianfan.api_secret')
+    this.apiKey = this.configService.get('qianfan.apikey')
+    this.apiSecret = this.configService.get('qianfan.apiSecret')
 
     setEnvVariable('QIANFAN_ACCESS_KEY', this.apiKey)
     setEnvVariable('QIANFAN_SECRET_KEY', this.apiSecret)

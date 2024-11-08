@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt'
 import { compareSync } from 'bcryptjs'
 import { UserService } from '@/modules/user/user.service'
 import { RedisService } from '@/shared/redis.service'
-import { ACCESS_TOKEN_EXPIRATION_TIME } from '@/constants/redis.contant'
+import { ACCESS_TOKEN_EXPIRATION_TIME } from '@/common/constants/redis'
 import { ConfigService } from '@nestjs/config'
 import { responseSuccess } from '@/utils'
 

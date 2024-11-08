@@ -32,13 +32,13 @@ import { MulterModule } from '@nestjs/platform-express'
       useFactory: (configService: ConfigService) => {
         return {
           type: 'mysql',
-          autoLoadEntities: true,
           host: configService.get('mysql.host'),
           port: configService.get('mysql.port'),
           username: configService.get('mysql.username'),
           password: configService.get('mysql.password'),
           database: configService.get('mysql.database'),
           synchronize: process.env.NODE_ENV === 'production' ? false : configService.get('mysql.sync'),
+          autoLoadEntities: true,
           timezone: '+08:00',
         }
       },

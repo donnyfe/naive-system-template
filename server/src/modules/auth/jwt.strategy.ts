@@ -1,5 +1,5 @@
 import { ErrorInfo } from '@/common/constants/result-code'
-import { ACCESS_TOKEN_EXPIRATION_TIME } from '@/constants/redis.contant'
+import { ACCESS_TOKEN_EXPIRATION_TIME } from '@/common/constants/redis'
 import { RedisService } from '@/shared/redis.service'
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
