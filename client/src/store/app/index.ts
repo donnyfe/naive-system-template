@@ -1,4 +1,5 @@
 import type { GlobalThemeOverrides } from 'naive-ui'
+import type { Lang } from '@/types/global'
 import { setLocale } from '@/il8n'
 import { local } from '@/utils'
 import { colord } from 'colord'
@@ -26,7 +27,7 @@ export const useAppStore = defineStore('app-store', {
 	state: () => {
 		return {
 			footerText: import.meta.env.VITE_COPYRIGHT_INFO,
-			lang: 'zhCN' as App.lang,
+			lang: 'zhCN' as Lang,
 			theme: themeConfig as GlobalThemeOverrides,
 			primaryColor: themeConfig.common.primaryColor,
 			collapsed: false,
@@ -77,7 +78,7 @@ export const useAppStore = defineStore('app-store', {
 			// 重置所有配色
 			this.setPrimaryColor(this.primaryColor)
 		},
-		setAppLang(lang: App.lang) {
+		setAppLang(lang: Lang) {
 			setLocale(lang)
 			local.set('lang', lang)
 			this.lang = lang

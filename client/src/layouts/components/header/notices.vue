@@ -81,7 +81,7 @@ const currentTab = ref(0)
 function handleRead(id: number) {
 	const data = MassageData.value.find((i) => i.id === id)
 	if (data) data.isRead = true
-	window.$message.success(`id: ${id}`)
+	$message.success(`id: ${id}`)
 }
 const massageCount = computed(() => {
 	return MassageData.value.filter((i: any) => !i.isRead).length

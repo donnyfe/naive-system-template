@@ -67,7 +67,7 @@ export const useRouteStore = defineStore('route-store', {
 			// 获取路由
 			const rowRoutes = await this.getRoutes()
 			if (!rowRoutes) {
-				window.$message.error($t('app.getRouteError'))
+				$message.error($t('app.getRouteError'))
 				return
 			}
 			this.rowRoutes = rowRoutes

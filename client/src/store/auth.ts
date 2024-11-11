@@ -65,7 +65,7 @@ export const useAuthStore = defineStore('auth-store', {
 			router.push({
 				path: query.redirect || '/'
 			})
-			window.$message.success('登录成功，欢迎您!')
+			$message.success('登录成功，欢迎您!')
 		},
 
 		/* 登录退出，重置用户信息等 */
@@ -73,23 +73,24 @@ export const useAuthStore = defineStore('auth-store', {
 			const route = unref(router.currentRoute)
 			// 清除本地缓存
 			this.clearAuthStorage()
+
 			// 清空路由、菜单等数据
 			const routeStore = useRouteStore()
 			routeStore.resetRouteStore()
+
 			// 清空标签栏数据
 			const tabStore = useTabStore()
 			tabStore.clearAllTabs()
+
 			// 重置当前存储库
 			this.$reset()
-			// 重定向到登录页
-			if (route.meta.requiresAuth) {
-				router.push({
-					name: 'login',
-					query: {
-						redirect: route.fullPath
-					}
-				})
-			}
+
+			router.push({
+				name: 'login',
+				query: {
+					redirect: route.fullPath
+				}
+			})
 		},
 		clearAuthStorage() {
 			local.remove('accessToken')

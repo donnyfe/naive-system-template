@@ -1,9 +1,7 @@
+import type { LocalStorageData, SessionStorageData, StorageData } from '@/types/global'
+
 const STORAGE_PREFIX = import.meta.env.VITE_STORAGE_PREFIX
 
-interface StorageData<T> {
-	value: T
-	expire: number | null
-}
 /**
  * LocalStorage部分操作
  */

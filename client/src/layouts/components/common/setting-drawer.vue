@@ -67,7 +67,7 @@ function resetSetting() {
 		negativeText: t('common.cancel'),
 		onPositiveClick: () => {
 			appStore.resetAlltheme()
-			window.$message.success(t('app.resetSettingMeaasge'))
+			$message.success(t('app.resetSettingMeaasge'))
 		}
 	})
 }

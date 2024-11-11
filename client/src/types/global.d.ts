@@ -1,12 +1,33 @@
-declare namespace App {
-	type lang = 'zhCN' | 'enUS'
+import type { MessageApi, LoadingBarApi, DialogApi, NotificationApi } from 'naive-ui'
+
+declare global {
+	const $message: MessageApi
+
+	interface Window {
+		$loadingBar: LoadingBarApi
+		$dialog: DialogApi
+		$message: MessageApi
+		$notification: NotificationApi
+	}
+
+	// 如果使用 setup 语法糖,还需要声明组件实例的类型
+	declare module 'vue' {
+		interface ComponentCustomProperties {
+			$loadingBar: LoadingBarApi
+			$dialog: DialogApi
+			$message: MessageApi
+			$notification: NotificationApi
+		}
+	}
 }
 
-interface SessionStorageData {
+export type Lang = 'zhCN' | 'enUS'
+
+export interface SessionStorageData {
 	demoKey: string
 }
 
-interface LocalStorageData {
+export interface LocalStorageData {
 	/* 存储用户信息 */
 	userInfo: LoginData
 	/* 存储访问token */
@@ -16,12 +37,12 @@ interface LocalStorageData {
 	/* 存储登录账号 */
 	loginAccount: any
 	/* 存储当前语言 */
-	lang: App.lang
+	lang: Lang
 }
 
-interface Window {
-	$loadingBar: import('naive-ui').LoadingBarApi
-	$dialog: import('naive-ui').DialogApi
-	$message: import('naive-ui').MessageApi
-	$notification: import('naive-ui').NotificationApi
+export interface StorageData<T> {
+	value: T
+	expire: number | null
 }
+
+export {}

@@ -9,30 +9,30 @@ import http, { httpStream, type Result } from '@/http/request'
 
 // 新增对话
 export async function createChat(params: Chat) {
-	return http.post<Result<Chat>>('/chat/create', params)
+	return http.post<Result<Chat>>('/api/chat/create', params)
 }
 
 // 更新对话
 export async function updateChat(params: Chat) {
-	return http.post<Result<Chat>>('/chat/update', params)
+	return http.post<Result<Chat>>('/api/chat/update', params)
 }
 
 // 移除对话
 export async function removeChat(chatId: string) {
-	return http.post<Result<void>>(`/chat/remove/${chatId}`)
+	return http.post<Result<void>>(`/api/chat/remove/${chatId}`)
 }
 
 // 清空列表
-export const clearChat = async () => http.post<Result<void>>('/chat/clear')
+export const clearChat = async () => http.post<Result<void>>('/api/chat/clear')
 
 // 获取对话消息列表
 export async function queryChat(chatId: string) {
-	return http.get<Result<Chat>>(`/chat/${chatId}`)
+	return http.get<Result<Chat>>(`/api/chat/${chatId}`)
 }
 
 // 获取对话列表
 export async function queryChatList() {
-	return http.post<Result<Chat[]>>('/chat/list')
+	return http.post<Result<Chat[]>>('/api/chat/list')
 }
 
 /**
@@ -43,12 +43,12 @@ export async function queryChatList() {
 
 // 新增消息
 export async function createMessage(params: Message) {
-	return http.post<Result<Message>>('/chat/message/create', params)
+	return http.post<Result<Message>>('/api/chat/message/create', params)
 }
 
 // 更新消息
 export async function updateMessage(params: Message) {
-	return http.post<Result<Message>>('/chat/message/update', params)
+	return http.post<Result<Message>>('/api/chat/message/update', params)
 }
 
 /**
@@ -59,17 +59,17 @@ export async function updateMessage(params: Message) {
 
 // 新增指令
 export const createPrompt = async (params: Prompt) =>
-	http.post<Result<Prompt>>('/prompt/create', params)
+	http.post<Result<Prompt>>('/api/prompt/create', params)
 
 // 移除指令
-export const removePrompt = async (promptId: string) => http.post(`/prompt/remove/${promptId}`)
+export const removePrompt = async (promptId: string) => http.post(`/api/prompt/remove/${promptId}`)
 
 // 修改指令
 export const updatePrompt = async (params: Prompt) =>
-	http.post<Result<Prompt>>('/prompt/update', params)
+	http.post<Result<Prompt>>('/api/prompt/update', params)
 
 // 获取指令列表
-export const queryPromptList = async () => http.post<Result<Prompt[]>>('/prompt/list')
+export const queryPromptList = async () => http.post<Result<Prompt[]>>('/api/prompt/list')
 
 // 对话
-export const chatSubmit = async (params: ChatParams) => httpStream('/chat/submit', params)
+export const chatSubmit = async (params: ChatParams) => httpStream('/api/chat/submit', params)

@@ -71,7 +71,6 @@ export const inOrderPromise = async function <T>(fns: (() => Promise<T>)[]) {
 	const results: T[] = []
 
 	try {
-		// 使用 for...of 替代 reduce 来提高可读性
 		for (const fn of fns) {
 			const result = await fn()
 			results.push(result)
