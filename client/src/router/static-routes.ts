@@ -1,11 +1,12 @@
 export const staticRoutes: RowRoute[] = [
 	{
-		name: 'users',
-		path: '/users',
-		title: '用户管理',
+		name: 'chat',
+		path: '/chat',
+		title: '聊天助手',
 		requiresAuth: true,
-		icon: 'icon-park-outline:every-user',
-		componentPath: '/users/index.vue',
+		icon: 'icon-park-outline:user',
+		menuType: 'page',
+		componentPath: '/chat/index.vue',
 		pid: null,
 		id: 1
 	},
@@ -20,18 +21,7 @@ export const staticRoutes: RowRoute[] = [
 		pid: null,
 		id: 2
 	},
-	{
-		name: 'chat',
-		path: '/chat',
-		title: '聊天助手',
-		requiresAuth: true,
-		icon: 'icon-park-outline:user',
-		pinTab: true,
-		menuType: 'page',
-		componentPath: '/chat/index.vue',
-		pid: null,
-		id: 3
-	},
+
 	{
 		name: 'imageRecognition',
 		path: '/image-recognition',
@@ -44,6 +34,40 @@ export const staticRoutes: RowRoute[] = [
 		pid: null,
 		id: 3
 	},
+	{
+		name: 'system',
+		path: '/system',
+		title: '系统管理',
+		requiresAuth: true,
+		icon: 'icon-park-outline:computer',
+		menuType: 'dir',
+		componentPath: null,
+		pid: null,
+		id: 97
+	},
+	{
+		name: 'users',
+		path: '/system/users',
+		title: '用户管理',
+		requiresAuth: true,
+		icon: 'icon-park-outline:every-user',
+		menuType: 'page',
+		componentPath: '/system/users/index.vue',
+		pid: 97,
+		id: 2
+	},
+	{
+		name: 'role',
+		path: '/system/role',
+		title: '角色管理',
+		requiresAuth: true,
+		icon: 'icon-park-outline:user-business',
+		menuType: 'page',
+		componentPath: '/system/role/index.vue',
+		pid: 97,
+		id: 3
+	},
+
 	{
 		name: 'userCenter',
 		path: '/user-center',
