@@ -36,7 +36,7 @@ const formRef = ref<FormInst | null>(null)
 
 function handleRegister() {
 	if (!isRead.value) {
-		return window.$message.warning('请阅读并同意用户协议')
+		return $message.warning('请阅读并同意用户协议')
 	}
 
 	formRef.value?.validate(async (error: any) => {
@@ -47,7 +47,7 @@ function handleRegister() {
 		// password = encrypt(password)
 		const { success, message } = await authStore.register(username, password)
 		if (!success) return
-		window.$message.success(message)
+		$message.success(message)
 
 		isLoading.value = false
 

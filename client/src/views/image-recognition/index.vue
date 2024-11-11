@@ -88,9 +88,11 @@ function readFileAsDataURL(file: File): Promise<string> {
 		<n-text> 备注：加载模型库需要科学上网 </n-text>
 		<n-card title="示例">
 			<div ref="imageContaienr"
-				class="img-container" />
-			<p ref="status"
-				class="status" />
+				class="img-container">
+				<p ref="status"
+					class="status">
+				</p>
+			</div>
 		</n-card>
 		<n-card title="图像上传">
 			<n-upload multiple

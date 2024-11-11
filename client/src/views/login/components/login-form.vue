@@ -7,6 +7,7 @@ import {
 } from '@/utils'
 import { encrypt } from '@/utils/aes'
 import { useThrottleFn } from '@vueuse/core'
+import FallbackImage from '@/components/fallback-image.vue'
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -32,8 +33,8 @@ const rules = computed(() => {
 	}
 })
 const form = reactive({
-	username: '',
-	password: '',
+	username: 'admin01',
+	password: '123456',
 	captcha: ''
 })
 
@@ -41,7 +42,7 @@ const captchaUrl = ref('')
 const baseUrl = import.meta.env.VITE_AXIOS_BASE_URL
 
 const initCaptcha = useThrottleFn(() => {
-	captchaUrl.value = `${baseUrl}/auth/captcha?${Date.now()}`
+	captchaUrl.value = `${baseUrl}/api/auth/captcha?${Date.now()}`
 }, 500)
 initCaptcha()
 
@@ -117,11 +118,18 @@ function handleLogin() {
 						:placeholder="$t('login.captchaPlaceholder')"
 						@keydown.enter="handleLogin()"
 					/>
-					<n-image
+					<!-- <n-image
 						class="w-100px h-38px ml-12px cursor-pointer"
 						v-if="captchaUrl"
 						:src="captchaUrl"
 						:alt="$t('login.captcha')"
+						@click="initCaptcha"
+					/> -->
+					<FallbackImage
+						v-if="captchaUrl"
+						:src="captchaUrl"
+						:alt="$t('login.captcha')"
+						class="w-100px h-38px ml-12px cursor-pointer"
 						@click="initCaptcha"
 					/>
 				</n-flex>
