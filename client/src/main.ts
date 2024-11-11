@@ -26,11 +26,31 @@ async function setupApp() {
 	app.mount('#app')
 
 	app.config.errorHandler = (err, vm, info) => {
-		console.error('全局错误处理器捕获到异常：', err, info)
+		// 区分开发环境和生产环境的错误处理
+		if (import.meta.env.DEV) {
+			console.error('错误信息:', err)
+			console.error('错误组件:', vm)
+			console.error('错误详情:', info)
+		} else {
+			// 生产环境错误上报
+			// TODO: 监控错误上报
+			// 生产环境错误上报
+			errorReport({
+				error: err,
+				component: vm?.$options?.name,
+				info,
+				url: window.location.href,
+				time: new Date().toISOString()
+			})
+		}
+		// 显示友好的错误提示
+		$message.error('系统出现异常,请稍后重试')
 	}
 }
 setupApp()
 
-window.addEventListener('unhandledrejection', (error) => {
-	console.error('全局错误处理器捕获到Promise异常：', error.reason)
-})
+// 添加错误上报函数
+function errorReport(error: any) {
+	// 上报到监控平台
+	console.error(error)
+}
