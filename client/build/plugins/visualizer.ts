@@ -1,7 +1,8 @@
 import { visualizer } from 'rollup-plugin-visualizer'
 /**
- * Generation packaging analysis
- * 生成打包分析
+ * @title 生成打包分析 (plugin: rollup-plugin-visualizer)
+ * @description Generate packaging analysis
+ * @link https://github.com/btd/rollup-plugin-visualizer
  */
 export function useVisualizerPlugin() {
 	return visualizer({

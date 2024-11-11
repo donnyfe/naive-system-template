@@ -1,40 +1,76 @@
-import { resolve } from 'node:path'
-import { createHtmlPlugin } from 'vite-plugin-html'
+import { Plugin } from 'vite'
+import { makeHtmlAttributes } from '@rollup/plugin-html'
+
+interface ScriptObject {
+	src: string
+	attrs?: Record<string, string>
+}
+
+console.log('[APP_ENV]: ', process.env.NODE_ENV)
+console.log('[APP_TITLE]: ', process.env.VITE_APP_TITLE)
 
 /**
- * @link: https://github.com/vbenjs/vite-plugin-html/blob/main/README.zh_CN.md
+ * @title html注入插件 (plugin: @rollup/plugin-html)
+ * @description 用于向html注入数据，生成html
+ * @link https://github.com/rollup/plugins/tree/master/packages/html
  */
-export function useHtmlPlugin() {
-	return createHtmlPlugin({
-		minify: true,
-		/**
-		 * 在这里写entry后，你将不需要在`index.html`内添加 script 标签，原有标签需要删除
-		 * @default src/main.ts
-		 */
-		entry: resolve('src/main.ts'),
-		/**
-		 * 如果你想将 `index.html`存放在指定文件夹，可以修改它，否则不需要配置
-		 * @default index.html
-		 */
-		template: resolve('public/index.html'),
-
-		/**
-		 * 需要注入 index.html ejs 模版的数据
-		 */
-		inject: {
-			data: {
-				title: 'Vue3Admin',
-				injectScript: '<script type="module" src="./inject.js"></script>'
-			},
-			tags: [
+export function useHtmlPlugin(): Plugin {
+	return {
+		name: 'vite:html-transform',
+		transformIndexHtml(html) {
+			const scripts: ScriptObject[] = [
 				{
-					injectTo: 'body-prepend',
-					tag: 'div',
-					attrs: {
-						id: 'tag'
-					}
+					src: 'https://cdn.bootcdn.net/ajax/libs/vue/3.5.12/vue.esm-browser.prod.min.js',
+					attrs: {}
+				},
+				{
+					src: 'https://cdn.bootcdn.net/ajax/libs/vue-router/4.4.5/vue-router.esm-browser.min.js',
+					attrs: {}
+				},
+				{
+					src: 'https://cdn.bootcdn.net/ajax/libs/naive-ui/2.39.0/index.prod.js',
+					attrs: {}
+				},
+				{
+					src: 'https://cdn.bootcdn.net/ajax/libs/vue-demi/0.14.8/index.iife.min.js',
+					attrs: {}
+				},
+				{
+					src: 'https://cdn.bootcdn.net/ajax/libs/pinia/2.2.4/pinia.iife.prod.min.js',
+					attrs: {}
+				},
+				{
+					src: 'https://cdn.bootcdn.net/ajax/libs/vue-i18n/10.0.4/vue-i18n.esm-browser.prod.min.js',
+					attrs: {}
+				},
+
+				{
+					src: 'https://cdn.bootcdn.net/ajax/libs/axios/1.7.7/axios.min.js',
+					attrs: {}
 				}
 			]
+
+			const scriptTags = scripts
+				.map(({ src, attrs = {} }) => {
+					attrs = {
+						...attrs,
+						type: 'module',
+						src
+					}
+					return `<script${makeHtmlAttributes(attrs)}></script>`
+				})
+				.join('\n')
+			console.log(8888888, scriptTags)
+
+			return (
+				html
+					// 注入script标签
+					.replace(
+						'</body>',
+						`${scriptTags}
+						</body>`
+					)
+			)
 		}
-	})
+	}
 }

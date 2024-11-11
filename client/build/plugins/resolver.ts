@@ -2,13 +2,13 @@ import { resolve } from 'node:path'
 import AutoImport from 'unplugin-auto-import/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
-/**
- * If you use the template method for development, you can use the unplugin-vue-components plugin to enable on-demand loading support.
- * 按需引入
- * https://github.com/antfu/unplugin-vue-components
- */
 import Components from 'unplugin-vue-components/vite'
 
+/**
+ * @title 按需引入 (plugin: unplugin-vue-components)
+ * @description If you use the template method for development, you can use the unplugin-vue-components plugin to enable on-demand loading support.
+ * @link https://github.com/antfu/unplugin-vue-components
+ */
 export function useAutoImportPlugin() {
 	return AutoImport({
 		// 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
