@@ -1,4 +1,7 @@
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 import type { UserData } from '../types'
 import { useBoolean } from '@/hooks'
 import { createUser, updateUser } from '../api'
@@ -94,13 +97,13 @@ async function onSubmit() {
 		async add() {
 			const { success } = await createUser(form.value)
 			if (!success) return
-			window.$message.success('用户创建成功')
+			$message.success('用户创建成功')
 			closeModal()
 		},
 		async edit() {
 			const { success } = await updateUser(form.value)
 			if (!success) return
-			window.$message.success('用户更新成功')
+			$message.success('用户更新成功')
 			closeModal()
 		},
 		async view() {
@@ -109,7 +112,7 @@ async function onSubmit() {
 	}
 	await formRef.value?.validate()
 	startLoading()
-	;(await handlers[modalType.value]()) && closeModal()
+		; (await handlers[modalType.value]()) && closeModal()
 }
 
 // const options = ref<RoleCode[]>([])
@@ -126,62 +129,91 @@ async function onSubmit() {
 // }
 </script>
 
-<template>
-	<n-modal
-		v-model:show="modalVisible"
-		:mask-closable="false"
-		preset="card"
-		:title="modalTitle"
-		class="w-700px"
-		:segmented="{
-			content: true,
-			action: true
-		}"
+<template><n-modal
+	v-model:show="modalVisible"
+	:mask-closable="false"
+	preset="card"
+	:title="modalTitle"
+	class="w-700px"
+	:segmented="{
+		content: true,
+		action: true
+	}"
+>
+	<n-form
+		ref="formRef"
+		:rules="rules"
+		label-placement="left"
+		:model="form"
+		:label-width="100"
+		:disabled="modalType === 'view'"
 	>
-		<n-form
-			ref="formRef"
-			:rules="rules"
-			label-placement="left"
-			:model="form"
-			:label-width="100"
-			:disabled="modalType === 'view'"
+		<n-grid
+			:cols="2"
+			:x-gap="18"
 		>
-			<n-grid :cols="2" :x-gap="18">
-				<n-form-item-grid-item :span="1" label="用户名" path="username">
-					<n-input v-model:value="form.username" />
-				</n-form-item-grid-item>
+			<n-form-item-grid-item
+				:span="1"
+				label="用户名"
+				path="username"
+			>
+				<n-input v-model:value="form.username" />
+			</n-form-item-grid-item>
 
-				<n-form-item-grid-item :span="1" label="性别" path="sex">
-					<n-radio-group v-model:value="form.sex">
-						<n-space>
-							<n-radio value="0"> 男 </n-radio>
-							<n-radio value="1"> 女 </n-radio>
-						</n-space>
-					</n-radio-group>
-				</n-form-item-grid-item>
+			<n-form-item-grid-item
+				:span="1"
+				label="性别"
+				path="sex"
+			>
+				<n-radio-group v-model:value="form.sex">
+					<n-space>
+						<n-radio value="0"> 男 </n-radio>
+						<n-radio value="1"> 女 </n-radio>
+					</n-space>
+				</n-radio-group>
+			</n-form-item-grid-item>
 
-				<n-form-item-grid-item :span="1" label="联系方式" path="phone">
-					<n-input v-model:value="form.phone" />
-				</n-form-item-grid-item>
+			<n-form-item-grid-item
+				:span="1"
+				label="联系方式"
+				path="phone"
+			>
+				<n-input v-model:value="form.phone" />
+			</n-form-item-grid-item>
 
-				<n-form-item-grid-item :span="1" label="邮箱" path="email">
-					<n-input v-model:value="form.email" />
-				</n-form-item-grid-item>
+			<n-form-item-grid-item
+				:span="1"
+				label="邮箱"
+				path="email"
+			>
+				<n-input v-model:value="form.email" />
+			</n-form-item-grid-item>
 
-				<!-- <n-form-item-grid-item :span="2" label="角色" path="roles">
+			<!-- <n-form-item-grid-item :span="2" label="角色" path="roles">
 					<n-select v-model:value="form.roles" multiple filterable label-field="name" value-field="value"
 						:options="options" />
 				</n-form-item-grid-item> -->
-				<n-form-item-grid-item :span="2" label="备注" path="remark">
-					<n-input v-model:value="form.remark" type="textarea" />
-				</n-form-item-grid-item>
-			</n-grid>
-		</n-form>
-		<template #action>
-			<n-space justify="center">
-				<n-button @click="closeModal"> 取消 </n-button>
-				<n-button type="primary" :loading="submitLoading" @click="onSubmit"> 提交 </n-button>
-			</n-space>
-		</template>
-	</n-modal>
+			<n-form-item-grid-item
+				:span="2"
+				label="备注"
+				path="remark"
+			>
+				<n-input
+					v-model:value="form.remark"
+					type="textarea"
+				/>
+			</n-form-item-grid-item>
+		</n-grid>
+	</n-form>
+	<template #action>
+		<n-space justify="center">
+			<n-button @click="closeModal"> 取消 </n-button>
+			<n-button
+				type="primary"
+				:loading="submitLoading"
+				@click="onSubmit"
+			> 提交 </n-button>
+		</n-space>
+	</template>
+</n-modal>
 </template>
