@@ -9,6 +9,19 @@ import { local } from '@/utils/storage'
 import axios from 'axios'
 import { stringify } from 'qs'
 
+declare module 'axios' {
+	interface InternalAxiosRequestConfig {
+		// 重试次数计数器
+		retryCount?: number
+		// 是否开启重试
+		isRetry?: boolean
+		// 最大重试次数
+		retryLimit?: number
+		// 重试间隔时间(ms)
+		retryInterval?: number
+	}
+}
+
 export interface Result<T> {
 	code: number
 	data: T
@@ -103,10 +116,23 @@ class Http {
 
 				return Promise.resolve(data)
 			},
-			(error: AxiosError) => {
-				const { response } = error
-				this.handleNetworkError((response as any).status)
-				Promise.reject(response)
+			async (error: AxiosError) => {
+				const config = error.config as InternalAxiosRequestConfig
+				// 重试配置
+				config.retryCount = config.retryCount ?? 0
+				const { isRetry, retryCount, retryInterval } = config
+
+				if (isRetry && retryCount < 3) {
+					config.retryCount++
+
+					// 重试延迟
+					await new Promise((resolve) => {
+						setTimeout(resolve, retryInterval || 1000)
+					})
+
+					return this.axiosInstance(config)
+				}
+				Promise.reject(error)
 			}
 		)
 	}
@@ -138,7 +164,7 @@ class Http {
 		const { code } = data
 
 		if (ERROR_CODE.hasOwnProperty(code)) {
-			window.$message.error(ERROR_CODE[code as ErrorCode] || ERROR_DEFAULT_MESSAGE)
+			$message.error(ERROR_CODE[code as ErrorCode] || ERROR_DEFAULT_MESSAGE)
 			// 授权错误，登出账户
 			// logout()
 			return false
@@ -158,7 +184,7 @@ class Http {
 		const errMsg: string = status
 			? ERROR_MESSAGE_MAP[status] || ERROR_DEFAULT_MESSAGE
 			: '无法连接到服务器！'
-		window.$message.error(errMsg)
+		$message.error(errMsg)
 	}
 
 	async get<T>(url: string, params?: object, config?: InternalAxiosRequestConfig): Promise<T> {
@@ -187,7 +213,6 @@ export default http
 
 export async function httpStream(url: string, data: any) {
 	const token = local.get('accessToken')
-	url = `/api${url}`
 
 	const res = await fetch(url, {
 		method: 'POST',
