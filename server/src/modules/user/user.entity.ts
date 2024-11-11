@@ -2,12 +2,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
-  ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
 import { Exclude } from 'class-transformer'
+import { RoleEntity } from '@/modules/role/role.entity'
+import { UserRoleEntity } from '@/modules/role/user-role.entity'
 
 @Entity('user', { comment: '用户表' })
 export class UserEntity {
@@ -45,4 +46,8 @@ export class UserEntity {
 
   @UpdateDateColumn({ type: 'timestamp', comment: '更新时间' })
   public updateTime: Date
+
+
+  @OneToMany(() => UserRoleEntity, (userRole) => userRole.user)
+  userRoles: UserRoleEntity[]
 }

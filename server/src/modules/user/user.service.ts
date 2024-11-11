@@ -3,9 +3,9 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Like, Repository } from 'typeorm'
 import { CreateUserDto, UpdateUserDto, GetUserListDto } from './user.dto'
-import { RegisterUserDto } from '../auth/auth.dto'
 import { UserEntity } from './user.entity'
-import { ErrorInfo } from '@/common/constants/result-code'
+import { RegisterUserDto } from '@/modules/auth/auth.dto'
+import { UserRoleEntity } from '@/modules/role/user-role.entity'
 import { responseSuccess, responseFail } from '@/utils'
 
 @Injectable()
@@ -119,6 +119,45 @@ export class UserService {
       where: { id },
     })
     return responseSuccess({ ...user })
+  }
+
+  async getUserWithRoles(id: number) {
+    const user = await this.userRepo.findOne({
+      where: { id },
+      relations: {
+        userRoles: {
+          role: true,
+        },
+      },
+    })
+
+    return responseSuccess({
+      ...user,
+      roles: user.userRoles.map((ur) => ur.role),
+    })
+  }
+
+  async assignRoles(userId: number, roleIds: number[]) {
+    const user = await this.userRepo.findOne({
+      where: { id: userId },
+      relations: {
+        userRoles: {
+          role: true,
+        },
+      },
+    })
+
+    // 更新用户角色
+    user.userRoles = roleIds.map((roleId) => {
+      const userRole = new UserRoleEntity()
+      userRole.userId = userId
+      userRole.roleId = roleId
+      return userRole
+    })
+
+    // 保存更新后的用户
+    const savedUser = await this.userRepo.save(user)
+    return responseSuccess(savedUser)
   }
 
   async resetPassword(id: number, password: string) {
