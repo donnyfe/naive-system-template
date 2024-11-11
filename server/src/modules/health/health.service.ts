@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { HealthCheckResult, HealthIndicator, HealthIndicatorResult } from '@nestjs/terminus'
+import { HealthIndicator, HealthIndicatorResult } from '@nestjs/terminus'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { RedisService } from '@/shared/redis.service'
