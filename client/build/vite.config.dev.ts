@@ -19,7 +19,7 @@ export default mergeConfig(
 			open: false,
 			proxy: {
 				'/api': {
-					target: 'http://localhost:5174',
+					target: 'http://localhost:3000/api',
 					changeOrigin: true,
 					rewrite: (path: string) => path.replace(/^\/api/, ''),
 					secure: false,
