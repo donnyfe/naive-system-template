@@ -5,7 +5,6 @@ import { join } from 'path'
 
 export default () => {
   const env = process.env.NODE_ENV || 'development'
-
   const filePath = join(__dirname, `config.${env}.yaml`)
   const YAML_CONFIG = yaml.load(readFileSync(filePath, 'utf8'))
 

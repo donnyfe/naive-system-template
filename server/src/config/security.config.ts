@@ -1,19 +1,21 @@
 import { INestApplication } from '@nestjs/common'
 import helmet from 'helmet'
 import rateLimit from 'express-rate-limit'
+
 export const setupSecurity = (app: INestApplication) => {
   const isProduction = process.env.NODE_ENV === 'production'
+
   // 配置 helmet 安全头
   app.use(
     helmet({
       // 注意： 开发环境如果开启 nest static mode 需要将 crossOriginResourcePolicy 设置为 false 否则 静态资源 跨域不可访问
-      // 在开发环境中禁用 COOP，或者配置为 unsafe-none
-      // 跨域打开策略 - 生产环境更严格
+      // 跨域打开策略
       crossOriginOpenerPolicy: {
-        policy: isProduction ? 'same-origin-allow-popups' : 'unsafe-none',
+        // policy: isProduction ? 'same-origin-allow-popups' : 'unsafe-none',
+        policy: 'unsafe-none', // 开发环境中禁用 COOP，或者配置为 unsafe-none
       },
       // 跨域资源访问策略
-      crossOriginResourcePolicy: false,
+      crossOriginResourcePolicy: isProduction ? { policy: 'same-origin' } : false,
       // 内容安全策略
       contentSecurityPolicy: isProduction
         ? {
@@ -29,8 +31,30 @@ export const setupSecurity = (app: INestApplication) => {
       xssFilter: true,
       // 禁止嗅探 MIME 类型
       noSniff: true,
+      // 引用策略
+      referrerPolicy: {
+        policy: 'strict-origin-when-cross-origin',
+      },
+      // 严格传输安全
+      hsts: isProduction
+        ? {
+            maxAge: 31536000,
+            includeSubDomains: true,
+            preload: true,
+          }
+        : false,
     }),
   )
+
+  // CORS 配置
+  app.enableCors({
+    origin: isProduction ? process.env.ALLOWED_ORIGINS?.split(',') : true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Content-Range', 'X-Content-Range'],
+    maxAge: 3600,
+  })
 
   // 限制应用访问频率
   app.use(
