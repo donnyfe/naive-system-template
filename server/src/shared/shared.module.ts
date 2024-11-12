@@ -1,32 +1,42 @@
-import { Global, Module, ValidationPipe } from '@nestjs/common'
-import { SharedService } from './shared.service'
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
-import { TransformInterceptor } from '@/common/interceptors/response.interceptor'
-import { ConfigService } from '@nestjs/config'
+import { Global, Module, ValidationPipe } from '@nestjs/common'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { MulterModule } from '@nestjs/platform-express'
+import { HttpModule } from '@nestjs/axios'
 import { RedisService } from './redis.service'
 import { createClient } from 'redis'
-import { HttpModule } from '@nestjs/axios'
-import { MulterModule } from '@nestjs/platform-express'
+import { SharedService } from './shared.service'
+import { TransformInterceptor } from '@/common/interceptors/transform.interceptor'
+
+import AppConfig from '@/config/app.config'
 
 @Global()
 @Module({
   imports: [
+    /* 配置模块 */
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [AppConfig],
+    }),
+
     MulterModule.register({
       dest: './uploads', // 设置文件上传的目录
     }),
 
+    /* http模块 */
     HttpModule.registerAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         return {
-          baseURL: '', // configService.get('http.host'),
+          baseURL: configService.get('http.host'),
           timeout: 5000,
           maxRedirects: 5,
         }
       },
     }),
 
+    /* 数据库模块 */
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
@@ -37,7 +47,8 @@ import { MulterModule } from '@nestjs/platform-express'
           username: configService.get('mysql.username'),
           password: configService.get('mysql.password'),
           database: configService.get('mysql.database'),
-          synchronize: process.env.NODE_ENV === 'production' ? false : configService.get('mysql.sync'),
+          synchronize:
+            process.env.NODE_ENV === 'production' ? false : configService.get('mysql.sync'),
           autoLoadEntities: true,
           timezone: '+08:00',
         }

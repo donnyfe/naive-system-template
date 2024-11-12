@@ -1,12 +1,12 @@
-import { ErrorInfo } from '@/common/constants/result-code'
-import { ACCESS_TOKEN_EXPIRATION_TIME } from '@/common/constants/redis'
-import { RedisService } from '@/shared/redis.service'
+import { ExtractJwt, Strategy } from 'passport-jwt'
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
-import { ExtractJwt, Strategy } from 'passport-jwt'
+import { ErrorInfo } from '@/common/constants/result-code'
+import { RedisService } from '@/shared/redis.service'
 import { UserService } from '../user/user.service'
 import { AuthService } from './auth.service'
+import { LoggerService } from '@/modules/logger/logger.service'
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -15,6 +15,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private redisService: RedisService,
     private userService: UserService,
     private authService: AuthService,
+    private logger: LoggerService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -36,7 +37,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new HttpException(ErrorInfo.ERR_11002, HttpStatus.UNAUTHORIZED)
     }
 
-    // 延长token过期时间
+    // 获取token失效时间
+    const ACCESS_TOKEN_EXPIRATION_TIME = this.configService.get('redis.accessTokenExpirationTime')
+
+    // 设置token失效时间
     this.redisService.set(
       this.authService.getAccessTokenKey(payload),
       accessToken,

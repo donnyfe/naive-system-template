@@ -1,16 +1,22 @@
 import { hashSync } from 'bcryptjs'
 import { Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Like, Repository } from 'typeorm'
-import { CreateUserDto, UpdateUserDto, GetUserListDto } from './user.dto'
 import { UserEntity } from './user.entity'
+import { CreateUserDto, UpdateUserDto, GetUserListDto } from './user.dto'
 import { RegisterUserDto } from '@/modules/auth/auth.dto'
 import { UserRoleEntity } from '@/modules/role/user-role.entity'
+import { LoggerService } from '@/modules/logger/logger.service'
 import { responseSuccess, responseFail } from '@/utils'
 
 @Injectable()
 export class UserService {
-  constructor(@InjectRepository(UserEntity) private userRepo: Repository<UserEntity>) {}
+  constructor(
+    @InjectRepository(UserEntity) private userRepo: Repository<UserEntity>,
+    private logger: LoggerService,
+    private configService: ConfigService,
+  ) {}
 
   async register(userDto: RegisterUserDto) {
     // 根据用户名查重
@@ -29,10 +35,16 @@ export class UserService {
 
     try {
       const userRepo = this.userRepo.create(userDto)
-      await this.userRepo.save(userRepo)
-    } catch (err) {
-      return responseFail(500, '用户创建失败')
+      const user = await this.userRepo.save(userRepo)
+
+      this.logger.info('用户注册成功', 'UserService.register', { userId: user.id })
+    } catch (error) {
+      this.logger.error('用户注册失败', error.stack, 'UserService.register', {
+        userData: userDto,
+      })
+      return responseFail(500, '用户注册失败')
     }
+
     return responseSuccess(null, '用户注册成功')
   }
 
@@ -48,14 +60,20 @@ export class UserService {
     }
 
     try {
+      // 初始密码
+      const initialPassword = this.configService.get('user.initialPassword')
+
       const newUser = {
         ...userDto,
-        password: hashSync('12345678'),
+        password: hashSync(initialPassword),
       }
       const userRepo = this.userRepo.create(newUser)
       await this.userRepo.save(userRepo)
-    } catch (err) {
-      console.log(err)
+
+      this.logger.info('用户创建成功', 'UserService.create', { userId: userRepo.id })
+    } catch (error) {
+      this.logger.info('用户创建失败', error.stack, 'UserService.create')
+
       return responseFail(500, '用户创建失败')
     }
     return responseSuccess('用户创建成功')

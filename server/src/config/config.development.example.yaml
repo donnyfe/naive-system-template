@@ -3,6 +3,9 @@ env: development
 jwt:
   secret: nestjs
 
+user:
+  initialPassword: 12345678
+
 session:
   secret: admin
 
@@ -33,6 +36,7 @@ mysql:
 
 redis:
   url: redis://default:123456@localhost:6379
+  accessTokenExpirationTime: 3600 # 3600秒
 
 qianfan:
   apiKey: your_api_key

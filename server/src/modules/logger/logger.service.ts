@@ -78,7 +78,7 @@ export class LoggerService {
     })
   }
 
-  log(message: string, context?: string, meta?: any) {
+  info(message: string, context?: string, meta?: any) {
     this.logger.info(message, { context, ...meta })
   }
 

@@ -13,7 +13,7 @@ export class LoggerInterceptor implements NestInterceptor {
     const ctx = context.getClass().name
 
     // 记录请求信息
-    this.logger.log(`Incoming Request: ${method} ${url}`, ctx, {
+    this.logger.info(`接收请求: ${method} ${url}`, ctx, {
       body,
       headers: {
         ...headers,
@@ -26,14 +26,14 @@ export class LoggerInterceptor implements NestInterceptor {
       tap({
         next: (data) => {
           // 记录响应信息
-          this.logger.log(`Response sent: ${method} ${url}`, ctx, {
+          this.logger.info(`发送请求: ${method} ${url}`, ctx, {
             duration: `${Date.now() - now}ms`,
             data,
           })
         },
         error: (error) => {
           // 记录错误信息
-          this.logger.error(`Request failed: ${method} ${url}`, error.stack, ctx, {
+          this.logger.error(`请求失败: ${method} ${url}`, error.stack, ctx, {
             duration: `${Date.now() - now}ms`,
             error: error.message,
           })

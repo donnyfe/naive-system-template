@@ -92,7 +92,6 @@ export class RoleService {
       where.name = Like(`%${query.name.trim()}%`)
     }
 
-    // status 可能为 0,所以要用 !== undefined 判断
     if (typeof query.status === 'number') {
       where.status = Number(query.status)
     }
@@ -104,10 +103,8 @@ export class RoleService {
         createTime: 'DESC',
       },
       skip: (pageNumber - 1) * pageSize,
-      // take: pageSize,
+      take: pageSize,
     })
-
-    console.log(roles, total)
 
     return responseSuccess({
       list: roles,

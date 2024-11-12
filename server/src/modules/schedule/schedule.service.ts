@@ -5,16 +5,17 @@ import { SchedulerRegistry, Cron } from '@nestjs/schedule'
 import { ScheduleEntity } from './schedule.entity'
 import { CreateScheduleDto, UpdateScheduleDto } from './schedule.dto'
 import { ScheduleStatus, ScheduleType } from './types'
+import { LoggerService } from '@/modules/logger/logger.service'
 
 @Injectable()
 export class ScheduleService {
-  private readonly logger = new Logger(ScheduleService.name)
   private readonly runningTasks = new Map<string, any>()
 
   constructor(
     @InjectRepository(ScheduleEntity)
     private scheduleRepository: Repository<ScheduleEntity>,
     private schedulerRegistry: SchedulerRegistry,
+    private logger: LoggerService,
   ) {
     this.initializeScheduledTasks()
   }
@@ -43,7 +44,7 @@ export class ScheduleService {
           task.status = ScheduleStatus.ACTIVE
           task.retryCount = 0
         } catch (error) {
-          this.logger.error(`Task ${task.name} failed: ${error.message}`)
+          this.logger.error(`Task ${task.name} failed: ${error.message}`, 'ScheduleService')
           task.status = ScheduleStatus.ERROR
           task.retryCount++
 
@@ -58,7 +59,10 @@ export class ScheduleService {
 
       switch (task.type) {
         case ScheduleType.CRON:
-          this.schedulerRegistry.addCronJob(task.id, new (Cron as any)(task.expression, jobFunction))
+          this.schedulerRegistry.addCronJob(
+            task.id,
+            new (Cron as any)(task.expression, jobFunction),
+          )
           break
 
         case ScheduleType.INTERVAL:
@@ -82,7 +86,7 @@ export class ScheduleService {
   private async executeTask(task: ScheduleEntity) {
     // 这里实现具体的任务执行逻辑
     // 可以根据 task.taskData 中的配置来执行不同类型的任务
-    this.logger.log(`Executing task: ${task.name}`)
+    this.logger.info(`Executing task: ${task.name}`)
 
     // 示例：支持 HTTP 请求任务
     if (task.taskData.type === 'http') {
