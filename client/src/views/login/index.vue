@@ -18,18 +18,17 @@ const formComponents = {
 		<!-- 左侧品牌区域 -->
 		<div class="login-banner">
 			<div class="banner-content">
-				<h1 class="text-2xl font-bold mb-4">欢迎使用</h1>
+				<h1 class="text-2xl font-bold mb-4">欢迎您</h1>
 				<!-- <p class="text-lg opacity-75">打造专业的企业级应用</p> -->
 			</div>
 		</div>
-	
-		<!-- 右侧表单区域 -->
-		<div class="login-form-container">
-			<div class="form-header">
-				<DarkModeSwitch />
-				<LangsSwitch />
-			</div>
-	
+<!-- 右侧表单区域 -->
+<div class="login-form-container">
+	<div class="form-header">
+		<DarkModeSwitch />
+		<LangsSwitch />
+	</div>
+
 			<div class="form-content">
 				<transition
 					name="fade-slide"
@@ -50,7 +49,7 @@ const formComponents = {
 <style scoped>
 	.login-container {
 		@apply w-full min-h-screen flex;
-		background: linear-gradient(135deg, #fff 0%, #000 100%);
+		background: linear-gradient(135deg, #3c3c3c 0%, #000 100%);
 	}
 
 	.login-banner {
