@@ -20,8 +20,10 @@
 	},
 	"route": {
 		"appRoot": "首页",
+		"system": "系统管理",
 		"chat": "聊天助手",
 		"users": "用户管理",
+		"role": "角色管理",
 		"userCenter": "个人中心",
 		"about": "关于",
 		"file": "文件上传",
@@ -117,6 +119,7 @@
 		"captchaPlaceholder": "输入验证码",
 		"accountRuleTip": "请输入账户",
 		"passwordRuleTip": "请输入密码",
+		"captchaRuleTip": "请输入正确的验证码",
 		"or": "其他",
 		"signIn": "登录",
 		"rememberMe": "记住我",

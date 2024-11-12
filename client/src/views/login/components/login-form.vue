@@ -3,7 +3,6 @@ import type { FormInst } from 'naive-ui'
 import { useAuthStore } from '@/store'
 import {
 	local
-	// throttle
 } from '@/utils'
 import { encrypt } from '@/utils/aes'
 import { useThrottleFn } from '@vueuse/core'
@@ -29,6 +28,11 @@ const rules = computed(() => {
 			required: true,
 			trigger: 'blur',
 			message: t('login.passwordRuleTip')
+		},
+		captcha: {
+			required: true,
+			trigger: 'blur',
+			message: t('login.captchaRuleTip')
 		}
 	}
 })
@@ -41,10 +45,10 @@ const form = reactive({
 const captchaUrl = ref('')
 const baseUrl = import.meta.env.VITE_AXIOS_BASE_URL
 
-const initCaptcha = useThrottleFn(() => {
+const fetchCaptcha = useThrottleFn(() => {
 	captchaUrl.value = `${baseUrl}/api/auth/captcha?${Date.now()}`
 }, 500)
-initCaptcha()
+fetchCaptcha()
 
 const isRemember = ref(false)
 const isLoading = ref(false)
@@ -67,9 +71,16 @@ function handleLogin() {
 		// 实现前端加密传给后端
 		// data.password = encrypt(password)
 
-		await authStore.login(data)
-
-		isLoading.value = false
+		try {
+			const res = await authStore.login(data)
+			if (!res.success) {
+				fetchCaptcha()
+			}
+		} catch (error) {
+			fetchCaptcha()
+		} finally {
+			isLoading.value = false
+		}
 	})
 }
 </script>
@@ -118,19 +129,12 @@ function handleLogin() {
 						:placeholder="$t('login.captchaPlaceholder')"
 						@keydown.enter="handleLogin()"
 					/>
-					<!-- <n-image
-						class="w-100px h-38px ml-12px cursor-pointer"
-						v-if="captchaUrl"
-						:src="captchaUrl"
-						:alt="$t('login.captcha')"
-						@click="initCaptcha"
-					/> -->
 					<FallbackImage
 						v-if="captchaUrl"
 						:src="captchaUrl"
 						:alt="$t('login.captcha')"
 						class="w-100px h-38px ml-12px cursor-pointer"
-						@click="initCaptcha"
+						@click="fetchCaptcha"
 					/>
 				</n-flex>
 			</n-form-item>

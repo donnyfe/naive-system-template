@@ -20,8 +20,10 @@
 	},
 	"route": {
 		"appRoot": "Home",
+		"system": "系统管理",
 		"chat": "Chat",
 		"users": "User settings",
+		"role": "Role management",
 		"userCenter": "Personal Center",
 		"about": "About",
 		"file": "Upload",
@@ -113,6 +115,7 @@
 		"signInTitle": "Login",
 		"accountRuleTip": "Please enter account",
 		"passwordRuleTip": "Please enter password",
+		"captchaRuleTip": "Please enter correct captcha",
 		"or": "Or",
 		"rememberMe": "Remember me",
 		"forgotPassword": "Forget the password?",

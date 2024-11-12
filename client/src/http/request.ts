@@ -10,7 +10,13 @@ import axios from 'axios'
 import { stringify } from 'qs'
 
 declare module 'axios' {
+	// 拓展axios请求配置
 	interface InternalAxiosRequestConfig {
+		// 是否为上传文件
+		isUpload?: boolean
+		// 是否为json格式
+		isJson?: boolean
+
 		// 重试次数计数器
 		retryCount?: number
 		// 是否开启重试
@@ -111,7 +117,13 @@ class Http {
 					return Promise.reject(data)
 				}
 
+				if (data.code !== 200) {
+					data.success = false
+				}
+
+				// 处理授权异常
 				this.handleAuthError(data)
+				// 处理其他异常
 				this.handleGeneralError(data)
 
 				return Promise.resolve(data)
@@ -144,11 +156,11 @@ class Http {
 			config.headers.Authorization = `Bearer ${local.get('accessToken') || ''}`
 		}
 
-		if ((config as any).isUpload) {
+		if (config.isUpload) {
 			config.headers['Content-Type'] = 'multipart/form-data'
 		}
 
-		if ((config as any).isJson === false) {
+		if (config.isJson === false) {
 			config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
 		}
 		return config
@@ -161,10 +173,12 @@ class Http {
 
 	// 处理授权异常
 	handleAuthError(data: Result<unknown>): boolean {
-		const { code } = data
+		const { code, message } = data
 
 		if (ERROR_CODE.hasOwnProperty(code)) {
-			$message.error(ERROR_CODE[code as ErrorCode] || ERROR_DEFAULT_MESSAGE)
+			const msg = message || ERROR_CODE[code as ErrorCode] || ERROR_DEFAULT_MESSAGE
+
+			$message.error(msg)
 			// 授权错误，登出账户
 			// logout()
 			return false
@@ -175,7 +189,9 @@ class Http {
 
 	// 处理其他异常
 	handleGeneralError(data: Result<unknown>): boolean {
-		// do sth...
+		if (data.success === false) {
+			return false
+		}
 		return true
 	}
 

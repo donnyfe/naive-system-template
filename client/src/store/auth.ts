@@ -36,11 +36,12 @@ export const useAuthStore = defineStore('auth-store', {
 
 		/* 用户登录 */
 		async login(params: LoginParam) {
-			const { success, data } = await doLogin(params)
-			if (!success) return
-
-			// 处理登录信息
-			await this.handleLoginInfo(data)
+			const res = await doLogin(params)
+			if (res.success) {
+				// 处理登录信息
+				await this.handleLoginInfo(res.data)
+			}
+			return res
 		},
 
 		/* 处理登录返回的数据 */
@@ -63,7 +64,7 @@ export const useAuthStore = defineStore('auth-store', {
 			const route = unref(router.currentRoute)
 			const query = route.query as { redirect: string }
 			router.push({
-				path: query.redirect || '/'
+				path: query.redirect || import.meta.env.VITE_ROUTE_HOME_PATH
 			})
 			$message.success('登录成功，欢迎您!')
 		},
