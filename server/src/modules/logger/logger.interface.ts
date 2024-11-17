@@ -1,34 +1,22 @@
-import { LogLevel } from '@nestjs/common'
-
-export enum LogType {
-  SYSTEM = 'system',
-  BUSINESS = 'business',
-  SECURITY = 'security',
-  PERFORMANCE = 'performance',
-  DIAGNOSTIC = 'diagnostic',
-}
-
 export interface LoggerOptions {
+  // 是否输出JSON格式
+  json?: boolean;
+
   // 日志级别
-  level?: LogLevel
-  // 日志类型
-  type?: LogType
-  // 日志文件配置
+  logLevel?: ('log' | 'debug' | 'error' | 'verbose' | 'warn')[];
+
+  // 文件输出配置
   file?: {
-    enabled: boolean
-    path: string
-    maxSize: string
-    maxFiles: string
-    zippedArchive: boolean
-  }
-  // 控制台配置
-  console?: {
-    enabled: boolean
-    colorize: boolean
-  }
-  // 格式化配置
-  format?: {
-    timestamp: boolean
-    label: boolean
-  }
+    enabled: boolean;
+    path: string;
+    maxFiles?: number;
+    maxSize?: string;
+  };
+
+  // 请求日志配置
+  requestLogging?: {
+    enabled: boolean;
+    headers?: boolean;
+    ignorePaths?: string[];
+  };
 }

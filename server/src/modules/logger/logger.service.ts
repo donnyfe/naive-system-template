@@ -1,100 +1,61 @@
-import { Inject, Injectable,  Optional } from '@nestjs/common'
-import { createLogger, format, transports } from 'winston'
-import DailyRotateFile from 'winston-daily-rotate-file'
-import { LOGGER_OPTIONS } from '@/common/constants/logger'
-import { LoggerOptions, LogType } from './logger.interface'
+import { Injectable, LoggerService as NestLoggerService } from '@nestjs/common';
+import * as winston from 'winston';
+import { LoggerOptions } from './logger.interface';
 
 @Injectable()
-export class LoggerService {
-  private logger: any
+export class LoggerService implements NestLoggerService {
+  private logger: winston.Logger;
 
-  constructor(@Optional() @Inject(LOGGER_OPTIONS) private options: LoggerOptions = {}) {
-    this.initializeLogger()
+  constructor(private options: LoggerOptions) {
+    this.initLogger();
   }
 
-  private initializeLogger() {
-    const {
-      level = 'info',
-      type = LogType.SYSTEM,
-      file = {
-        enabled: true,
-        path: 'logs/%DATE%.log',
-        maxSize: '20m',
-        maxFiles: '14d',
-        zippedArchive: true,
-      },
-      console = {
-        enabled: true,
-        colorize: true,
-      },
-      format: formatOptions = {
-        timestamp: true,
-        label: true,
-      },
-    } = this.options
+  private initLogger() {
+    const transports = [];
 
-    // 配置日志格式
-    const logFormat = format.combine(
-      format.timestamp({
-        format: 'YYYY-MM-DD HH:mm:ss',
-      }),
-      format.errors({ stack: true }),
-      format.splat(),
-      format.json(),
-    )
+    // 控制台输出
+    transports.push(
+      new winston.transports.Console({
+        format: this.options.json
+          ? winston.format.json()
+          : winston.format.simple()
+      })
+    );
 
-    const loggerTransports = []
-
-    // 添加控制台输出
-    if (console.enabled) {
-      loggerTransports.push(
-        new transports.Console({
-          format: format.combine(format.colorize({ all: console.colorize }), format.simple()),
-        }),
-      )
+    // 文件输出
+    if (this.options.file?.enabled) {
+      transports.push(
+        new winston.transports.File({
+          filename: this.options.file.path,
+          maxFiles: this.options.file.maxFiles,
+          maxsize: this.options.file.maxSize
+        })
+      );
     }
 
-    // 添加文件输出
-    if (file.enabled) {
-      loggerTransports.push(
-        new DailyRotateFile({
-          filename: file.path,
-          datePattern: 'YYYY-MM-DD',
-          zippedArchive: file.zippedArchive,
-          maxSize: file.maxSize,
-          maxFiles: file.maxFiles,
-        }),
-      )
-    }
-
-    this.logger = createLogger({
-      level,
-      format: logFormat,
-      defaultMeta: {
-        type,
-        env: process.env.NODE_ENV,
-      },
-      transports: loggerTransports,
-    })
+    this.logger = winston.createLogger({
+      level: 'info',
+      transports
+    });
   }
 
-  info(message: string, context?: string, meta?: any) {
-    this.logger.info(message, { context, ...meta })
+  log(message: string, context?: string) {
+    this.logger.info(message, { context });
   }
 
-  error(message: string, trace?: string, context?: string, meta?: any) {
-    this.logger.error(message, { trace, context, ...meta })
+  error(message: string, trace?: Error | unknown, context?: string) {
+    this.logger.error(message, { trace, context });
   }
 
-  warn(message: string, context?: string, meta?: any) {
-    this.logger.warn(message, { context, ...meta })
+  warn(message: string, context?: string) {
+    this.logger.warn(message, { context });
   }
 
-  debug(message: string, context?: string, meta?: any) {
-    this.logger.debug(message, { context, ...meta })
+  debug(message: string, context?: string) {
+    this.logger.debug(message, { context });
   }
 
-  verbose(message: string, context?: string, meta?: any) {
-    this.logger.verbose(message, { context, ...meta })
+  verbose(message: string, context?: string) {
+    this.logger.verbose(message, { context });
   }
 }

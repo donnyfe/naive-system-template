@@ -1,7 +1,6 @@
 import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common'
 import { PerformanceMiddleware } from '@/common/middleware/performance.middleware'
 import { LoggerModule } from '@/modules/logger/logger.module'
-import { LogType } from '@/modules/logger/logger.interface'
 import { SharedModule } from './shared/shared.module'
 import { HealthModule } from './modules/health/health.module'
 import { ScheduleModule } from './modules/schedule/schedule.module'
@@ -16,18 +15,18 @@ import { PromptModule } from './modules/chat-prompt/prompt.module'
   imports: [
     /* 日志模块 */
     LoggerModule.forRoot({
-      level: 'debug',
-      type: LogType.SYSTEM,
+      json: true,
+      logLevel: ['log', 'error', 'warn'],
       file: {
         enabled: true,
-        path: 'logs/app-%DATE%.log',
+        path: 'logs/app.log',
+        maxFiles: 30,
         maxSize: '20m',
-        maxFiles: '14d',
-        zippedArchive: true,
       },
-      console: {
+      requestLogging: {
         enabled: true,
-        colorize: true,
+        headers: true,
+        ignorePaths: ['/health'],
       },
     }),
 
