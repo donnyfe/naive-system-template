@@ -8,7 +8,7 @@ import { RedisService } from './redis.service'
 import { createClient } from 'redis'
 import { SharedService } from './shared.service'
 import { TransformInterceptor } from '@/common/interceptors/transform.interceptor'
-
+import { CompressionMiddleware } from '@/common/middleware/compression.middleware'
 import AppConfig from '@/config/app.config'
 
 @Global()
@@ -58,6 +58,7 @@ import AppConfig from '@/config/app.config'
   providers: [
     SharedService,
     RedisService,
+
     {
       inject: [ConfigService],
       provide: 'REDIS_CLIENT',
@@ -81,6 +82,14 @@ import AppConfig from '@/config/app.config'
         whitelist: true,
         transform: true, // 自动类型转换
       }),
+    },
+    {
+      provide: CompressionMiddleware,
+      useFactory: () =>
+        new CompressionMiddleware({
+          level: 9,
+          threshold: 0,
+        }),
     },
   ],
   exports: [SharedService, RedisService],
