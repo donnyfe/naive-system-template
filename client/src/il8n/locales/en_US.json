@@ -18,17 +18,6 @@
 		"copySuccess": "Copy success",
 		"copyFailed": "Copy failed"
 	},
-	"route": {
-		"appRoot": "Home",
-		"system": "系统管理",
-		"chat": "Chat",
-		"users": "User settings",
-		"role": "Role management",
-		"userCenter": "Personal Center",
-		"about": "About",
-		"file": "Upload",
-		"imageRecognition": "Image Recognition"
-	},
 	"http": {
 		"400": "Syntax error in the request",
 		"401": "User unauthorized",
@@ -55,6 +44,17 @@
 			"clearIcon": "Clear icon",
 			"selectorTitle": "Icon selection"
 		}
+	},
+	"route": {
+		"appRoot": "Home",
+		"system": "系统管理",
+		"chat": "Chat",
+		"users": "User settings",
+		"role": "Role management",
+		"userCenter": "Personal Center",
+		"about": "About",
+		"file": "Upload",
+		"imageRecognition": "Image Recognition"
 	},
 	"app": {
 		"systemInfo": "System info",
@@ -133,9 +133,17 @@
 		"registerTitle": "Register",
 		"userAgreement": "User Agreement",
 		"resetPassword": "Reset password",
-		"resetPasswordPlaceholder": "Enter account/mobile phone number",
-		"resetPasswordRuleTip": "Please enter your account/mobile phone number",
-		"resetPasswordTitle": "Reset"
+		"resetPasswordPlaceholder": "Enter account",
+		"resetPasswordRuleTip": "Please enter your account",
+		"resetPasswordTitle": "Reset",
+		"accountLengthTip": "The length of the username is between 4-20 characters",
+		"passwordLengthTip": "The length of the password is between 6-20 characters",
+		"captchaLengthTip": "The length of the verification code is 4 digits",
+		"passwordNotMatch": "The two passwords entered are inconsistent",
+		"agreementRequired": "Please read and agree to the user agreement",
+		"registerSuccess": "Register successful",
+		"resetPasswordSuccess": "Reset password successful",
+		"emailPlaceholder": "Please enter your email"
 	},
 	"users": {
 		"createUser": "Create user"

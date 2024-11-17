@@ -24,8 +24,6 @@ declare module 'vue' {
     IconParkOutlineMenuUnfold: typeof import('~icons/icon-park-outline/menu-unfold')['default']
     IconParkOutlineMoon: typeof import('~icons/icon-park-outline/moon')['default']
     IconParkOutlineOffScreenTwo: typeof import('~icons/icon-park-outline/off-screen-two')['default']
-    IconParkOutlinePreviewCloseOne: typeof import('~icons/icon-park-outline/preview-close-one')['default']
-    IconParkOutlinePreviewOpen: typeof import('~icons/icon-park-outline/preview-open')['default']
     IconParkOutlineRedo: typeof import('~icons/icon-park-outline/redo')['default']
     IconParkOutlineRefresh: typeof import('~icons/icon-park-outline/refresh')['default']
     IconParkOutlineRemind: typeof import('~icons/icon-park-outline/remind')['default']

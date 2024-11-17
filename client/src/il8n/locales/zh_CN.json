@@ -18,17 +18,6 @@
 		"copySuccess": "复制成功",
 		"copyFailed": "复制失败"
 	},
-	"route": {
-		"appRoot": "首页",
-		"system": "系统管理",
-		"chat": "聊天助手",
-		"users": "用户管理",
-		"role": "角色管理",
-		"userCenter": "个人中心",
-		"about": "关于",
-		"file": "文件上传",
-		"imageRecognition": "图像识别"
-	},
 	"http": {
 		"400": "请求出现语法错误",
 		"401": "用户未授权",
@@ -47,6 +36,17 @@
 		"10005": "用户创建失败",
 		"10031": "登录失效，需要重新登录",
 		"defaultTip": "请求错误"
+	},
+	"route": {
+		"appRoot": "首页",
+		"system": "系统管理",
+		"chat": "聊天助手",
+		"users": "用户管理",
+		"role": "角色管理",
+		"userCenter": "个人中心",
+		"about": "关于",
+		"file": "文件上传",
+		"imageRecognition": "图像识别"
 	},
 	"components": {
 		"iconSelector": {
@@ -133,9 +133,17 @@
 		"readAndAgree": "我已阅读并同意",
 		"userAgreement": "用户协议",
 		"resetPasswordTitle": "重置密码",
-		"resetPasswordPlaceholder": "输入账号/手机号码",
-		"resetPasswordRuleTip": "请输入账号/手机号码",
-		"resetPassword": "重置密码"
+		"resetPasswordPlaceholder": "输入账号",
+		"resetPasswordRuleTip": "请输入账号",
+		"resetPassword": "重置密码",
+		"accountLengthTip": "用户名长度在4-20个字符之间",
+		"passwordLengthTip": "密码长度在6-20个字符之间",
+		"captchaLengthTip": "验证码长度为4位",
+		"passwordNotMatch": "两次输入的密码不一致",
+		"agreementRequired": "请阅读并同意用户协议",
+		"registerSuccess": "注册成功",
+		"resetPasswordSuccess": "重置密码成功",
+		"emailPlaceholder": "请输入邮箱"
 	},
 	"users": {
 		"createUser": "新建用户"
