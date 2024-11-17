@@ -1,172 +1,182 @@
-<script setup lang="ts">
-import type { FormInst } from 'naive-ui'
+<script
+	setup
+	lang="ts"
+>
+import { ref, reactive } from 'vue'
+import { useFormRules } from './hooks'
 import { useAuthStore } from '@/store'
-import {
-	local
-} from '@/utils'
-import { encrypt } from '@/utils/aes'
 import { useThrottleFn } from '@vueuse/core'
+import { encrypt } from '@/utils/aes'
+import { local } from '@/utils'
 import FallbackImage from '@/components/fallback-image.vue'
+import { UserOutlined, LockOutlined } from '@vicons/antd'
 
 const emit = defineEmits(['update:modelValue'])
-
+const { t } = useI18n()
 const authStore = useAuthStore()
 
-function toOtherForm(type: any) {
-	emit('update:modelValue', type)
-}
+const formRef = ref()
+const loading = ref(false)
 
-const { t } = useI18n()
-const rules = computed(() => {
-	return {
-		username: {
-			required: true,
-			trigger: 'blur',
-			message: t('login.accountRuleTip')
-		},
-		password: {
-			required: true,
-			trigger: 'blur',
-			message: t('login.passwordRuleTip')
-		},
-		captcha: {
-			required: true,
-			trigger: 'blur',
-			message: t('login.captchaRuleTip')
-		}
-	}
-})
 const form = reactive({
 	username: 'admin01',
 	password: '123456',
 	captcha: ''
 })
+const rules = useFormRules(form) as Ref<Record<string, any[]>>
 
+// 验证码相关
 const captchaUrl = ref('')
-const baseUrl = import.meta.env.VITE_AXIOS_BASE_URL
-
+const baseUrl = import.meta.env.VITE_AXIOS_BASE_URL || ''
 const fetchCaptcha = useThrottleFn(() => {
 	captchaUrl.value = `${baseUrl}/api/auth/captcha?${Date.now()}`
 }, 500)
-fetchCaptcha()
 
+// 记住密码
 const isRemember = ref(false)
-const isLoading = ref(false)
 
-const formRef = ref<FormInst | null>(null)
+// 表单提交
+async function handleSubmit() {
+	try {
+		await formRef.value?.validate()
+		loading.value = true
 
-function handleLogin() {
-	formRef.value?.validate(async (error) => {
-		if (error) return
-
-		isLoading.value = true
 		const { username, password } = form
-
 		if (isRemember.value) {
-			local.set('loginAccount', { username, password: encrypt(password) })
-		} else {
-			local.remove('loginAccount')
+			local.set('loginAccount', {
+				username,
+				password: encrypt(password)
+			})
 		}
-		const data = { ...toRaw(form) }
-		// 实现前端加密传给后端
-		// data.password = encrypt(password)
 
-		try {
-			const res = await authStore.login(data)
-			if (!res.success) {
-				fetchCaptcha()
-			}
-		} catch (error) {
+		const res = await authStore.login({
+			...form,
+			password: encrypt(password)
+		})
+
+		if (!res.success) {
 			fetchCaptcha()
-		} finally {
-			isLoading.value = false
 		}
-	})
+	} catch (error) {
+		fetchCaptcha()
+	} finally {
+		loading.value = false
+	}
 }
+
+// 切换表单
+function switchForm(type: string) {
+	emit('update:modelValue', type)
+}
+
+onMounted(() => {
+	fetchCaptcha()
+})
 </script>
 
 <template>
-	<div>
-		<n-h2 depth="3" class="text-center">
-			{{ $t('login.signInTitle') }}
-		</n-h2>
-		<n-form ref="formRef" :rules="rules" :model="form" :show-label="false" size="large">
-			<n-form-item path="username">
+<div class="login-form login-modal-form">
+	<n-h2 class="form-title">
+		{{ $t('login.signInTitle') }}
+	</n-h2>
+	<n-form
+		ref="formRef"
+		:model="form"
+		:rules="rules"
+		size="large"
+	>
+		<n-form-item path="username">
+			<n-input
+				v-model:value="form.username"
+				:placeholder="t('login.accountPlaceholder')"
+			>
+				<template #prefix>
+					<n-icon>
+						<UserOutlined />
+					</n-icon>
+				</template>
+			</n-input>
+		</n-form-item>
+
+		<n-form-item path="password">
+			<n-input
+				v-model:value="form.password"
+				type="password"
+				show-password-on="click"
+				:placeholder="t('login.passwordPlaceholder')"
+			>
+				<template #prefix>
+					<n-icon>
+						<LockOutlined />
+					</n-icon>
+				</template>
+			</n-input>
+		</n-form-item>
+
+		<n-form-item path="captcha">
+			<div class="w-full h-full flex flex-row justify-between items-center">
 				<n-input
-					v-model:value="form.username"
-					clearable
-					:placeholder="$t('login.accountPlaceholder')"
+					class="flex-1"
+					v-model:value="form.captcha"
+					:placeholder="t('login.captchaPlaceholder')"
+					@keyup.enter="handleSubmit"
 				/>
-			</n-form-item>
-
-			<n-form-item path="password">
-				<n-input
-					v-model:value="form.password"
-					type="password"
-					clearable
-					show-password-on="click"
-					autocomplete="current-password"
-					:minleng="6"
-					:maxlength="20"
-					:placeholder="$t('login.passwordPlaceholder')"
-				>
-					<template #password-invisible-icon>
-						<icon-park-outline-preview-close-one />
-					</template>
-					<template #password-visible-icon>
-						<icon-park-outline-preview-open />
-					</template>
-				</n-input>
-			</n-form-item>
-
-			<n-form-item path="captcha">
-				<n-flex class="w-full flex-between flex-center">
-					<n-input
-						class="flex-1"
-						v-model:value="form.captcha"
-						clearable
-						:maxlength="4"
-						:placeholder="$t('login.captchaPlaceholder')"
-						@keydown.enter="handleLogin()"
-					/>
+				<div class="w-28 h-full items-center ml-4">
 					<FallbackImage
-						v-if="captchaUrl"
+						class="w-full h-full max-h-44px rounded cursor-pointer"
 						:src="captchaUrl"
-						:alt="$t('login.captcha')"
-						class="w-100px h-38px ml-12px cursor-pointer"
+						:alt="t('login.captcha')"
 						@click="fetchCaptcha"
 					/>
-				</n-flex>
-			</n-form-item>
+				</div>
+			</div>
+		</n-form-item>
 
-			<n-space vertical :size="20">
-				<div class="flex-y-center justify-between">
-					<n-checkbox v-model:checked="isRemember">
-						{{ $t('login.rememberMe') }}
-					</n-checkbox>
-					<n-button type="primary" text @click="toOtherForm('resetPasswordForm')">
-						{{ $t('login.forgotPassword') }}
+		<div class="flex justify-between mb-4 text-white flex-center">
+			<n-checkbox v-model:checked="isRemember">
+				<span class="text-white">{{ t('login.rememberMe') }}</span>
+			</n-checkbox>
+			<n-button
+				text
+				class="text-white"
+				@click="switchForm('resetPasswordForm')"
+			>
+				{{ t('login.forgotPassword') }}
+			</n-button>
+		</div>
+
+		<n-button
+			class="text-white rounded-lg"
+			block
+			type="primary"
+			size="large"
+			:loading="loading"
+			@click="handleSubmit"
+		>
+			{{ t('login.signIn') }}
+		</n-button>
+
+		<div class="mt-4 text-center text-white">
+			{{ t('login.noAccountText') }}
+			<n-button
+				text
+				:class="['text-[var(--n-text-color-pressed)]']"
+				@click="switchForm('registerForm')"
+			>
+				{{ t('login.signUp') }}
 					</n-button>
 				</div>
-				<n-button
-					block
-					type="primary"
-					size="large"
-					:loading="isLoading"
-					:disabled="isLoading"
-					@click="handleLogin"
-				>
-					{{ $t('login.signIn') }}
-				</n-button>
-				<n-flex>
-					<n-text>{{ $t('login.noAccountText') }}</n-text>
-					<n-button type="primary" text @click="toOtherForm('registerForm')">
-						{{ $t('login.signUp') }}
-					</n-button>
-				</n-flex>
-			</n-space>
-		</n-form>
+				</n-form>
 	</div>
 </template>
 
-<style scoped></style>
+<style
+	lang="scss"
+	scoped
+>
+	@use '../style.scss' as *;
+
+	.captcha-img {
+		@apply w-28 h-full cursor-pointer ml-4 rounded;
+	}
+</style>

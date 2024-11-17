@@ -1,58 +1,107 @@
-<script setup lang="ts">
-import type { FormInst } from 'naive-ui'
+<script
+	setup
+	lang="ts"
+>
+import { ref, reactive } from 'vue'
+import { useFormRules } from './hooks'
+import { UserOutlined, MailOutlined } from '@vicons/antd'
 
 const emit = defineEmits(['update:modelValue'])
-function toLogin() {
-	emit('update:modelValue', 'loginForm')
-}
 const { t } = useI18n()
 
-const rules = computed(() => {
-	return {
-		account: {
-			required: true,
-			trigger: 'blur',
-			message: t('login.resetPasswordRuleTip')
-		}
+
+const formRef = ref()
+const loading = ref(false)
+
+const form = reactive({
+	username: '',
+	email: ''
+})
+const rules = useFormRules() as Record<string, any>
+
+async function handleSubmit() {
+	try {
+		await formRef.value?.validate()
+		loading.value = true
+
+		// TODO: 实现重置密码逻辑
+		await new Promise(resolve => setTimeout(resolve, 1000))
+
+		window.$message.success(t('login.resetPasswordSuccess'))
+		switchForm('loginForm')
+	} finally {
+		loading.value = false
 	}
-})
-const formValue = ref({
-	account: ''
-})
-const formRef = ref<FormInst | null>(null)
-function handleRegister() {
-	formRef.value?.validate()
+}
+
+function switchForm(type: string) {
+	emit('update:modelValue', type)
 }
 </script>
 
 <template>
-	<div>
-		<n-h2 depth="3" class="text-center">
-			{{ $t('login.resetPasswordTitle') }}
-		</n-h2>
-		<n-form ref="formRef" :rules="rules" :model="formValue" :show-label="false" size="large">
-			<n-form-item path="account">
-				<n-input
-					v-model:value="formValue.account"
-					clearable
-					:placeholder="$t('login.resetPasswordPlaceholder')"
-				/>
-			</n-form-item>
-			<n-form-item>
-				<n-space vertical :size="20" class="w-full">
-					<n-button block type="primary" @click="handleRegister">
-						{{ $t('login.resetPassword') }}
-					</n-button>
-					<n-flex justify="center">
-						<n-text>{{ $t('login.haveAccountText') }}</n-text>
-						<n-button text type="primary" @click="toLogin">
-							{{ $t('login.signIn') }}
-						</n-button>
-					</n-flex>
-				</n-space>
-			</n-form-item>
-		</n-form>
+<div class="reset-form login-modal-form">
+	<n-h2 class="form-title">
+		{{ t('login.resetPasswordTitle') }}
+	</n-h2>
+	<n-form
+		ref="formRef"
+		:model="form"
+		:rules="rules"
+		size="large"
+	>
+		<n-form-item path="username">
+			<n-input
+				v-model:value="form.username"
+				:placeholder="t('login.resetPasswordPlaceholder')"
+			>
+				<template #prefix>
+					<n-icon>
+						<UserOutlined />
+					</n-icon>
+				</template>
+			</n-input>
+		</n-form-item>
+	
+		<n-form-item path="email">
+			<n-input
+				v-model:value="form.email"
+				:placeholder="t('login.emailPlaceholder')"
+			>
+				<template #prefix>
+					<n-icon>
+						<MailOutlined />
+					</n-icon>
+				</template>
+			</n-input>
+		</n-form-item>
+		<n-button
+			block
+			type="primary"
+			size="large"
+			:loading="loading"
+			class="text-white rounded-lg mt-6"
+			@click="handleSubmit"
+		>
+			{{ t('login.resetPassword') }}
+		</n-button>
+		<div class="mt-4 text-center">
+			{{ t('login.haveAccountText') }}
+			<n-button
+				text
+				:class="['text-[var(--n-text-color-pressed)]']"
+				@click="switchForm('loginForm')"
+			>
+				{{ t('login.signIn') }}
+			</n-button>
+		</div>
+	</n-form>
 	</div>
 </template>
 
-<style scoped></style>
+<style
+	lang="scss"
+	scoped
+>
+	@use '../style.scss' as *;
+</style>

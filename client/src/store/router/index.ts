@@ -1,10 +1,7 @@
 import type { MenuOption } from 'naive-ui'
 import { router } from '@/router'
 import { staticRoutes } from '@/router/static-routes'
-import { useAuthStore } from '@/store/auth'
 import { $t } from '@/il8n'
-import { local } from '@/utils'
-import { queryUserRoutes } from '@/views/login/api'
 import { createMenus, createRoutes, generateCacheRoutes } from './helper'
 
 interface RoutesStatus {
@@ -38,28 +35,9 @@ export const useRouteStore = defineStore('route-store', {
 		},
 
 		async getRoutes() {
-			// 动态路由-从服务端获取路由数据
-			if (import.meta.env.VITE_AUTH_ROUTE_MODE === 'dynamic') {
-				const userInfo = local.get('userInfo')
-
-				if (!userInfo || !userInfo.id) {
-					const authStore = useAuthStore()
-					authStore.logout()
-					return
-				}
-
-				// Get user's route
-				const { data } = await queryUserRoutes({
-					id: userInfo.id
-				})
-				if (!data) return
-
-				return data
-			} else {
-				// 静态路由
-				this.rowRoutes = staticRoutes
-				return staticRoutes
-			}
+			// 静态路由
+			this.rowRoutes = staticRoutes
+			return staticRoutes
 		},
 		async initAuthRoute() {
 			this.isInitAuthRoute = false

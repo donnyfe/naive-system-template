@@ -56,7 +56,7 @@ export function createRoutes(routes: RowRoute[]) {
 	const appRootRoute: RouteRecordRaw = {
 		path: '/appRoot',
 		name: 'appRoot',
-		redirect: import.meta.env.VITE_HOME_PATH,
+		redirect: import.meta.env.VITE_ROUTE_HOME_PATH,
 		component: Layout,
 		meta: {
 			title: '',

@@ -1,136 +1,146 @@
-<script setup lang="ts">
-import type { FormInst } from 'naive-ui'
+<script
+	setup
+	lang="ts"
+>
+import { ref, reactive } from 'vue'
+import { useFormRules } from './hooks'
 import { useAuthStore } from '@/store'
+import { UserOutlined, LockOutlined } from '@vicons/antd'
 
 const emit = defineEmits(['update:modelValue'])
 const { t } = useI18n()
 const authStore = useAuthStore()
+
+const formRef = ref()
+const loading = ref(false)
 const isRead = ref(false)
 
-const rules = {
-	username: {
-		required: true,
-		trigger: 'blur',
-		message: t('login.accountRuleTip')
-	},
-	password: {
-		required: true,
-		trigger: 'blur',
-		message: t('login.passwordRuleTip')
-	},
-	resetPassword: {
-		required: true,
-		trigger: 'blur',
-		message: t('login.checkPasswordRuleTip')
-	}
-}
-const form = ref({
+const form = reactive({
 	username: '',
 	password: '',
-	resetPassword: ''
+	checkPassword: ''
 })
+const rules = useFormRules(form) as Ref<Record<string, any[]>>
 
-const isLoading = ref(false)
-
-const formRef = ref<FormInst | null>(null)
-
-function handleRegister() {
+async function handleSubmit() {
 	if (!isRead.value) {
-		return $message.warning('请阅读并同意用户协议')
+		window.$message.warning(t('login.agreementRequired'))
+		return
 	}
 
-	formRef.value?.validate(async (error: any) => {
-		if (error) return
-		isLoading.value = true
-		const { username, password } = form.value
-		// 实现前端加密传给后端
-		// password = encrypt(password)
-		const { success, message } = await authStore.register(username, password)
-		if (!success) return
-		$message.success(message)
+	try {
+		await formRef.value?.validate()
+		loading.value = true
 
-		isLoading.value = false
+		const { username, password } = form
+		const res = await authStore.register(username, password)
 
-		toLogin()
-	})
+		if (res.success) {
+			window.$message.success(t('login.registerSuccess'))
+			switchForm('loginForm')
+		}
+	} finally {
+		loading.value = false
+	}
 }
 
-function toLogin() {
-	emit('update:modelValue', 'loginForm')
+function switchForm(type: string) {
+	emit('update:modelValue', type)
 }
 </script>
 
 <template>
-	<div>
-		<n-h2 depth="3" class="text-center">
-			{{ $t('login.registerTitle') }}
-		</n-h2>
-		<n-form ref="formRef" :rules="rules" :model="form" :show-label="false" size="large">
-			<n-form-item path="username">
-				<n-input
-					v-model:value="form.username"
-					clearable
-					:placeholder="$t('login.accountPlaceholder')"
-				/>
-			</n-form-item>
-
-			<n-form-item path="password">
-				<n-input
-					v-model:value="form.password"
-					type="password"
-					:placeholder="$t('login.passwordPlaceholder')"
-					clearable
-					autocomplete="current-password"
-					show-password-on="click"
-				>
-					<template #password-invisible-icon>
-						<icon-park-outline-preview-close-one />
-					</template>
-					<template #password-visible-icon>
-						<icon-park-outline-preview-open />
-					</template>
-				</n-input>
-			</n-form-item>
-
-			<n-form-item path="resetPassword">
-				<n-input
-					v-model:value="form.resetPassword"
-					type="password"
-					:placeholder="$t('login.checkPasswordPlaceholder')"
-					clearable
-					autocomplete="current-password"
-					show-password-on="click"
-				>
-					<template #password-invisible-icon>
-						<icon-park-outline-preview-close-one />
-					</template>
-					<template #password-visible-icon>
-						<icon-park-outline-preview-open />
-					</template>
-				</n-input>
-			</n-form-item>
-
-			<n-form-item>
-				<n-space vertical :size="20" class="w-full">
-					<n-checkbox v-model:checked="isRead">
-						{{ $t('login.readAndAgree') }}
-						<n-button type="primary" text>
-							{{ $t('login.userAgreement') }}
-						</n-button>
-					</n-checkbox>
-					<n-button block type="primary" @click="handleRegister">
-						{{ $t('login.signUp') }}
-					</n-button>
-					<n-flex justify="center">
-						<n-text>{{ $t('login.haveAccountText') }}</n-text>
-						<n-button text type="primary" @click="toLogin">
-							{{ $t('login.signIn') }}
-						</n-button>
-					</n-flex>
-				</n-space>
-			</n-form-item>
-		</n-form>
+<div class="register-form login-modal-form">
+	<n-h2 class="form-title">
+		{{ t('login.registerTitle') }}
+	</n-h2>
+	<n-form
+		ref="formRef"
+		:model="form"
+		:rules="rules"
+		size="large"
+	>
+		<n-form-item path="username">
+			<n-input
+				v-model:value="form.username"
+				:placeholder="t('login.accountPlaceholder')"
+			>
+				<template #prefix>
+					<n-icon>
+						<UserOutlined />
+					</n-icon>
+				</template>
+			</n-input>
+		</n-form-item>
+	
+		<n-form-item path="password">
+			<n-input
+				v-model:value="form.password"
+				type="password"
+				show-password-on="click"
+				:placeholder="t('login.passwordPlaceholder')"
+			>
+				<template #prefix>
+					<n-icon>
+						<LockOutlined />
+					</n-icon>
+				</template>
+			</n-input>
+		</n-form-item>
+	
+		<n-form-item path="checkPassword">
+			<n-input
+				v-model:value="form.checkPassword"
+				type="password"
+				show-password-on="click"
+				:placeholder="t('login.checkPasswordPlaceholder')"
+			>
+				<template #prefix>
+					<n-icon>
+						<LockOutlined />
+					</n-icon>
+				</template>
+			</n-input>
+		</n-form-item>
+	
+		<n-checkbox
+			v-model:checked="isRead"
+			class="mb-4 items-center"
+		>
+			<span class="text-white">{{ t('login.readAndAgree') }}</span>
+			<n-button
+				text
+				:class="['text-[var(--n-text-color-pressed)]']"
+			>{{ t('login.userAgreement') }}</n-button>
+		</n-checkbox>
+		<n-button
+			class="text-white rounded-lg"
+			block
+			type="primary"
+			size="large"
+			:loading="loading"
+			@click="handleSubmit"
+		>
+			{{ t('login.signUp') }}
+		</n-button>
+	
+		<div class="mt-4 text-center text-white">
+			{{ t('login.haveAccountText') }}
+			<n-button
+				text
+				:class="['text-[var(--n-text-color-pressed)]']"
+				@click="switchForm('loginForm')"
+			>
+				{{ t('login.signIn') }}
+			</n-button>
+		</div>
+	</n-form>
 	</div>
 </template>
 
-<style scoped></style>
+<style
+	lang="scss"
+	scoped
+>
+	@use '../style.scss' as *;
+</style>
