@@ -4,6 +4,7 @@ import { Strategy } from 'passport-local'
 import { AuthService } from './auth.service'
 import { ErrorInfo } from '@/common/constants/result-code'
 import { ApiException } from '@/common/exceptions/api.exception'
+import { decrypt } from '@/utils/aes'
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -12,7 +13,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(username: string, password: string): Promise<any> {
-    const user = await this.authSerevice.validateUser(username, password)
+    const user = await this.authSerevice.validateUser(username, decrypt(password))
     if (!user) throw new ApiException(ErrorInfo.ERR_10002)
     return user
   }
