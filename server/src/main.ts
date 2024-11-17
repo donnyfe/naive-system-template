@@ -3,10 +3,13 @@ import { ConfigService } from '@nestjs/config'
 import { NestExpressApplication } from '@nestjs/platform-express'
 import path from 'path'
 import session from 'express-session'
+import RedisStore from 'connect-redis'
+import { RedisService } from './shared/redis.service'
 import { mw as requestIpMw } from 'request-ip'
 import { AppModule } from './app.module'
 
-import { setupSecurity } from './config/security.config'
+import { setupSecurity } from './config/security'
+import { createSessionConfig } from './config/session.config'
 import { setupSwagger } from './config/swagger.config'
 import { setupGlobal } from './config/global.config'
 
@@ -35,20 +38,19 @@ async function bootstrap() {
     maxAge: 1000 * 60, //设置缓存时间
   })
 
-  // 设置session
-  const sessionMiddleware = session({
-    secret: configService.get('session.secret'), // 从配置中读取
-    name: 'admin',
-    rolling: true,
-    cookie: {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 24 * 60 * 60 * 1000, // 1天
-      sameSite: 'strict',
-    },
-    resave: false,
-    saveUninitialized: false,
+  const redisService = app.get(RedisService)
+
+
+  // 设置Redis Store
+  const redisStore = new RedisStore({
+    client: redisService['redisClient'], // 使用已有的Redis客户端
+    prefix: configService.get('redis.session.prefix') || 'sess:', // session键前缀
+    ttl: configService.get('redis.session.ttl') || 86400, // 默认1天
   })
+
+  // 设置session
+  const sessionConfig = createSessionConfig(configService, redisService)
+  const sessionMiddleware = session(sessionConfig)
   app.use(sessionMiddleware)
 
   // 获取真实IP
