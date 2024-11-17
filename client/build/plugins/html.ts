@@ -6,9 +6,6 @@ interface ScriptObject {
 	attrs?: Record<string, string>
 }
 
-console.log('[APP_ENV]: ', process.env.NODE_ENV)
-console.log('[APP_TITLE]: ', process.env.VITE_APP_TITLE)
-
 /**
  * @title html注入插件 (plugin: @rollup/plugin-html)
  * @description 用于向html注入数据，生成html

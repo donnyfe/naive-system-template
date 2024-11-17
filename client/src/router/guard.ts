@@ -2,7 +2,7 @@ import type { Router } from 'vue-router'
 import { useAppStore, useRouteStore, useTabStore } from '@/store'
 import { local } from '@/utils'
 
-const title = import.meta.env.VITE_APP_NAME
+const title = import.meta.env.VITE_APP_NAME || 'Vue3 Admin'
 
 export function setupRouterGuard(router: Router) {
 	const appStore = useAppStore()
