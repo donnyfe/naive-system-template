@@ -5,10 +5,14 @@
 import type { UserData } from './types'
 import CopyText from '@/components/custom/copy-text.vue'
 import { SEX } from '@/constants'
-import { useBoolean } from '@/hooks'
 import { type DataTableColumns, type FormInst, NButton, NPopconfirm, NSpace, NTag } from 'naive-ui'
 import { queryUserList, removeUser } from './api'
 import EditUserModal from './components/edit-user-modal.vue'
+import { useBoolean } from '@/hooks'
+import { useAuthStore } from '@/store'
+
+const authStore = useAuthStore()
+const { userInfo } = authStore
 
 const { bool: loading, setTrue: startLoading, setFalse: endLoading } = useBoolean(false)
 
@@ -73,21 +77,27 @@ const columns: DataTableColumns<UserData> = [
 		title: '操作',
 		align: 'center',
 		render: (row) => {
+			// 判断是否是当前用户
+			const isSelf = row.id === userInfo.id
 			return (
 				<NSpace justify="center">
 					<NButton size="small" onClick={() => modalRef.value.openModal('edit', row)}>
 						编辑
 					</NButton>
-					<NPopconfirm onPositiveClick={() => delteteUser(row.id!)}>
-						{{
-							default: () => '确认删除',
-							trigger: () => (
-								<NButton size="small" type="error">
-									删除
-								</NButton>
-							)
-						}}
-					</NPopconfirm>
+					{
+						!isSelf && (
+							<NPopconfirm onPositiveClick={() => delteteUser(row.id!)}>
+								{{
+									default: () => '确认删除',
+									trigger: () => (
+										<NButton size="small" type="error">
+											删除
+										</NButton>
+									)
+								}}
+							</NPopconfirm>
+						)
+					}
 				</NSpace>
 			)
 		}

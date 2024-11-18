@@ -50,7 +50,6 @@ const formDefault: UserData = {
 	sex: undefined,
 	email: '',
 	phone: ''
-	// roles: [],
 }
 const form = ref<UserData>({ ...formDefault })
 
@@ -60,8 +59,6 @@ async function openModal(type: ModalType = 'add', data: any) {
 	modalType.value = type
 
 	showModal()
-
-	// getRoleList()
 
 	const handlers = {
 		async add() {
@@ -110,9 +107,16 @@ async function onSubmit() {
 			return true
 		}
 	}
-	await formRef.value?.validate()
-	startLoading()
-		; (await handlers[modalType.value]()) && closeModal()
+
+	try {
+		await formRef.value?.validate()
+		startLoading()
+		await handlers[modalType.value]()
+	} catch (error) {
+		console.error(error)
+	} finally {
+		endLoading()
+	}
 }
 
 // const options = ref<RoleCode[]>([])

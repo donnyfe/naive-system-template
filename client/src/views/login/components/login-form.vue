@@ -136,13 +136,13 @@ onMounted(() => {
 			<n-checkbox v-model:checked="isRemember">
 				<span class="text-white">{{ t('login.rememberMe') }}</span>
 			</n-checkbox>
-			<n-button
+			<!-- <n-button
 				text
 				class="text-white"
 				@click="switchForm('resetPasswordForm')"
 			>
 				{{ t('login.forgotPassword') }}
-			</n-button>
+			</n-button> -->
 		</div>
 
 		<n-button

@@ -6,8 +6,7 @@ import http from '@/http/request'
 export const queryUserList = async (params: UserParams) =>
 	http.get<Result<PaginList<UserData[]>>>('/api/user/list', params)
 // 创建用户
-export const createUser = async (params: UserParams) =>
-	http.post<Result<any>>('/api/user/add', params)
+export const createUser = async (params: UserParams) => http.post<Result<any>>('/api/user/create', params)
 // 更新用户
 export const updateUser = async (params: UserParams) =>
 	http.patch<Result<any>>(`/api/user/${params.id}`, params)
