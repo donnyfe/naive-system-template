@@ -10,10 +10,15 @@ export const setupSecurity = async (app: INestApplication) => {
   const configService = app.get(ConfigService)
   const isProduction = process.env.NODE_ENV === 'production'
 
+  // 配置安全头
   await setupHelmet(app, isProduction)
-  await setupCors(app, configService)
+  // 配置跨域
+  // await setupCors(app, configService)
+  // 配置限流
   await setupRateLimit(app, isProduction)
-  await setupCsrf(app)
+  // 配置CSRF保护
+  // await setupCsrf(app)
+  // 配置JWT安全
   await setupJwtSecurity(app, configService)
 }
 

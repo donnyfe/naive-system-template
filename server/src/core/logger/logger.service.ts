@@ -24,16 +24,22 @@ export class LoggerService implements NestLoggerService {
       })
     );
 
-    // 文件输出
-    if (this.options.file?.enabled) {
-      transports.push(
-        new winston.transports.File({
-          filename: this.options.file.path,
-          maxFiles: this.options.file.maxFiles,
-          maxsize: parseInt(this.options.file.maxSize)
-        })
-      );
-    }
+    // 应用日志
+    transports.push(
+      new winston.transports.File({
+        filename: this.options.file.path,
+        maxFiles: this.options.file.maxFiles,
+        maxsize: parseInt(this.options.file.maxSize)
+      })
+    );
+
+    // HTTP访问日志
+    transports.push(
+      new winston.transports.File({
+        filename: 'logs/access.log',
+        level: 'http',
+      })
+    )
 
     this.logger = winston.createLogger({
       level: 'info',
@@ -42,7 +48,7 @@ export class LoggerService implements NestLoggerService {
   }
 
   log(message: string, context?: string, data?: any) {
-    this.logger.log(message, { context, data });
+    this.logger.info(message, { context, data });
   }
 
   error(message: string, trace?: Error | unknown, context?: string) {

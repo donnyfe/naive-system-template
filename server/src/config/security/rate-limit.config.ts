@@ -3,6 +3,9 @@ import rateLimit from 'express-rate-limit'
 import RedisStore from 'rate-limit-redis'
 import { RedisService } from '@/core/redis/redis.service'
 
+/**
+ * 配置限流
+ */
 export const setupRateLimit = async (app: INestApplication, isProduction: boolean) => {
   const redisService = app.get(RedisService)
 

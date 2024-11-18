@@ -40,7 +40,6 @@ async function bootstrap() {
 
   const redisService = app.get(RedisService)
 
-
   // 设置Redis Store
   const redisStore = new RedisStore({
     client: redisService['redisClient'], // 使用已有的Redis客户端
@@ -63,5 +62,12 @@ async function bootstrap() {
   await app.listen(port)
 
   console.log(`🚀 启动成功: http://${host}:${port}`)
+
+  // 添加进程退出处理, 优雅退出
+  process.on('SIGINT', async () => {
+    // 确保应用在退出时正确释放端口
+    await app.close()
+    process.exit(0)
+  })
 }
 bootstrap()

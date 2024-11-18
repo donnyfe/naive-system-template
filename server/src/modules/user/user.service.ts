@@ -59,7 +59,7 @@ export class UserService {
 
     try {
       // 初始密码
-      const initialPassword = this.configService.get('user.initialPassword')
+      const initialPassword = this.configService.get('initial.password')
 
       const newUser = {
         ...userDto,

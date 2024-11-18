@@ -9,7 +9,7 @@ import { createClient } from 'redis';
     {
       provide: 'REDIS_CLIENT',
       useFactory: async (configService: ConfigService) => {
-        console.log(11111111111, configService.get('redis.url'))
+
         const client = createClient({
           url: configService.get('redis.url'),
           socket: {

@@ -1,6 +1,9 @@
 import { INestApplication } from '@nestjs/common'
 import helmet from 'helmet'
 
+/**
+ * 配置安全头
+ */
 export const setupHelmet = async (app: INestApplication, isProduction: boolean) => {
   app.use(
     helmet({

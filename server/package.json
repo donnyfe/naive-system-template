@@ -20,7 +20,7 @@
   ],
   "scripts": {
     "start": "cross-env NODE_ENV=development nest start --watch",
-    "start:debug": "nest start --debug --watch",
+    "start:debug": "cross-env NODE_ENV=development nest start --debug --watch",
     "start:prod": "cross-env NODE_ENV=production node dist/main",
     "build": "cross-env NODE_ENV=production && nest build && ncc build ./dist/main.js -o ncc-dist",
     "deploy": "npm run build && node ./scripts/deploy/index.mjs",

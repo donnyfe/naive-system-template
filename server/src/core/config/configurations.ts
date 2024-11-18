@@ -29,19 +29,29 @@ export const httpConfig = registerAs('http', () => ({
   maxConcurrent: parseInt(process.env.HTTP_MAX_CONCURRENT, 10) || 10,
 }))
 
+export const initialConfig = registerAs('initial', () => ({
+  password: process.env.INITIAL_PASSWORD || '123456',
+}))
+
 export const jwtConfig = registerAs('jwt', () => ({
   secret: process.env.JWT_SECRET,
   expiresIn: process.env.JWT_EXPIRES_IN || '1h',
+  refreshSecret: process.env.JWT_REFRESH_SECRET,
+  refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
 }))
 
 export const securityConfig = registerAs('security', () => ({
   allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || '*',
+  jwt: {
+    secret: process.env.JWT_SECRET,
+    expiresIn: process.env.JWT_EXPIRES_IN || '1h',
+  },
   csrf: {
     secret: process.env.CSRF_SECRET,
   },
   session: {
     secret: process.env.SESSION_SECRET,
-    name: process.env.SESSION_NAME || 'nest:session',
+    name: process.env.SESSION_NAME || 'nest',
   },
   cookie: {
     domain: process.env.COOKIE_DOMAIN,
@@ -51,7 +61,7 @@ export const securityConfig = registerAs('security', () => ({
 
 export default registerAs('logger', () => ({
   json: true,
-  logLevel: process.env.LOG_LEVEL || 'info', //['log', 'error', 'warn'],
+  logLevel: process.env.LOG_LEVEL || ['log', 'error', 'warn'],
   file: {
     enabled: true,
     path: process.env.LOG_FILE_PATH || 'logs/app.log',
@@ -60,6 +70,7 @@ export default registerAs('logger', () => ({
   },
   requestLogging: {
     enabled: true,
+    path: process.env.REQUEST_LOG_FILE_PATH || 'logs/request.log',
     headers: true,
     ignorePaths: ['/health'],
   },

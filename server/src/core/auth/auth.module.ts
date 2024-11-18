@@ -15,7 +15,7 @@ import { RedisModule } from '@/core/redis/redis.module'
     PassportModule,
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get('jwt.secret'),
+        secret: configService.get('security.jwt.secret'),
         signOptions: { expiresIn: '1d' },
       }),
       inject: [ConfigService],
