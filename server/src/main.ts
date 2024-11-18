@@ -4,7 +4,7 @@ import { NestExpressApplication } from '@nestjs/platform-express'
 import path from 'path'
 import session from 'express-session'
 import RedisStore from 'connect-redis'
-import { RedisService } from './shared/redis.service'
+import { RedisService } from '@/core/redis/redis.service'
 import { mw as requestIpMw } from 'request-ip'
 import { AppModule } from './app.module'
 

@@ -1,17 +1,18 @@
-import { Body, Controller, Get, Param, Post, Req, Res, UseGuards } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
+import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common'
 import * as svgCaptcha from 'svg-captcha'
 import { responseFail } from '@/utils'
 import { JwtGuard, LocalGuard } from '@/common/guards'
 import { ChangePasswordDto, RegisterUserDto } from './auth.dto'
 import { UserService } from '@/modules/user/user.service'
 import { AuthService } from './auth.service'
+import { LoggerService } from '@/core/logger/logger.service'
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private userService: UserService,
+    private logger: LoggerService,
   ) {}
 
   @Post('register')
@@ -22,8 +23,9 @@ export class AuthController {
   @UseGuards(LocalGuard)
   @Post('login')
   async login(@Req() req: any, @Body() body) {
-    // 判断验证码是否正确
+
     if (req.session?.code?.toLocaleLowerCase() !== body.captcha?.toLocaleLowerCase()) {
+      this.logger.error('auth.login', '验证码错误', req.session?.code)
       return responseFail(500, '验证码错误')
     }
     return this.authService.login(req.user, req.session?.code)

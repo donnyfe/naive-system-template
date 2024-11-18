@@ -18,5 +18,5 @@ export const setupJwtSecurity = async (app: INestApplication, configService: Con
     },
   })
 
-  app.use(jwtModule)
+  return jwtModule
 }

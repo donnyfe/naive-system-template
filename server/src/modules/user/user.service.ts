@@ -5,9 +5,9 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Like, Repository } from 'typeorm'
 import { UserEntity } from './user.entity'
 import { CreateUserDto, UpdateUserDto, GetUserListDto } from './user.dto'
-import { RegisterUserDto } from '@/modules/auth/auth.dto'
+import { RegisterUserDto } from '@/core/auth/auth.dto'
 import { UserRoleEntity } from '@/modules/role/user-role.entity'
-import { LoggerService } from '@/modules/logger/logger.service'
+import { LoggerService } from '@/core/logger/logger.service'
 import { responseSuccess, responseFail } from '@/utils'
 
 @Injectable()
@@ -37,11 +37,9 @@ export class UserService {
       const userRepo = this.userRepo.create(userDto)
       const user = await this.userRepo.save(userRepo)
 
-      this.logger.info('用户注册成功', 'UserService.register', { userId: user.id })
+      this.logger.log('用户注册成功', 'UserService.register', { userId: user.id })
     } catch (error) {
-      this.logger.error('用户注册失败', error.stack, 'UserService.register', {
-        userData: userDto,
-      })
+      this.logger.error('用户注册失败', error.stack, 'UserService.register')
       return responseFail(500, '用户注册失败')
     }
 
@@ -70,9 +68,9 @@ export class UserService {
       const userRepo = this.userRepo.create(newUser)
       await this.userRepo.save(userRepo)
 
-      this.logger.info('用户创建成功', 'UserService.create', { userId: userRepo.id })
+      this.logger.log('用户创建成功', 'UserService.create', { userId: userRepo.id })
     } catch (error) {
-      this.logger.info('用户创建失败', error.stack, 'UserService.create')
+      this.logger.log('用户创建失败', error.stack, 'UserService.create')
 
       return responseFail(500, '用户创建失败')
     }

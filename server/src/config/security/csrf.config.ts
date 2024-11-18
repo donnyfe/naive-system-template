@@ -1,27 +1,24 @@
 import { INestApplication } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import csurf from 'csurf'
 
-export const setupCsrf = async (app: INestApplication) => {
+export const setupCsrf = (app: INestApplication) => {
+  const configService = app.get(ConfigService)
+  const csrfConfig = configService.get('security.csrf')
+
   app.use(
     csurf({
-      cookie: {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-      },
+      cookie: csrfConfig.cookie,
       ignoreMethods: ['HEAD', 'OPTIONS'],
-      value: (req) => {
-        return req.headers['x-csrf-token']
-      },
+      value: (req) => req.headers['x-csrf-token'],
     })
   )
 
-  // CSRF错误处理
   app.use((err, req, res, next) => {
     if (err.code === 'EBADCSRFTOKEN') {
       res.status(403).json({
         statusCode: 403,
-        message: 'CSRF token 验证失败',
+        message: 'Invalid CSRF token',
       })
     } else {
       next(err)

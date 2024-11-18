@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { HealthIndicator, HealthIndicatorResult } from '@nestjs/terminus'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { RedisService } from '@/shared/redis.service'
+import { RedisService } from '@/core/redis/redis.service'
 import { UserEntity } from '@/modules/user/user.entity'
 import { getDiskInfoSync } from 'node-disk-info'
 

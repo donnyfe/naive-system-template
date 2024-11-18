@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common'
 import rateLimit from 'express-rate-limit'
 import RedisStore from 'rate-limit-redis'
-import { RedisService } from '@/shared/redis.service'
+import { RedisService } from '@/core/redis/redis.service'
 
 export const setupRateLimit = async (app: INestApplication, isProduction: boolean) => {
   const redisService = app.get(RedisService)
@@ -9,7 +9,7 @@ export const setupRateLimit = async (app: INestApplication, isProduction: boolea
   app.use(
     rateLimit({
       store: new RedisStore({
-        sendCommand: (...args: string[]) => redisService['redisClient'].sendCommand(args),
+        sendCommand: (...args: string[]) => redisService.getClient().sendCommand(args),
       }),
       windowMs: 15 * 60 * 1000,
       max: isProduction ? 100 : 1000,
@@ -19,11 +19,10 @@ export const setupRateLimit = async (app: INestApplication, isProduction: boolea
       skipSuccessfulRequests: false,
       keyGenerator: (req) => {
         const forwardedFor = req.headers['x-forwarded-for']
-        const clientIp = typeof forwardedFor === 'string'
-          ? forwardedFor.split(',')[0].trim()
-          : forwardedFor?.[0]
+        const clientIp =
+          typeof forwardedFor === 'string' ? forwardedFor.split(',')[0].trim() : forwardedFor?.[0]
         return req.ip || clientIp || req.socket.remoteAddress
       },
-    })
+    }),
   )
 }

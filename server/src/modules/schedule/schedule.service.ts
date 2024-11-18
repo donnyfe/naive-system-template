@@ -5,7 +5,7 @@ import { SchedulerRegistry, Cron } from '@nestjs/schedule'
 import { ScheduleEntity } from './schedule.entity'
 import { CreateScheduleDto, UpdateScheduleDto } from './schedule.dto'
 import { ScheduleStatus, ScheduleType } from './types'
-import { LoggerService } from '@/modules/logger/logger.service'
+import { LoggerService } from '@/core/logger/logger.service'
 
 @Injectable()
 export class ScheduleService {
@@ -86,7 +86,7 @@ export class ScheduleService {
   private async executeTask(task: ScheduleEntity) {
     // 这里实现具体的任务执行逻辑
     // 可以根据 task.taskData 中的配置来执行不同类型的任务
-    this.logger.info(`Executing task: ${task.name}`)
+    this.logger.log(`Executing task: ${task.name}`)
 
     // 示例：支持 HTTP 请求任务
     if (task.taskData.type === 'http') {

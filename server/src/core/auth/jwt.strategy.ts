@@ -3,10 +3,10 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { ErrorInfo } from '@/common/constants/result-code'
-import { RedisService } from '@/shared/redis.service'
-import { UserService } from '../user/user.service'
+import { RedisService } from '@/core/redis/redis.service'
+import { UserService } from '../../modules/user/user.service'
 import { AuthService } from './auth.service'
-import { LoggerService } from '@/modules/logger/logger.service'
+import { LoggerService } from '@/core/logger/logger.service'
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {

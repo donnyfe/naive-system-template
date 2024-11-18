@@ -21,7 +21,7 @@ export class UploadService {
     private config: ConfigService,
   ) {
     // 上传目录路径
-    this.uploadDirPath = path.join(process.cwd(), this.config.get('files.location'))
+    this.uploadDirPath = path.join(process.cwd(), this.config.get('upload.dest'))
 
     // 切片目录路径
     this.chunkDirPath = path.join(this.uploadDirPath, 'chunk')

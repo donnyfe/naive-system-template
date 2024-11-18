@@ -1,7 +1,20 @@
 import { Injectable, NestMiddleware } from '@nestjs/common'
 import { Request, Response, NextFunction } from 'express'
 import { performance } from 'perf_hooks'
-import { LoggerService } from '@/modules/logger/logger.service'
+import { LoggerService } from '@/core/logger/logger.service'
+
+const getCircularReplacer = () => {
+  const seen = new WeakSet()
+  return (key: string, value: any) => {
+    if (typeof value === 'object' && value !== null) {
+      if (seen.has(value)) {
+        return
+      }
+      seen.add(value)
+    }
+    return value
+  }
+}
 
 @Injectable()
 export class PerformanceMiddleware implements NestMiddleware {
@@ -19,7 +32,7 @@ export class PerformanceMiddleware implements NestMiddleware {
         statusCode: res.statusCode,
       }
 
-      this.logger.info('Performance', `${JSON.stringify(info)}`)
+      this.logger.log('Performance', `${JSON.stringify(info, getCircularReplacer())}`)
     })
 
     next()

@@ -1,7 +1,7 @@
 # compiled output
-/dist
-/ncc-dist
-/node_modules
+dist
+ncc-dist
+node_modules
 
 # Logs
 logs
@@ -36,8 +36,11 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-dist.tar.gz
+
 .tmp
+.env
+.env.development
+.env.production
 
 config.development.yaml
 config.production.yaml

@@ -2,8 +2,8 @@ import { ConfigService } from '@nestjs/config'
 import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { compareSync } from 'bcryptjs'
-import { LoggerService } from '@/modules/logger/logger.service'
-import { RedisService } from '@/shared/redis.service'
+import { LoggerService } from '@/core/logger/logger.service'
+import { RedisService } from '@/core/redis/redis.service'
 import { UserService } from '@/modules/user/user.service'
 import { responseSuccess } from '@/utils'
 
@@ -33,7 +33,7 @@ export class AuthService {
       captcha,
     }
     const token = this.generateToken(payload)
-    this.logger.info('登录成功', 'AuthService.login', { token })
+    this.logger.log('登录成功', 'AuthService.login', { token })
     return responseSuccess(token, '登录成功')
   }
 
@@ -55,7 +55,7 @@ export class AuthService {
     if (user.userId) {
       await Promise.all([this.redisService.del(this.getAccessTokenKey(user))])
 
-      this.logger.info('退出登录', 'AuthService.logout', {
+      this.logger.log('退出登录', 'AuthService.logout', {
         userId: user.Id,
         time: Date.now(),
       })

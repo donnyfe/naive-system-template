@@ -1,4 +1,4 @@
-import { Injectable, LoggerService as NestLoggerService } from '@nestjs/common';
+import { Injectable, Inject, LoggerService as NestLoggerService } from '@nestjs/common';
 import * as winston from 'winston';
 import { LoggerOptions } from './logger.interface';
 
@@ -6,7 +6,9 @@ import { LoggerOptions } from './logger.interface';
 export class LoggerService implements NestLoggerService {
   private logger: winston.Logger;
 
-  constructor(private options: LoggerOptions) {
+  constructor(
+    @Inject('LOGGER_OPTIONS') private options: LoggerOptions
+  ) {
     this.initLogger();
   }
 
@@ -28,7 +30,7 @@ export class LoggerService implements NestLoggerService {
         new winston.transports.File({
           filename: this.options.file.path,
           maxFiles: this.options.file.maxFiles,
-          maxsize: this.options.file.maxSize
+          maxsize: parseInt(this.options.file.maxSize)
         })
       );
     }
@@ -39,8 +41,8 @@ export class LoggerService implements NestLoggerService {
     });
   }
 
-  log(message: string, context?: string) {
-    this.logger.info(message, { context });
+  log(message: string, context?: string, data?: any) {
+    this.logger.log(message, { context, data });
   }
 
   error(message: string, trace?: Error | unknown, context?: string) {
