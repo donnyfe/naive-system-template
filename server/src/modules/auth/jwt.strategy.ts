@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { ErrorInfo } from '@/common/constants/result-code'
 import { RedisService } from '@/core/redis/redis.service'
-import { UserService } from '../../modules/user/user.service'
+import { UserService } from '../user/user.service'
 import { AuthService } from './auth.service'
 import { LoggerService } from '@/core/logger/logger.service'
 
@@ -38,7 +38,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     // 获取token失效时间
-    const ACCESS_TOKEN_EXPIRATION_TIME = this.configService.get('redis.accessTokenExpirationTime')
+    const ACCESS_TOKEN_EXPIRATION_TIME = this.configService.get('redis.ttl')
 
     // 设置token失效时间
     this.redisService.set(

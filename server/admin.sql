@@ -47,18 +47,17 @@ CREATE TABLE `chat` (
 
 LOCK TABLES `chat` WRITE;
 /*!40000 ALTER TABLE `chat` DISABLE KEYS */;
-INSERT INTO `chat` VALUES ('1e93dbc4-6179-45d8-af6b-7a3513134f62','你好','admin01',0,'2024-11-18 15:59:27.571000','2024-11-18 15:59:27.571000');
 /*!40000 ALTER TABLE `chat` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `message`
+-- Table structure for table `chat_message`
 --
 
-DROP TABLE IF EXISTS `message`;
+DROP TABLE IF EXISTS `chat_message`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `message` (
+CREATE TABLE `chat_message` (
   `messageId` varchar(36) NOT NULL DEFAULT '',
   `previousId` varchar(36) NOT NULL DEFAULT '',
   `chatId` varchar(36) NOT NULL DEFAULT '',
@@ -68,28 +67,27 @@ CREATE TABLE `message` (
   `sender` varchar(255) NOT NULL,
   `createTime` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '创建时间',
   PRIMARY KEY (`messageId`),
-  KEY `message_chat_id_foreign` (`chatId`)
+  KEY `chat_message_chat_id_foreign` (`chatId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `message`
+-- Dumping data for table `chat_message`
 --
 
-LOCK TABLES `message` WRITE;
-/*!40000 ALTER TABLE `message` DISABLE KEYS */;
-INSERT INTO `message` VALUES ('ba524474-ff4a-49e7-a12c-839d7c5d50db','f5e601d6-097e-49dc-8e3d-69c7b547bb87','1e93dbc4-6179-45d8-af6b-7a3513134f62','你好！我是零一万物开发的一个智能助手，我叫 Yi，我是由零一万物的研究人员们通过大量的文本数据进行训练，学习了语言的各种模式和关联，从而能够生成文本、回答问题以及进行其他与语言处理相关的任务。我可以帮助你解答问题，提供信息，或者进行简单的对话。有什么我可以帮助你的吗？',1,0,'assistant','2024-11-18 15:59:27.864000'),('f5e601d6-097e-49dc-8e3d-69c7b547bb87','','1e93dbc4-6179-45d8-af6b-7a3513134f62','你好',1,0,'user','2024-11-18 15:59:27.691000');
-/*!40000 ALTER TABLE `message` ENABLE KEYS */;
+LOCK TABLES `chat_message` WRITE;
+/*!40000 ALTER TABLE `chat_message` DISABLE KEYS */;
+/*!40000 ALTER TABLE `chat_message` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `prompt`
+-- Table structure for table `chat_prompt`
 --
 
-DROP TABLE IF EXISTS `prompt`;
+DROP TABLE IF EXISTS `chat_prompt`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `prompt` (
+CREATE TABLE `chat_prompt` (
   `promptId` varchar(36) NOT NULL,
   `title` varchar(32) NOT NULL DEFAULT '',
   `content` varchar(1024) NOT NULL DEFAULT '',
@@ -102,42 +100,12 @@ CREATE TABLE `prompt` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `prompt`
+-- Dumping data for table `chat_prompt`
 --
 
-LOCK TABLES `prompt` WRITE;
-/*!40000 ALTER TABLE `prompt` DISABLE KEYS */;
-/*!40000 ALTER TABLE `prompt` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `role`
---
-
-DROP TABLE IF EXISTS `role`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `role` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '角色ID',
-  `code` varchar(30) NOT NULL COMMENT '角色编码',
-  `name` varchar(30) NOT NULL COMMENT '角色名称',
-  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
-  `sort` int NOT NULL DEFAULT '0' COMMENT '排序',
-  `status` tinyint NOT NULL DEFAULT '1' COMMENT '状态:0-禁用,1-启用',
-  `createTime` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '创建时间',
-  `updateTime` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '更新时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `IDX_ee999bb389d7ac0fd967172c41` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `role`
---
-
-LOCK TABLES `role` WRITE;
-/*!40000 ALTER TABLE `role` DISABLE KEYS */;
-/*!40000 ALTER TABLE `role` ENABLE KEYS */;
+LOCK TABLES `chat_prompt` WRITE;
+/*!40000 ALTER TABLE `chat_prompt` DISABLE KEYS */;
+/*!40000 ALTER TABLE `chat_prompt` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -175,6 +143,95 @@ LOCK TABLES `schedule_tasks` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `sys_role`
+--
+
+DROP TABLE IF EXISTS `sys_role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sys_role` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '角色ID',
+  `code` varchar(30) NOT NULL COMMENT '角色编码',
+  `name` varchar(30) NOT NULL COMMENT '角色名称',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `sort` int NOT NULL DEFAULT '0' COMMENT '排序',
+  `status` tinyint NOT NULL DEFAULT '1' COMMENT '状态:0-禁用,1-启用',
+  `createTime` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '创建时间',
+  `updateTime` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `IDX_cf51756dc07761fea6b351e061` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sys_role`
+--
+
+LOCK TABLES `sys_role` WRITE;
+/*!40000 ALTER TABLE `sys_role` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sys_role` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sys_user`
+--
+
+DROP TABLE IF EXISTS `sys_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sys_user` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '用户ID',
+  `username` varchar(30) NOT NULL COMMENT '用户账号',
+  `password` varchar(200) NOT NULL COMMENT '用户登录密码',
+  `nickName` varchar(30) DEFAULT NULL COMMENT '用户昵称',
+  `avatar` varchar(255) DEFAULT NULL COMMENT '头像地址',
+  `sex` char(1) DEFAULT NULL COMMENT '性别',
+  `phone` varchar(11) DEFAULT NULL COMMENT '手机号码',
+  `email` varchar(50) DEFAULT NULL COMMENT '邮箱',
+  `remark` varchar(50) DEFAULT NULL COMMENT '备注',
+  `createTime` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '创建时间',
+  `updateTime` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `IDX_9e7164b2f1ea1348bc0eb0a7da` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sys_user`
+--
+
+LOCK TABLES `sys_user` WRITE;
+/*!40000 ALTER TABLE `sys_user` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sys_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sys_user_sys_role`
+--
+
+DROP TABLE IF EXISTS `sys_user_sys_role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sys_user_sys_role` (
+  `userId` int NOT NULL,
+  `roleId` int NOT NULL,
+  PRIMARY KEY (`userId`,`roleId`),
+  KEY `FK_5794ed71a413a86368b567659a0` (`roleId`),
+  CONSTRAINT `FK_04cd65d56fda4398226412a7711` FOREIGN KEY (`userId`) REFERENCES `sys_user` (`id`),
+  CONSTRAINT `FK_5794ed71a413a86368b567659a0` FOREIGN KEY (`roleId`) REFERENCES `sys_role` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sys_user_sys_role`
+--
+
+LOCK TABLES `sys_user_sys_role` WRITE;
+/*!40000 ALTER TABLE `sys_user_sys_role` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sys_user_sys_role` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `upload`
 --
 
@@ -200,66 +257,6 @@ LOCK TABLES `upload` WRITE;
 /*!40000 ALTER TABLE `upload` DISABLE KEYS */;
 /*!40000 ALTER TABLE `upload` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `user`
---
-
-DROP TABLE IF EXISTS `user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '用户ID',
-  `username` varchar(30) NOT NULL COMMENT '用户账号',
-  `password` varchar(200) NOT NULL COMMENT '用户登录密码',
-  `nickName` varchar(30) DEFAULT NULL COMMENT '用户昵称',
-  `avatar` varchar(255) DEFAULT NULL COMMENT '头像地址',
-  `sex` char(1) DEFAULT NULL COMMENT '性别',
-  `phone` varchar(11) DEFAULT NULL COMMENT '手机号码',
-  `email` varchar(50) DEFAULT NULL COMMENT '邮箱',
-  `remark` varchar(50) DEFAULT NULL COMMENT '备注',
-  `createTime` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '创建时间',
-  `updateTime` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '更新时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `IDX_78a916df40e02a9deb1c4b75ed` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'admin01','$2a$10$p8J9DXTwGiXUGl6sU9OZGumV.fCEi6XNsZIEZLC2iFTyCzj6HU3.i',NULL,NULL,'0','18823456789','18823456789@qq.com',NULL,'2024-11-18 15:07:15.660884','2024-11-18 15:57:28.000000'),(2,'admin02','$2a$10$Q2UvWtMu3bjlp0ICat/xve6hnIkmcZXrNOA6JMGn73g7RBqgBt96G',NULL,NULL,'1','18812345678','18812345678@qq.com',NULL,'2024-11-18 15:56:49.127318','2024-11-18 15:57:02.000000');
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `user_role`
---
-
-DROP TABLE IF EXISTS `user_role`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user_role` (
-  `userId` int NOT NULL,
-  `roleId` int NOT NULL,
-  PRIMARY KEY (`userId`,`roleId`),
-  KEY `FK_dba55ed826ef26b5b22bd39409b` (`roleId`),
-  CONSTRAINT `FK_ab40a6f0cd7d3ebfcce082131fd` FOREIGN KEY (`userId`) REFERENCES `user` (`id`),
-  CONSTRAINT `FK_dba55ed826ef26b5b22bd39409b` FOREIGN KEY (`roleId`) REFERENCES `role` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user_role`
---
-
-LOCK TABLES `user_role` WRITE;
-/*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -270,4 +267,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-19  0:31:45
+-- Dump completed on 2024-11-19 15:16:03

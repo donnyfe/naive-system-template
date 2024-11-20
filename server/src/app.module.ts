@@ -1,10 +1,9 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common'
+import { Module } from '@nestjs/common'
 import { CoreModule } from '@/core/core.module'
-
 import { SharedModule } from './shared/shared.module'
 import { HealthModule } from './modules/health/health.module'
 import { ScheduleModule } from './modules/schedule/schedule.module'
-import { AuthModule } from './core/auth/auth.module'
+import { AuthModule } from './modules/auth/auth.module'
 import { UploadModule } from './modules/upload/upload.module'
 import { RoleModule } from './modules/role/role.module'
 import { UserModule } from './modules/user/user.module'
@@ -16,7 +15,6 @@ import { PromptModule } from './modules/chat-prompt/prompt.module'
   imports: [
     /* 核心模块 */
     CoreModule,
-
     /* 共享模块 */
     SharedModule,
     /* 健康检查模块 */

@@ -15,7 +15,7 @@ export const databaseConfig = registerAs('database', () => ({
 export const redisConfig = registerAs('redis', () => ({
   url: process.env.REDIS_URL,
   db: parseInt(process.env.REDIS_DB, 10) || 0,
-  prefix: process.env.REDIS_PREFIX || 'nest:',
+  prefix: process.env.REDIS_PREFIX || 'sess:',
   ttl: parseInt(process.env.REDIS_TTL, 10) || 86400,
 }))
 
@@ -29,39 +29,31 @@ export const httpConfig = registerAs('http', () => ({
   maxConcurrent: parseInt(process.env.HTTP_MAX_CONCURRENT, 10) || 10,
 }))
 
-export const initialConfig = registerAs('initial', () => ({
-  password: process.env.INITIAL_PASSWORD || '123456',
-}))
-
-export const jwtConfig = registerAs('jwt', () => ({
-  secret: process.env.JWT_SECRET,
-  expiresIn: process.env.JWT_EXPIRES_IN || '1h',
-  refreshSecret: process.env.JWT_REFRESH_SECRET,
-  refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
-}))
-
 export const securityConfig = registerAs('security', () => ({
   allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || '*',
   jwt: {
     secret: process.env.JWT_SECRET,
     expiresIn: process.env.JWT_EXPIRES_IN || '1h',
+    refreshSecret: process.env.JWT_REFRESH_SECRET,
+    refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
   },
   csrf: {
     secret: process.env.CSRF_SECRET,
   },
   session: {
-    secret: process.env.SESSION_SECRET,
-    name: process.env.SESSION_NAME || 'nest',
+    name: process.env.SESSION_NAME || 'sess',
+    secret: process.env.SESSION_SECRET || 'sess',
   },
   cookie: {
-    domain: process.env.COOKIE_DOMAIN,
+    // 从X-Forwarded-Host获取实际域名
+    domain: process.env.COOKIE_DOMAIN || undefined,
     secure: process.env.COOKIE_SECURE === 'true',
   },
 }))
 
 export default registerAs('logger', () => ({
   json: true,
-  logLevel: process.env.LOG_LEVEL || ['log', 'error', 'warn'],
+  logLevel: process.env.LOG_LEVEL || ['log', 'error', 'warn', 'debug'],
   file: {
     enabled: true,
     path: process.env.LOG_FILE_PATH || 'logs/app.log',
@@ -78,7 +70,13 @@ export default registerAs('logger', () => ({
 
 export const uploadConfig = registerAs('upload', () => ({
   dest: process.env.UPLOAD_DEST || './uploads',
+  domain: process.env.UPLOAD_DOMAIN || 'http://127.0.0.1',
+  serveRoot: process.env.UPLOAD_SERVE_ROOT || '/static',
   maxSize: parseInt(process.env.UPLOAD_MAX_SIZE, 10) || 5242880,
   maxFiles: parseInt(process.env.UPLOAD_MAX_FILES, 10) || 10,
-  allowedTypes: process.env.UPLOAD_ALLOWED_TYPES?.split(',') || ['image/*', 'application/pdf'],
+  allowedTypes: process.env.UPLOAD_ALLOWED_TYPES?.split(',') || ['image/*', 'video/*', 'application/pdf'],
+}))
+
+export const initialConfig = registerAs('initial', () => ({
+  password: process.env.INITIAL_PASSWORD || '123456',
 }))

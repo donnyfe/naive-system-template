@@ -10,7 +10,7 @@ import { Exclude } from 'class-transformer'
 import { RoleEntity } from '@/modules/role/role.entity'
 import { UserRoleEntity } from '@/modules/role/user-role.entity'
 
-@Entity('user', { comment: '用户表' })
+@Entity('sys_user', { comment: '用户表' })
 export class UserEntity {
   @PrimaryGeneratedColumn({ comment: '用户ID' })
   public id: number

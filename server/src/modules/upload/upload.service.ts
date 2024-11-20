@@ -43,8 +43,8 @@ export class UploadService {
    */
   async uploadFile(file: Express.Multer.File) {
     const fileSize = (file.size / 1024 / 1024).toFixed(2)
-    if (fileSize > this.config.get('files.maxSize')) {
-      return responseFail(500, `文件大小不能超过${this.config.get('files.maxSize')}MB`)
+    if (fileSize > this.config.get('upload.maxSize')) {
+      return responseFail(500, `文件大小不能超过${this.config.get('upload.maxSize')}MB`)
     }
     let result = await this.saveFileLocal(file)
 
@@ -71,8 +71,8 @@ export class UploadService {
     fs.writeFileSync(targetFile, file.buffer)
 
     //文件服务完整路径
-    const filePath = path.join(this.config.get('files.serveRoot'), relativeFilePath)
-    const url = path.join(this.config.get('files.domain'), filePath)
+    const filePath = path.join(this.config.get('upload.serveRoot'), relativeFilePath)
+    const url = path.join(this.config.get('upload.domain'), filePath)
 
     let result = {
       fileName,
@@ -164,8 +164,8 @@ export class UploadService {
     await this.mergeChunkStream(chunkDirPath, targetFile)
     //文件相对地址
     const relativeFilePath = targetFile.replace(this.uploadDirPath, '')
-    const filePath = path.join(this.config.get('files.location'), relativeFilePath)
-    const url = path.join(this.config.get('files.domain'), filePath)
+    const filePath = path.join(this.config.get('upload.dest'), relativeFilePath)
+    const url = path.join(this.config.get('upload.domain'), filePath)
 
     const stats = fs.statSync(targetFile)
 

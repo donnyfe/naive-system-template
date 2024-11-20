@@ -1,8 +1,8 @@
 import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 import { ChatEntity } from '../chat/chat.entity'
 
-@Index('message_chat_id_foreign', ['chatId'], {})
-@Entity('message')
+@Index('chat_message_chat_id_foreign', ['chatId'], {})
+@Entity('chat_message')
 export class MessageEntity {
   @PrimaryColumn({ type: 'varchar', default: '', length: 36 })
   messageId: string

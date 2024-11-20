@@ -18,10 +18,10 @@ export class TransformInterceptor<T> implements NestInterceptor<ResponseType<T>>
 
   // 接收 ExecutionContext 和 CallHandler，并返回一个 Observable<Data>
   intercept(context: ExecutionContext, next: CallHandler<any>): Observable<ResponseType<T>> {
-    // nestjs使用REST API风格，对于post请求默认返回201，所以需要手动处理成200
     const request = context.switchToHttp().getRequest<Request>()
     const response = context.switchToHttp().getResponse<Response>()
 
+    // nestjs使用REST API风格，对于post请求默认返回201，所以需要手动处理成200
     if (request.method === 'POST' && response.statusCode === HttpStatus.CREATED) {
       response.status(HttpStatus.OK)
     }

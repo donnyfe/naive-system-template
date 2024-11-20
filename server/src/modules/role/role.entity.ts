@@ -4,7 +4,7 @@ import { UserRoleEntity } from './user-role.entity'
 /**
  * 定义角色表
  */
-@Entity('role')
+@Entity('sys_role')
 export class RoleEntity {
   @PrimaryGeneratedColumn({ comment: '角色ID' })
   id: number

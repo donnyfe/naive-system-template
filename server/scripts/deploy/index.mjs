@@ -47,6 +47,7 @@ const serverOptions = {
     '.env', // 忽略环境变量文件
     'scripts', // 忽略脚本目录
     'uploads', // 忽略上传目录
+    'src', // 忽略源码目录
   ],
   shell: [
     `cd ${process.env.SERVER_ROOT_PATH}`,

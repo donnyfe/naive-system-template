@@ -32,7 +32,7 @@ import * as configs from './config/configurations';
     // 日志
     LoggerModule.forRoot({
       json: true,
-      logLevel: ['log', 'error', 'warn'],
+      logLevel: ['log', 'error', 'warn', 'debug'],
       file: {
         enabled: true,
         path: 'logs/app.log',

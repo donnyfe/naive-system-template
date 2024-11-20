@@ -1,29 +1,31 @@
+import { INestApplication } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { SessionOptions } from 'express-session'
+import session from 'express-session'
 import RedisStore from 'connect-redis'
-import { RedisService } from '@/core/redis/redis.service'
 
-export const createSessionConfig = (
-  configService: ConfigService,
-  redisService: RedisService,
-): SessionOptions => {
-  const sessionConfig = configService.get('security.session')
-  const cookieConfig = configService.get('security.cookie')
-  const redisConfig = configService.get('redis')
 
-  return {
-    store: new RedisStore({
-      client: redisService.getClient(),
-      prefix: redisConfig.prefix,
-      ttl: redisConfig.ttl,
-    }),
-    secret: sessionConfig.secret,
-    name: sessionConfig.name,
+/**
+ * 设置session
+ * @param app
+ */
+export async function setupSession(app: INestApplication, redisStore: RedisStore): Promise<void> {
+  const configService = app.get(ConfigService)
+  const securityConfig = configService.get('security')
+
+  const conf = {
+    store: redisStore,
+    secret: securityConfig.session.secret,
+    name: securityConfig.session.name,
     rolling: true,
-    cookie: cookieConfig,
+    cookie: {
+      ...securityConfig.cookie,
+      httpOnly: true,
+      sameSite: 'lax',
+    },
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     proxy: process.env.NODE_ENV === 'production',
     unset: 'destroy',
   }
+  app.use(session(conf))
 }

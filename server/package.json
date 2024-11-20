@@ -22,7 +22,8 @@
     "start": "cross-env NODE_ENV=development nest start --watch",
     "start:debug": "cross-env NODE_ENV=development nest start --debug --watch",
     "start:prod": "cross-env NODE_ENV=production node dist/main",
-    "build": "cross-env NODE_ENV=production && nest build && ncc build ./dist/main.js -o ncc-dist",
+    "clean": "rm -rf dist ncc-dist",
+    "build": "npm run clean && nest build && ncc build ./dist/main.js -o ncc-dist",
     "deploy": "npm run build && node ./scripts/deploy/index.mjs",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\""

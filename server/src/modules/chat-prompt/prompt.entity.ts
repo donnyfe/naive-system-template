@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm'
 import { IsNotEmpty } from 'class-validator'
 
-@Entity('prompt')
+@Entity('chat_prompt')
 export class PromptEntity {
   @PrimaryColumn({ type: 'varchar', length: 36 })
   public promptId: string

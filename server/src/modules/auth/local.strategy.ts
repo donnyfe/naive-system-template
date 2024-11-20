@@ -14,7 +14,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
   async validate(username: string, password: string): Promise<any> {
     const user = await this.authSerevice.validateUser(username, decrypt(password))
-    if (!user) throw new ApiException(ErrorInfo.ERR_10002)
     return user
   }
 }

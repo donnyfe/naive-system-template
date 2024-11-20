@@ -5,7 +5,7 @@ import { RoleEntity } from './role.entity'
 /**
  * 定义用户角色关联表
  */
-@Entity('user_role')
+@Entity('sys_user_sys_role')
 export class UserRoleEntity {
   @PrimaryColumn()
   userId: number
