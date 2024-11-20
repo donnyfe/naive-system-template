@@ -82,8 +82,8 @@ importers:
         specifier: ^4.1.2
         version: 4.1.2(vue@3.5.12(typescript@5.6.3))
       '@idonnyfe/vite-plugin-workflow':
-        specifier: 1.0.1-alpha.13
-        version: 1.0.1-alpha.13
+        specifier: 1.0.1-alpha.17
+        version: 1.0.1-alpha.17
       '@rollup/plugin-html':
         specifier: ^1.0.4
         version: 1.0.4(rollup@4.24.0)
@@ -793,8 +793,8 @@ packages:
     peerDependencies:
       vue: '>=3'
 
-  '@idonnyfe/vite-plugin-workflow@1.0.1-alpha.13':
-    resolution: {integrity: sha512-x3+jbt/rqt0cYDwRH0AfDyQSJAmq4wgR0MgSG2rwWW15v7pjz2qPN1L3xRf69BqxMf8R0bE96oVzTzJS8BDvEg==}
+  '@idonnyfe/vite-plugin-workflow@1.0.1-alpha.17':
+    resolution: {integrity: sha512-9U8wN5bej53kN1Duqf5YR3wth2VFdeSsnWqYqrA+o0zH1LffYQTl6TH23ks22IdA8UYf07e8dFyr0Vh2CZnPEQ==}
 
   '@intlify/core-base@10.0.4':
     resolution: {integrity: sha512-GG428DkrrWCMhxRMRQZjuS7zmSUzarYcaHJqG9VB8dXAxw4iQDoKVQ7ChJRB6ZtsCsX3Jse1PEUlHrJiyQrOTg==}
@@ -6020,7 +6020,7 @@ snapshots:
       '@iconify/types': 2.0.0
       vue: 3.5.12(typescript@5.6.3)
 
-  '@idonnyfe/vite-plugin-workflow@1.0.1-alpha.13':
+  '@idonnyfe/vite-plugin-workflow@1.0.1-alpha.17':
     dependencies:
       node-ssh: 13.2.0
 

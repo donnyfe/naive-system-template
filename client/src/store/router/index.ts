@@ -27,7 +27,9 @@ export const useRouteStore = defineStore('route-store', {
 			this.$reset()
 		},
 		resetRoutes() {
-			if (router.hasRoute('appRoot')) router.removeRoute('appRoot')
+			if (router.hasRoute('appRoot')) {
+				router.removeRoute('appRoot')
+			}
 		},
 		// set the currently highlighted menu key
 		setActiveMenu(key: string) {

@@ -3,16 +3,16 @@ import { useImageminPlugin, useVisualizerPlugin } from './plugins'
 import baseConfig from './vite.config.base'
 import { deployToServer } from '@idonnyfe/vite-plugin-workflow'
 
-const env = loadEnv('prod', process.cwd(), '')
+const env = loadEnv('production', process.cwd(), '')
 
 export default mergeConfig(
 	{
-		mode: 'prod',
-		envDir: '../',
+		mode: 'production',
 		base: './',
 		plugins: [
 			// 图片压缩
 			useImageminPlugin(),
+
 			// 分析报告
 			useVisualizerPlugin(),
 
@@ -27,10 +27,13 @@ export default mergeConfig(
 		],
 		build: {
 			target: 'esnext',
-			drop: ['console', 'debugger'],
-			sourcemap: true, // 启用 sourcemap
+			drop: ['debugger'],
+			cssCodeSplit: true, // 启用 CSS 代码分割
+			sourcemap: false, // 启用 sourcemap
+			emptyOutDir: true, // 启用/禁用清空输出目录
 			reportCompressedSize: false, // 启用/禁用 gzip 压缩大小报告
-			chunkSizeWarningLimit: 2000,
+			assetsInlineLimit: 4096, // 启用/禁用 base64 内联资源, 4kb 以下使用 base64 内联
+			chunkSizeWarningLimit: 500, // 启用/禁用 chunk 大小警告, 500kb 以下
 			// 模块预加载
 			modulePreload: {
 				polyfill: false,
@@ -38,24 +41,30 @@ export default mergeConfig(
 					// 根据文件名过滤需要预加载的依赖
 					return deps.filter((dep: any) => {
 						// 只预加载核心chunks
-						return dep.includes('chunk-core') || dep.includes('chunk-utils')
+						return (
+							// dep.includes('vue-vendor') ||
+							// dep.includes('ui-vendor') ||
+							dep.includes('utils-vendor')
+						)
 					})
 				}
 			},
 			rollupOptions: {
+				cache: true,
 				output: {
 					// 分包策略
 					manualChunks: {
-						'chunk-core': ['vue', 'vue-router', 'pinia', 'vue-i18n', 'naive-ui'],
-						'chunk-utils': ['@vueuse/core', 'radash', 'axios', 'qs'],
-						'chunk-libs': ['dayjs', 'spark-md5', 'crypto-js'],
-						'chunk-md': [
+						'vue-vendor': ['vue', 'vue-router', 'pinia'],
+						'ui-vendor': ['naive-ui'],
+						'utils-vendor': ['axios', 'qs', 'dayjs', '@vueuse/core'],
+						'libs-vendor': ['spark-md5', 'crypto-js'],
+						'markdown-vendor': [
 							'markdown-it',
 							'markdown-it-link-attributes',
 							'@traptitech/markdown-it-katex',
 							'highlight.js'
 						],
-						'chunk-ai': ['@xenova/transformers']
+						'ai-vendor': ['@xenova/transformers']
 					},
 					// 用于从入口点创建的块的打包输出格式[name]表示文件名,[hash]表示该文件内容hash值
 					chunkFileNames: 'assets/js/[name]-[hash].js',

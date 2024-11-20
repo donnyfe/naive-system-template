@@ -20,8 +20,8 @@
 		"chatapp"
 	],
 	"scripts": {
-		"dev": "vite --mode dev --config ./build/vite.config.dev.ts",
-		"build": "vue-tsc --noEmit && vite build --mode prod --config ./build/vite.config.prod.ts",
+		"dev": "vite --config ./build/vite.config.dev.ts",
+		"build": "vue-tsc --noEmit && vite build --config ./build/vite.config.prod.ts",
 		"preview": "vite preview --port 9981",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
@@ -59,7 +59,7 @@
 		"@antfu/eslint-config": "^3.8.0",
 		"@iconify-json/icon-park-outline": "^1.2.1",
 		"@iconify/vue": "^4.1.2",
-		"@idonnyfe/vite-plugin-workflow": "1.0.1-alpha.13",
+		"@idonnyfe/vite-plugin-workflow": "1.0.1-alpha.17",
 		"@rollup/plugin-html": "^1.0.4",
 		"@types/crypto-js": "^4.2.2",
 		"@types/markdown-it-link-attributes": "^3.0.5",

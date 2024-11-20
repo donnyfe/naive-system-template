@@ -3,7 +3,7 @@
  * @param file
  * @returns
  */
-export const createChunks = function (file: File, chunkSize: number): Blob[] {
+export function createChunks(file: File, chunkSize: number): Blob[] {
 	const chunks: Blob[] = []
 	const fileSize = file.size
 	let start = 0

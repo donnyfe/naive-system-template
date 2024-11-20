@@ -47,7 +47,7 @@
 	},
 	"route": {
 		"appRoot": "Home",
-		"system": "系统管理",
+		"system": "System Management",
 		"chat": "Chat",
 		"users": "User settings",
 		"role": "Role management",
@@ -164,7 +164,7 @@
 	},
 	"about": {
 		"title": "About",
-		"intro": "This is a backend management template based on Vue 3, Vite, TypeScript, and NaiveUI.",
+		"intro": "This is a backend management Application based on Vue 3, Vite, TypeScript, and NaiveUI.",
 		"devDependencies": "Development environment dependency",
 		"dependencies": "Production environment dependency"
 	}

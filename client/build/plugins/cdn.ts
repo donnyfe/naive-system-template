@@ -30,14 +30,7 @@ export function useCdnPlugin() {
 	const useLibs = [
 		// 核心框架库
 		'vue',
-		'vue-demi',
-		'pinia',
-		'vue-router',
-		'vue-i18n',
-		// UI 框架
-		'naive-ui',
-		// 工具库
-		'axios'
+		'vue-router'
 	]
 	const cdnConfig = {
 		// 开发环境不启用 CDN

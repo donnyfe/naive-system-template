@@ -5,7 +5,6 @@
  * @param fns - 需要执行的函数数组，每个函数都应该返回 Promise
  * @param limit - 最大并发数
  * @returns Promise<Array> - 按照原始顺序返回所有 Promise 的执行结果
- *
  * @example
  * const tasks = [
  *   () => fetch('/api/1'),
@@ -14,7 +13,7 @@
  * ]
  * const results = await promisePool(tasks, 2) // 最多同时执行2个请求
  */
-export const promisePool = async function <T>(fns: (() => Promise<T>)[], limit: number) {
+export const promisePool = async function <T>(fns: (() => Promise<T>)[], limit: number = 1) {
 	// 参数校验
 	if (!Array.isArray(fns)) {
 		throw new TypeError('First argument must be an array of functions')

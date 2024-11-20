@@ -24,7 +24,10 @@ const naiveLocale = computed(() => {
 	>
 		<naive-provider>
 			<router-view />
-			<Watermark :show-watermark="appStore.showWatermark" />
+			<Watermark
+				:visible="appStore.showWatermark"
+				content="Watermark"
+			/>
 		</naive-provider>
 	</n-config-provider>
 </template>

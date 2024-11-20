@@ -82,8 +82,10 @@ async function handleUploadChunk(data: any) {
 
 		if (progress >= 100) {
 			clearInterval(intervalId)
+			$message.success('上传成功')
+			return
 		}
-	}, 150)
+	}, 300)
 
 	// 控制并发请求
 	const maxConcurrentNum = 3
@@ -96,6 +98,11 @@ async function handleUploadChunk(data: any) {
 	})
 }
 
+/**
+ * 使用 Web Worker 计算文件 hash
+ * @param file - 文件
+ * @returns 文件 hash 和切片信息
+ */
 function useHashWorker(file: File) {
 	return new Promise((resolve, reject) => {
 		const url = new URL('./hash.worker.ts', import.meta.url)
@@ -146,7 +153,14 @@ async function onUploadChunk(options: { fileList: UploadFileInfo[] }) {
 <template>
 	<n-flex>
 		<n-card title="大文件切片上传">
-			<n-upload multiple directory-dnd :max="5" :default-upload="false" @change="onUploadChunk">
+			<n-upload
+				accept="*"
+				multiple
+				directory-dnd
+				:max="5"
+				:default-upload="false"
+				@change="onUploadChunk"
+			>
 				<n-upload-dragger>
 					<div class="mt-12px">
 						<n-icon size="48" :depth="3">

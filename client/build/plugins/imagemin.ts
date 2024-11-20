@@ -12,19 +12,21 @@ export function useImageminPlugin() {
 			interlaced: false
 		},
 		optipng: {
-			optimizationLevel: 7
+			optimizationLevel: 5
 		},
 		mozjpeg: {
-			quality: 80
+			quality: 75, // 适当降低质量
+			progressive: true // 启用渐进式加载
 		},
 		pngquant: {
-			quality: [0.8, 0.9],
-			speed: 4
+			quality: [0.7, 0.8], // 适当降低质量
+			speed: 6 // 提高速度
 		},
 		svgo: {
 			plugins: [
 				{
-					name: 'removeViewBox'
+					name: 'removeViewBox',
+					active: false // 避免SVG显示问题
 				},
 				{
 					name: 'removeEmptyAttrs',

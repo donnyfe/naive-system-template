@@ -164,7 +164,7 @@
 	},
 	"about": {
 		"title": "关于",
-		"intro": "这是一款基于Vue3+vite+TypeScript+NaiveUI的后台管理模板",
+		"intro": "这是一款基于Vue3+vite+TypeScript+NaiveUI的后台管理应用",
 		"devDependencies": "开发环境依赖",
 		"dependencies": "生产环境依赖"
 	}

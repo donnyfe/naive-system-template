@@ -87,6 +87,7 @@ export const staticRoutes: RowRoute[] = [
 		requiresAuth: true,
 		icon: 'icon-park-outline:info',
 		componentPath: '/about/index.vue',
+		pinTab: false,
 		pid: null,
 		id: 99
 	}

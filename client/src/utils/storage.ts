@@ -7,7 +7,6 @@ const STORAGE_PREFIX = import.meta.env.VITE_STORAGE_PREFIX
  */
 function createLocalStorage<T extends LocalStorageData>() {
 	// 默认缓存期限为7天
-
 	function set<K extends keyof T>(key: K, value: T[K], expire: number = 60 * 60 * 24 * 7) {
 		const storageData: StorageData<T[K]> = {
 			value,

@@ -7,7 +7,8 @@ const { VITE_ROUTE_MODE = 'hash' } = import.meta.env
 
 export const router = createRouter({
 	history: VITE_ROUTE_MODE === 'hash' ? createWebHashHistory() : createWebHistory(),
-	routes
+	routes,
+	scrollBehavior: () => ({ left: 0, top: 0 })
 })
 
 export async function setupRouter(app: App) {
