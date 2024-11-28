@@ -12,7 +12,6 @@ export class DateParamsDTO {
   endTime: string;
 }
 
-
 /**
  * 分页DTO
  */

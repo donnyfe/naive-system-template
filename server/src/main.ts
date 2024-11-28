@@ -14,7 +14,6 @@ import { setupGlobal } from './config/global.config'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: ['log', 'error', 'warn', 'debug'],
     cors: true, // 开启跨域访问
   })
 

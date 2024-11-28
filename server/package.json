@@ -1,5 +1,5 @@
 {
-  "name": "nestjs",
+  "name": "nestjs-server",
   "version": "0.0.1",
   "description": "",
   "author": "donnyfe",
@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@baiducloud/qianfan": "^0.1.9",
+    "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/axios": "^3.1.0",
     "@nestjs/common": "^10.4.6",
     "@nestjs/config": "^3.3.0",

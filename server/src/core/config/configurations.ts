@@ -77,6 +77,18 @@ export const uploadConfig = registerAs('upload', () => ({
   allowedTypes: process.env.UPLOAD_ALLOWED_TYPES?.split(',') || ['image/*', 'video/*', 'application/pdf'],
 }))
 
+export const emailConfig = registerAs('email', () => ({
+  transport: process.env.EMAIL_TRANSPORT,
+  from: process.env.EMAIL_FROM,
+}))
+
+
+export const baiduConfig = registerAs('baidu', () => ({
+  qianfanApiKey: process.env.QIANFAN_API_KEY,
+  qianfanApiSecret: process.env.QIANFAN_API_SECRET
+}))
+
 export const initialConfig = registerAs('initial', () => ({
-  password: process.env.INITIAL_PASSWORD || '123456',
+  avatar: process.env.INITIAL_AVATAR || '',
+  password: process.env.INITIAL_PASSWORD || 'Aa12345678',
 }))

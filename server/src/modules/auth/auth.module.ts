@@ -8,9 +8,12 @@ import { UserModule } from '../user/user.module'
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
 import { RedisModule } from '@/core/redis/redis.module'
+import { EmailModule } from '@/core/email/email.module'
+
 @Module({
   imports: [
     RedisModule,
+    EmailModule,
     UserModule,
     PassportModule,
     JwtModule.registerAsync({

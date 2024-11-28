@@ -62,4 +62,8 @@ export const validationSchema = Joi.object({
   HTTP_RETRIES: Joi.number().default(3),
   HTTP_RETRY_DELAY: Joi.number().default(1000),
   HTTP_MAX_CONCURRENT: Joi.number().default(10),
+
+  // 百度配置
+  QIANFAN_API_KEY: Joi.string().required(),
+  QIANFAN_API_SECRET: Joi.string().required(),
 })
