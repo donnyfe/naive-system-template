@@ -2,10 +2,11 @@
 	setup
 	lang="ts"
 >
-import { ref, reactive } from 'vue'
-import { useFormRules } from './hooks'
+import { ref, reactive, onUnmounted } from 'vue'
+import { useDebounceFn } from '@vueuse/core'
+import { UserOutlined, LockOutlined, NumberOutlined } from '@vicons/antd'
 import { useAuthStore } from '@/store'
-import { UserOutlined, LockOutlined } from '@vicons/antd'
+import { useFormRules } from './hooks'
 
 const emit = defineEmits(['update:modelValue'])
 const { t } = useI18n()
@@ -16,27 +17,30 @@ const loading = ref(false)
 const isRead = ref(false)
 
 const form = reactive({
-	username: '',
+	email: '',
 	password: '',
-	checkPassword: ''
+	captcha: ''
 })
 const rules = useFormRules(form) as Ref<Record<string, any[]>>
 
+const countdown = ref(0)
+const timer = ref<number>()
+
 async function handleSubmit() {
 	if (!isRead.value) {
-		window.$message.warning(t('login.agreementRequired'))
+		$message.warning(t('login.agreementRequired'))
 		return
 	}
 
 	try {
-		await formRef.value?.validate()
+		await formRef.value.validate()
 		loading.value = true
 
-		const { username, password } = form
-		const res = await authStore.register(username, password)
+		const { email, password } = form
+		const res = await authStore.register(email, password)
 
 		if (res.success) {
-			window.$message.success(t('login.registerSuccess'))
+			$message.success(t('login.registerSuccess'))
 			switchForm('loginForm')
 		}
 	} finally {
@@ -47,6 +51,39 @@ async function handleSubmit() {
 function switchForm(type: string) {
 	emit('update:modelValue', type)
 }
+
+const getCaptcha = useDebounceFn(async () => {
+	if (countdown.value > 0) return
+	try {
+		await formRef.value.validate(
+			(errors: any) => { },
+			(fields: any) => fields.key === 'email'
+		)
+
+		$message.success(t('login.captchaSent'))
+
+		countdown.value = 60
+		timer.value = setInterval(() => {
+			countdown.value--
+			if (countdown.value <= 0) {
+				clearInterval(timer.value)
+			}
+		}, 1000) as unknown as number
+
+		await authStore.getVerifyCode({
+			email: form.email
+		})
+
+	} catch (err) {
+		$message.error(t('login.emailFormatTip'))
+	}
+}, 2000)
+
+onUnmounted(() => {
+	if (timer.value) {
+		clearInterval(timer.value)
+	}
+})
 </script>
 
 <template>
@@ -60,10 +97,10 @@ function switchForm(type: string) {
 		:rules="rules"
 		size="large"
 	>
-		<n-form-item path="username">
+		<n-form-item path="email">
 			<n-input
-				v-model:value="form.username"
-				:placeholder="t('login.accountPlaceholder')"
+				v-model:value="form.email"
+				:placeholder="t('login.emailPlaceholder')"
 			>
 				<template #prefix>
 					<n-icon>
@@ -72,7 +109,7 @@ function switchForm(type: string) {
 				</template>
 			</n-input>
 		</n-form-item>
-	
+
 		<n-form-item path="password">
 			<n-input
 				v-model:value="form.password"
@@ -87,22 +124,36 @@ function switchForm(type: string) {
 				</template>
 			</n-input>
 		</n-form-item>
-	
-		<n-form-item path="checkPassword">
-			<n-input
-				v-model:value="form.checkPassword"
-				type="password"
-				show-password-on="click"
-				:placeholder="t('login.checkPasswordPlaceholder')"
-			>
-				<template #prefix>
-					<n-icon>
-						<LockOutlined />
-					</n-icon>
-				</template>
-			</n-input>
+
+		<n-form-item path="captcha">
+			<div class="w-full h-full flex flex-row justify-between items-center">
+				<n-input
+					class="flex-1"
+					v-model:value="form.captcha"
+					:placeholder="t('login.captchaPlaceholder')"
+					:maxlength="6"
+				>
+					<template #prefix>
+						<n-icon>
+							<NumberOutlined />
+						</n-icon>
+					</template>
+				</n-input>
+
+				<div class="w-120px h-full items-center ml-4">
+					<n-button
+						class="w-120px h-44px"
+						type="primary"
+						:disabled="countdown > 0"
+						:loading="countdown > 0"
+						@click="getCaptcha"
+					>
+						{{ countdown > 0 ? `${countdown}s` : t('login.getCaptcha') }}
+					</n-button>
+				</div>
+			</div>
 		</n-form-item>
-	
+
 		<n-checkbox
 			v-model:checked="isRead"
 			class="mb-4 items-center"
@@ -123,7 +174,7 @@ function switchForm(type: string) {
 		>
 			{{ t('login.signUp') }}
 		</n-button>
-	
+
 		<div class="mt-4 text-center text-white">
 			{{ t('login.haveAccountText') }}
 			<n-button

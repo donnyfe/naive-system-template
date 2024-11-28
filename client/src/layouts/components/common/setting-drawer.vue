@@ -145,7 +145,7 @@ function clearCache() {
 
 			<template #footer>
 				<n-space justify="space-between">
-					<n-button type="warning" @click="clearCache">
+					<n-button  @click="clearCache">
 						{{ $t('app.clearCache') }}
 					</n-button>
 					<n-button type="error" @click="resetSetting">

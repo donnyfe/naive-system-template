@@ -5,9 +5,9 @@ export function useFormRules(formModel?: { password: string }) {
 	const { t } = useI18n()
 
 	return computed(() => ({
-		username: [
-			{ required: true, message: t('login.accountRuleTip') },
-			{ min: 4, max: 20, message: t('login.accountLengthTip') }
+		email: [
+			{ key: 'email', required: true, message: t('login.emailRuleTip') },
+			{ key: 'email', type: 'email', message: t('login.emailFormatTip') }
 		],
 		password: [
 			{ required: true, message: t('login.passwordRuleTip') },

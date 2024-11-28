@@ -19,8 +19,8 @@ const formRef = ref()
 const loading = ref(false)
 
 const form = reactive({
-	username: 'admin01',
-	password: '123456',
+	email: '',
+	password: '',
 	captcha: ''
 })
 const rules = useFormRules(form) as Ref<Record<string, any[]>>
@@ -41,17 +41,18 @@ async function handleSubmit() {
 		await formRef.value?.validate()
 		loading.value = true
 
-		const { username, password } = form
+		const { email, password } = form
 		if (isRemember.value) {
 			local.set('loginAccount', {
-				username,
+				email,
 				password: encrypt(password)
 			})
 		}
 
 		const res = await authStore.login({
-			...form,
-			password: encrypt(password)
+			email,
+			password: encrypt(password),
+			captcha: form.captcha
 		})
 
 		if (!res.success) {
@@ -85,10 +86,10 @@ onMounted(() => {
 		:rules="rules"
 		size="large"
 	>
-		<n-form-item path="username">
+		<n-form-item path="email">
 			<n-input
-				v-model:value="form.username"
-				:placeholder="t('login.accountPlaceholder')"
+				v-model:value="form.email"
+				:placeholder="t('login.emailPlaceholder')"
 			>
 				<template #prefix>
 					<n-icon>

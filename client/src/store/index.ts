@@ -11,11 +11,13 @@ const pinia = createPinia()
 pinia.use(piniaPluginPersist)
 
 // 自定义日志插件
-pinia.use(({ store }) => {
-	store.$subscribe((mutation, state) => {
-		console.log(`[${store.$id}]: ${mutation.type}`, mutation, state)
-	})
-})
+// pinia.use(({ store }) => {
+// 	store.$subscribe((mutation, state) => {
+// 		if (import.meta.env.VITE_MODE !== 'prod') {
+// 			console.log(`[${store.$id}]: ${mutation.type}`, mutation, state)
+// 		}
+// 	})
+// })
 
 // 安装pinia全局状态库
 export function setupPinia(app: App) {

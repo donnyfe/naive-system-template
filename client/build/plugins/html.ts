@@ -57,7 +57,7 @@ export function useHtmlPlugin(): Plugin {
 					return `<script${makeHtmlAttributes(attrs)}></script>`
 				})
 				.join('\n')
-			console.log(8888888, scriptTags)
+
 
 			return (
 				html

@@ -11,9 +11,11 @@ import {
 	PaperPlaneOutline,
 	StopCircleOutline
 } from '@vicons/ionicons5'
-import { chatSubmit } from '../api'
 import ChatMessage from './message.vue'
 import ChatPrompt from './prompt.vue'
+import {local} from '@/utils'
+import { fetchEventSource, EventStreamContentType } from '@microsoft/fetch-event-source'
+
 
 const { t } = useI18n()
 const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom } = useScroll()
@@ -29,7 +31,7 @@ const sidebarVisible = computed(() => {
 
 // 显示对话记录侧边栏
 function showChatSidebar() {
-	chatStore.showChatSidebar()
+	chatStore.showSidebar = true
 }
 
 const popoverPromptRef = ref<PopoverInst | null>(null)
@@ -134,10 +136,13 @@ async function handleSubmit() {
 	})
 
 	scrollToBottom()
+
 	// 创建回答
 	answer.value = aiMessage as Message
 	submitChat(answer.value)
 }
+
+const processedMsgIds = new Set<string>()
 
 async function submitChat(answer: Message) {
 	prompt.value = ''
@@ -152,55 +157,73 @@ async function submitChat(answer: Message) {
 		chatId: chatId as string,
 		previousId: answer.previousId as string
 	}
-	const response = await chatSubmit(parmas)
-	if (!response) return
 
-	const reader = response.body!.getReader()
-	const textDecoder = new TextDecoder('utf-8')
-	// 声明字符队列
-	const charQueue = new Queue()
-	let intervalId: any = null
-	let msg = ''
 
-	try {
-		while (true) {
-			const { done, value } = await reader.read()
-			if (done) {
-				break
+	/**
+	 * 流式响应
+	 * @docs https://www.npmjs.com/package/@microsoft/fetch-event-source
+	 */
+	const abortCtrl = new AbortController()
+
+	await fetchEventSource('/api/chat/submit', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'Cache-Control': 'no-cache',
+			'Connection': 'keep-alive',
+			'Authorization': `Bearer ${local.get('accessToken') || ''}`
+		},
+		body: JSON.stringify(parmas),
+		signal: abortCtrl.signal,
+		async onopen(response: any) {
+			if (response.ok && response.headers.get('Content-type').includes(EventStreamContentType)) {
+				return;
 			}
-			msg = textDecoder.decode(value)
-		}
-		if (answer.completed) {
-			return
-		}
-
-		// 消息入队
-		for (const char of msg) {
-			charQueue.enqueue(char)
-		}
-		intervalId = setInterval(async () => {
-			// 消息出队
-			const char = charQueue.dequeue()
-			if (char) {
-				answer.messageText += char
-			} else {
-				clearInterval(intervalId)
-				intervalId = null
-				loading.value = false
-				answer.completed = 1
-				scrollToBottom()
-				// 更新回答消息
-				await chatStore.updateMessage(answer)
+		},
+		async onmessage(msg: any) {
+			if(msg.event === 'error') {
+				console.error(msg)
+				return
 			}
-			scrollToBottomIfAtBottom()
-		}, 50)
-	} catch (error) {
-		console.error('Error reading stream:', error)
-	} finally {
-		reader?.releaseLock() // 确保释放读取器
-		loading.value = false
-		scrollToBottomIfAtBottom()
+			if (!msg.data) return
+			try {
+				let message = JSON.parse(msg.data)
+
+				answer.messageText += message.result
+				scrollToBottomIfAtBottom()
+
+				if (message.is_end) {
+					answer.completed = 1
+					loading.value = false
+					await updateMessage(toRaw(answer))
+				}
+			} catch (err) {
+				console.error('Error parsing message:', err)
+			}
+		},
+		onclose() {
+			console.log('SSE connection closed')
+			loading.value = false
+			processedMsgIds.clear()
+		},
+		onerror(err: any) {
+			loading.value = false
+			console.error('Stream error:', err)
+		}
+	})
+}
+
+/** 更新消息 */
+async function updateMessage(msg: Message) {
+	const params: Message = {
+		chatId: msg.chatId,
+		previousId: msg.previousId,
+		messageId: msg.messageId,
+		messageText: msg.messageText,
+		sender: msg.sender,
+		completed: 1
 	}
+	await chatStore.updateMessage(params)
 }
 
 /**
@@ -228,12 +251,12 @@ async function onRegenerate(answer: Message) {
 /**
  * 停止生成
  */
-function handleStop() {
+async function handleStop() {
 	if (loading.value) {
 		if (answer.value.chatId) {
 			answer.value.messageText = t('chat.chatStop')
 			answer.value.completed = 1
-			chatStore.updateMessage(answer.value)
+			await updateMessage(toRaw(answer.value))
 		}
 		loading.value = false
 	}

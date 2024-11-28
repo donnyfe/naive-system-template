@@ -22,7 +22,7 @@ export default mergeConfig(
 					rewrite: (path: string) => path.replace(/^\/api/, ''),
 					secure: false,
 					ws: false, // 支持WebSocket
-					timeout: 3000,
+					timeout: 60 * 1000, // 60秒
 					configure: (proxy: any, options: any) => {
 						// 配置此项可在响应头中看到请求的真实地址
 						proxy.on('proxyRes', (proxyRes: any, req: any) => {

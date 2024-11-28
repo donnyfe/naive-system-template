@@ -14,7 +14,10 @@ export const usePromptStore = defineStore('prompt-store', {
 	actions: {
 		async getPromptList() {
 			const res = await queryPromptList()
-			this.promptList = res.data
+			console.log(222, res.data)
+			if (res.data.length > 0) {
+				this.promptList = res.data
+			}
 			return this.promptList
 		},
 

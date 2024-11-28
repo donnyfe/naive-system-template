@@ -2,7 +2,7 @@ import type { Result } from '@/http/request'
 import type { LoginData, LoginParam } from '@/views/login/types'
 import { router } from '@/router'
 import { local } from '@/utils'
-import { login as doLogin, register as doRegister, queryUserInfo } from '@/views/login/api'
+import { login as doLogin, register as doRegister, queryUserInfo, getVerifyCode as doGetVerifyCode} from '@/views/login/api'
 import { useRouteStore } from './router'
 import { useTabStore } from './tab'
 
@@ -14,7 +14,7 @@ interface AuthState {
 export const useAuthStore = defineStore('auth-store', {
 	state: (): AuthState => {
 		return {
-			userInfo: local.get('userInfo'),
+			userInfo: local.get('userInfo') || {},
 			token: local.get('accessToken') || '',
 			permissions: []
 		}
@@ -26,15 +26,22 @@ export const useAuthStore = defineStore('auth-store', {
 		}
 	},
 	actions: {
-		// 注册
-		async register(username: string, password: string): Promise<Result<any>> {
+		/** 获取验证码 */
+		getVerifyCode(params: { email: string }) {
 			return new Promise(async (resolve) => {
-				const res = await doRegister({ username, password })
+				const res = await doGetVerifyCode(params.email)
+				resolve(res)
+			})
+		},
+		/** 注册 */
+		async register(email: string, password: string): Promise<Result<any>> {
+			return new Promise(async (resolve) => {
+				const res = await doRegister({ email, password })
 				resolve(res)
 			})
 		},
 
-		/* 用户登录 */
+		/** 用户登录 */
 		async login(params: LoginParam) {
 			const res = await doLogin(params)
 			if (res.success) {
@@ -44,7 +51,7 @@ export const useAuthStore = defineStore('auth-store', {
 			return res
 		},
 
-		/* 处理登录返回的数据 */
+		/** 处理登录返回的数据 */
 		async handleLoginInfo(loginData: LoginData) {
 			// 记录token和用户信息
 			local.set('accessToken', loginData.accessToken)
@@ -69,7 +76,7 @@ export const useAuthStore = defineStore('auth-store', {
 			$message.success('登录成功，欢迎您!')
 		},
 
-		/* 登录退出，重置用户信息等 */
+		/** 登录退出，重置用户信息等 */
 		async logout() {
 			const route = unref(router.currentRoute)
 			// 清除本地缓存

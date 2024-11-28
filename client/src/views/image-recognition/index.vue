@@ -21,7 +21,6 @@ async function detect(image: HTMLImageElement) {
 	})
 	status.value.textContent = '分析完成！'
 
-	console.log('output: ', output)
 	console.timeEnd('图像识别耗时:')
 	output.forEach((item: any) => renderBox(item))
 }

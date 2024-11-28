@@ -43,7 +43,7 @@ export const useAppStore = defineStore('app-store', {
 			showWatermark: false,
 			showSetting: false,
 			transitionAnimation: 'fade-slide' as TransitionAnimation,
-			layoutMode: 'leftMenu' as LayoutMode
+			layoutMode: 'topMenu' as LayoutMode
 		}
 	},
 	getters: {

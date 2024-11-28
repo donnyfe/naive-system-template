@@ -1,7 +1,7 @@
 export type IFormType = 'loginForm' | 'registerForm' | 'resetPasswordForm'
 
 export interface LoginParam {
-	username: string
+	email: string
 	password: string
 	captcha: string
 }

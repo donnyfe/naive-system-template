@@ -16,7 +16,6 @@ declare module 'axios' {
 		isUpload?: boolean
 		// 是否为json格式
 		isJson?: boolean
-
 		// 重试次数计数器
 		retryCount?: number
 		// 是否开启重试
@@ -102,7 +101,8 @@ class Http {
 				config = this.resolveRequestData(config)
 				return config
 			},
-			async (error: AxiosError) => {
+			(error: AxiosError) => {
+				$message.error(error.message)
 				return Promise.reject(error)
 			}
 		)
@@ -114,11 +114,11 @@ class Http {
 			async (response) => {
 				const { data, status } = response
 				if (status !== 200) {
-					return Promise.reject(data)
-				}
-
-				if (data.code !== 200) {
 					data.success = false
+					$message.error(data.message)
+					return Promise.reject(data)
+				} else {
+					data.success = data.code === 200
 				}
 
 				// 处理授权异常
@@ -129,7 +129,10 @@ class Http {
 				return Promise.resolve(data)
 			},
 			async (error: AxiosError) => {
+				$message.error(error.response?.data?.message)
+
 				const config = error.config as InternalAxiosRequestConfig
+
 				// 重试配置
 				config.retryCount = config.retryCount ?? 0
 				const { isRetry, retryCount, retryInterval } = config
@@ -208,6 +211,7 @@ class Http {
 	}
 
 	async post<T>(url: string, data?: object, config?: InternalAxiosRequestConfig): Promise<T> {
+		console.log('--------- post ----------:', url, data)
 		return this.axiosInstance.post(url, data, config)
 	}
 
@@ -228,14 +232,13 @@ const http = new Http()
 export default http
 
 export async function httpStream(url: string, data: any) {
-	const token = local.get('accessToken')
 
 	const res = await fetch(url, {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json',
+			'Content-Type': 'text/event-stream',
 			Accept: 'text/event-stream',
-			Authorization: `Bearer ${token}`
+			Authorization: `Bearer ${local.get('accessToken')}`
 		},
 		body: JSON.stringify(data)
 	})

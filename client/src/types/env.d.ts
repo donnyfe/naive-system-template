@@ -1,6 +1,8 @@
-type ServiceEnvType = 'dev' | 'test' | 'prod'
+type ServiceEnvType = 'dev' | 'prod'
 
 interface ImportMetaEnv {
+	/** 是否为生产环境 */
+	readonly VITE_MODE: ServiceEnvType
 	/** 项目标题 */
 	readonly VITE_APP_NAME: string
 	/** hash路由模式 */

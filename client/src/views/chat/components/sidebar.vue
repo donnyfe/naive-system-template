@@ -28,11 +28,14 @@ onMounted(async () => {
 })
 
 function hideChatSidebar() {
-	chatStore.hideChatSidebar()
+	chatStore.showSidebar = false
 }
 
 function handleAdd() {
-	chatStore.createChat()
+	const params = {
+		chatName: '新建对话'
+	}
+	chatStore.createChat(params)
 }
 
 async function handleSelect({ chatId }: Chat) {

@@ -27,7 +27,7 @@ async function handleSubmit() {
 		// TODO: 实现重置密码逻辑
 		await new Promise(resolve => setTimeout(resolve, 1000))
 
-		window.$message.success(t('login.resetPasswordSuccess'))
+		$message.success(t('login.resetPasswordSuccess'))
 		switchForm('loginForm')
 	} finally {
 		loading.value = false
@@ -62,7 +62,7 @@ function switchForm(type: string) {
 				</template>
 			</n-input>
 		</n-form-item>
-	
+
 		<n-form-item path="email">
 			<n-input
 				v-model:value="form.email"

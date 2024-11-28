@@ -14,8 +14,10 @@ export const logout = async () => http.post<Result<any>>('/api/auth/logout')
 export const updateToken = async (data: any) =>
 	http.post<Result<LoginData>>('/api/auth/refresh/token', data)
 
-export const queryUserInfo = async () => http.get<Result<UserData>>('/api/user/detail')
+export const queryUserInfo = async () => http.get<Result<UserData>>('/api/user/info')
 
 export async function queryUserRoutes(params: { id: number }) {
 	return http.get<Result<RowRoute[]>>('/api/user/getUserRoutes', { params })
 }
+
+export const getVerifyCode = async (email: string) => http.get<Result<any>>('/api/auth/verifyCode', {email})

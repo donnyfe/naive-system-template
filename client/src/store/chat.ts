@@ -27,21 +27,17 @@ export const useChatStore = defineStore('chat-store', {
 	}),
 
 	actions: {
-		showChatSidebar() {
-			this.showSidebar = true
-		},
-		hideChatSidebar() {
-			this.showSidebar = false
-		},
 		/**
 		 * 创建对话
 		 */
 		async createChat(params?: Chat) {
-			params = params || { chatName: '新建对话' }
-			const res = await createChat(params)
-			this.chatList.unshift(res.data)
-			this.activeId = res.data.chatId
-			this.chat = null
+			try {
+				await createChat(params)
+				this.queryChatList()
+				this.chat = null
+			} catch (error) {
+				throw error
+			}
 		},
 
 		/**
@@ -116,8 +112,13 @@ export const useChatStore = defineStore('chat-store', {
 		 * @returns
 		 */
 		async updateMessage(message: Message) {
-			await updateMessage(message)
-			this.queryMessage(message.chatId)
+
+			try {
+				await updateMessage(message)
+				this.queryMessage(message.chatId)
+			} catch (error) {
+				console.error('--------- updateMessage error ----------:', error)
+			}
 		},
 
 		/**
