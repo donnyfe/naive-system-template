@@ -42,7 +42,7 @@ export class LoggerService implements NestLoggerService {
     )
 
     this.logger = winston.createLogger({
-      level: 'info',
+      level: 'debug',
       transports
     });
   }
@@ -51,16 +51,16 @@ export class LoggerService implements NestLoggerService {
     this.logger.info(message, { context, ...data });
   }
 
-  error(message: string, trace?: Error | unknown, context?: string) {
-    this.logger.error(message, { trace, context });
+  error(message: string, trace?: Error | unknown, context?: string, data?: any) {
+    this.logger.error(message, { trace, context, ...data });
   }
 
-  warn(message: string, context?: string) {
-    this.logger.warn(message, { context });
+  warn(message: string, context?: string, data?: any) {
+    this.logger.warn(message, { context, ...data });
   }
 
-  debug(message: string, context?: string) {
-    this.logger.debug(message, { context });
+  debug(message: string, context?: string, data?: any) {
+    this.logger.debug(message, { context, ...data });
   }
 
   verbose(message: string, context?: string) {

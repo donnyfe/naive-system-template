@@ -106,7 +106,7 @@ export class RoleService {
       take: pageSize,
     })
 
-    return responseSuccess({
+    return responseSuccess(null, {
       list: roles,
       total,
     })
@@ -135,6 +135,6 @@ export class RoleService {
       where: { userId },
       relations: ['role'],
     })
-    return responseSuccess(userRoles.map((ur) => ur.role))
+    return responseSuccess(null, userRoles.map((ur) => ur.role))
   }
 }

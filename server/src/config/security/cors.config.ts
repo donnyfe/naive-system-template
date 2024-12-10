@@ -1,8 +1,13 @@
 import { INestApplication } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
-export const setupCors = async (app: INestApplication, configService: ConfigService) => {
-  const isProduction = process.env.NODE_ENV === 'production'
+/**
+ * 配置跨域
+ * @param app 应用实例
+ * @param isProduction 是否生产环境
+ */
+export const setupCors = async (app: INestApplication, isProduction: boolean) => {
+  const configService = app.get(ConfigService)
   const allowedOrigins = configService.get('allowedOrigins')
 
   app.enableCors({
@@ -16,6 +21,9 @@ export const setupCors = async (app: INestApplication, configService: ConfigServ
       'Origin',
       'X-Requested-With',
       'X-CSRF-Token',
+      'x-csrf-token',
+      'X-Forwarded-For',
+      'X-Real-IP',
     ],
     exposedHeaders: ['Content-Range', 'X-Content-Range', 'X-CSRF-Token'],
     maxAge: 3600,

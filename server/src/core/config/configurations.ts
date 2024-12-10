@@ -38,6 +38,7 @@ export const securityConfig = registerAs('security', () => ({
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
   },
   csrf: {
+    key: process.env.CSRF_KEY,
     secret: process.env.CSRF_SECRET,
   },
   session: {

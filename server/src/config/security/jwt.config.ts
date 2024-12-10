@@ -5,7 +5,9 @@ import { JwtModule } from '@nestjs/jwt'
 /**
  * 配置JWT安全
  */
-export const setupJwtSecurity = async (app: INestApplication, configService: ConfigService) => {
+export const setupJwtSecurity = async (app: INestApplication, isProduction: boolean) => {
+  const configService = app.get(ConfigService)
+
   const jwtModule = JwtModule.register({
     secret: configService.get('security.jwt.secret'),
     signOptions: {
