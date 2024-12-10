@@ -12,3 +12,6 @@ export const updateUser = async (params: UserParams) =>
 	http.patch<Result<any>>(`/api/user/${params.id}`, params)
 // 移除用户
 export const removeUser = async (id: string | number) => http.delete<Result<any>>(`/api/user/${id}`)
+
+// 读取用户信息
+export const getUserInfo = async () => http.get<Result<UserData>>(`/api/user/info`)

@@ -34,8 +34,15 @@ export interface Result<T> {
 	success: boolean
 }
 
+
 type ErrorStatus = keyof typeof ERROR_MESSAGE_MAP
 type ErrorCode = keyof typeof ERROR_CODE
+
+
+const REFRESH_CONFIG = {
+  isRefreshing: false, // 是否正在刷新
+  retryQueue: [] // 重试队列
+}
 
 /** 请求不成功各种状态的错误 */
 const ERROR_DEFAULT_MESSAGE = $t('http.defaultTip')
@@ -129,24 +136,47 @@ class Http {
 				return Promise.resolve(data)
 			},
 			async (error: AxiosError) => {
-				$message.error(error.response?.data?.message)
+				const { response, config } = error
 
-				const config = error.config as InternalAxiosRequestConfig
+				if (response?.status === 401) {
+					if (!REFRESH_CONFIG.isRefreshing) {
+						// 刷新token
+						REFRESH_CONFIG.isRefreshing = true
 
-				// 重试配置
-				config.retryCount = config.retryCount ?? 0
-				const { isRetry, retryCount, retryInterval } = config
+						try {
+								// 调用刷新token接口
+							const newToken = await this.refreshToken()
 
-				if (isRetry && retryCount < 3) {
-					config.retryCount++
+							// 更新token
+							local.set('accessToken', newToken)
 
-					// 重试延迟
-					await new Promise((resolve) => {
-						setTimeout(resolve, retryInterval || 1000)
-					})
+							// 重试队列中的请求
+							REFRESH_CONFIG.retryQueue.forEach(cb => cb(newToken))
+							REFRESH_CONFIG.retryQueue = []
 
-					return this.axiosInstance(config)
+							// 重试当前请求
+							config.headers.Authorization = `Bearer ${newToken}`
+							return this.axiosInstance(config)
+						} catch (err) {
+							// 刷新失败,清空token并跳转登录页
+							local.remove('accessToken')
+							window.location.href = '/login'
+							return Promise.reject(err)
+						} finally {
+							REFRESH_CONFIG.isRefreshing = false
+						}
+					} else {
+						// 添加到重试队列
+						return new Promise(resolve => {
+							REFRESH_CONFIG.retryQueue.push((token: string) => {
+								config.headers.Authorization = `Bearer ${token}`
+								resolve(this.axiosInstance(config))
+							})
+						})
+					}
 				}
+
+				$message.error(response?.data?.message)
 				Promise.reject(error)
 			}
 		)
@@ -169,9 +199,36 @@ class Http {
 		return config
 	}
 
+
+
 	// 处理请求数据
 	resolveRequestData(config: InternalAxiosRequestConfig) {
 		return config
+	}
+
+	private async refreshToken(): Promise<string> {
+		const refreshToken = local.get('refreshToken')
+		const res = await this.axiosInstance.post('/auth/refresh', {
+			refreshToken
+		})
+		return res.data.accessToken
+	}
+
+	// 重试请求
+	private async retryRequest(config: InternalAxiosRequestConfig) {
+		config.retryCount = config.retryCount ?? 0
+		const { isRetry, retryCount, retryInterval } = config
+
+		if (isRetry && retryCount < 3) {
+			config.retryCount++
+
+			// 重试延迟
+			await new Promise((resolve) => {
+				setTimeout(resolve, retryInterval || 1000)
+			})
+
+			return this.axiosInstance(config)
+		}
 	}
 
 	// 处理授权异常
@@ -206,12 +263,13 @@ class Http {
 		$message.error(errMsg)
 	}
 
+
+
 	async get<T>(url: string, params?: object, config?: InternalAxiosRequestConfig): Promise<T> {
 		return this.axiosInstance.get(url, { params, ...config })
 	}
 
 	async post<T>(url: string, data?: object, config?: InternalAxiosRequestConfig): Promise<T> {
-		console.log('--------- post ----------:', url, data)
 		return this.axiosInstance.post(url, data, config)
 	}
 

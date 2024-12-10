@@ -15,7 +15,7 @@ export class UserEntity {
   @PrimaryGeneratedColumn({ comment: '用户ID' })
   public id: number
 
-  @Column({ type: 'varchar', length: 30, nullable: false, unique: true, comment: '用户账号' })
+  @Column({ type: 'varchar', length: 30, nullable: true, unique: true, comment: '用户名' })
   public username: string
 
   @Exclude({ toPlainOnly: true }) // 输出屏蔽密码
@@ -35,7 +35,7 @@ export class UserEntity {
   @Column({ type: 'varchar', nullable: true, length: 11, comment: '手机号码' })
   public phone: string
 
-  @Column({ type: 'varchar', nullable: true, length: 50, comment: '邮箱' })
+  @Column({ type: 'varchar', nullable: false, length: 50, comment: '邮箱' })
   public email: string
 
   @Column({ type: 'varchar', nullable: true, length: 50, comment: '备注' })

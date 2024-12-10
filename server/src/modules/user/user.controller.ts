@@ -1,14 +1,18 @@
 import { Body, Controller, Get, Post, Param, Query, Delete, Patch, UseGuards, Request } from '@nestjs/common'
 import { UserService } from './user.service'
 import { CreateUserDto, UpdatePasswordDto, UpdateUserDto, GetUserListDto } from './user.dto'
-import { ErrorInfo } from '@/common/constants/result-code'
 import { JwtGuard } from '@/common/guards'
 import { responseFail } from '@/utils'
+import { LoggerService } from '@/core/logger/logger.service'
+import { NoCache } from '@/common/decorators/no-cache.decorator'
 
 @Controller('user')
 @UseGuards(JwtGuard)
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly logger: LoggerService,
+  ) {}
 
   @Post('create')
   create(@Body() user: CreateUserDto) {
@@ -35,19 +39,19 @@ export class UserController {
   /**
    * @desc 获取当前登录用户的详情信息
    */
-  @Get('detail')
+  @Get('info')
+  @NoCache() // 禁用缓存
   getUserInfo(@Request() req: any) {
-    const currentUser = req.user
-    return this.userService.findUserInfo(currentUser.id)
+    return this.userService.findUserInfo(req.user.id)
   }
 
-  @Get(':username')
-  findByUsername(@Param('username') username: string) {
-    return this.userService.findByUsername(username)
+  @Get(':email')
+  findByEmail(@Param('email') email: string) {
+    return this.userService.findByEmail(email)
   }
 
   /** 管理员重置密码 */
-  @Patch('password/reset/:userId')
+  @Patch('resetPassword/:userId')
   resetPassword(@Param('userId') userId: number, @Body() dto: UpdatePasswordDto) {
     return this.userService.resetPassword(userId, dto.password)
   }

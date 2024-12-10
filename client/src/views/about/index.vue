@@ -6,15 +6,7 @@ import lib from '@/../package.json'
 	<n-space vertical>
 		<n-card :title="$t('about.title')">
 			<article class="text-lg">
-				这是一款基于Vue3和NestJS架构设计的全栈应用。
-				<br />
-				<br />
-				前端技术栈：Vue3 + NaiveUI + TypeScript + Unocss。
-				<br />
-				后端技术栈：NestJS + TypeORM + MySQL + Redis。
-				<br />
-				<br />
-				本项目只用于学习交流，目前仍在建设中，主要目的在于全方位实践学习前后端技术、数据库、运维部署等技术。
+				本项目主要用于全方位实践前后端技术、数据库等综合技术栈。
 			</article>
 		</n-card>
 		<n-card :title="$t('about.devDependencies')">

@@ -20,26 +20,32 @@ export class UserService {
 
   async register(userDto: RegisterUserDto) {
     // 根据用户名查重
-    const { username } = userDto
+    const { email, password } = userDto
     const existUser = await this.userRepo.findOne({
-      where: { username },
+      where: { email },
     })
 
     if (existUser) {
       return responseFail(500, '用户已存在')
     }
 
-    if (userDto.password) {
-      userDto.password = hashSync(userDto.password)
+    // 生成随机8位数包含大小写字母和数字的字符串
+    const randomString = Math.random().toString(36).slice(2, 10)
+
+    const userData = {
+      email,
+      password: hashSync(password),
+      username: randomString,
+      avatar: this.configService.get('initial.avatar'),
     }
 
     try {
-      const userRepo = this.userRepo.create(userDto)
+      const userRepo = this.userRepo.create(userData)
       const user = await this.userRepo.save(userRepo)
 
-      this.logger.log('用户注册成功', 'UserService.register', { userId: user.id })
+      this.logger.log('用户注册成功', 'user-register', { userId: user.id })
     } catch (error) {
-      this.logger.error('用户注册失败', error.stack, 'UserService.register')
+      this.logger.error('用户注册失败', error.stack, 'user-register')
       return responseFail(500, '用户注册失败')
     }
 
@@ -48,9 +54,9 @@ export class UserService {
 
   async create(userDto: CreateUserDto) {
     // 根据用户名查重
-    const { username } = userDto
+    const { email } = userDto
     const existUser = await this.userRepo.findOne({
-      where: { username },
+      where: { email },
     })
 
     if (existUser) {
@@ -59,13 +65,13 @@ export class UserService {
 
     try {
       // 初始密码
-      const initialPassword = this.configService.get('initial.password')
+      const password = this.configService.get('initial.password')
 
-      const newUser = {
+      const userData = {
         ...userDto,
-        password: hashSync(initialPassword),
+        password,
       }
-      const userRepo = this.userRepo.create(newUser)
+      const userRepo = this.userRepo.create(userData)
       await this.userRepo.save(userRepo)
 
       this.logger.log('用户创建成功', 'UserService.create', { userId: userRepo.id })
@@ -74,7 +80,7 @@ export class UserService {
 
       return responseFail(500, '用户创建失败')
     }
-    return responseSuccess('用户创建成功')
+    return responseSuccess(null, '用户创建成功')
   }
 
   async remove(id: number) {
@@ -90,14 +96,15 @@ export class UserService {
   }
 
   async update(id: number, user: UpdateUserDto) {
+    console.log(`-----------------update ${id}: `, user)
+
     const findUser = await this.userRepo.findOne({
       where: { id },
     })
 
     const newUser = this.userRepo.merge(findUser, user)
 
-    await this.userRepo.save(newUser)
-    return responseSuccess(newUser)
+    return await this.userRepo.save(newUser)
   }
 
   async findAll(query: GetUserListDto) {
@@ -106,7 +113,7 @@ export class UserService {
 
     const [users, count] = await this.userRepo.findAndCount({
       where: {
-        username: Like(`%${query.username || ''}%`),
+        email: Like(`%${query.email || ''}%`),
       },
       order: {
         createTime: 'ASC',
@@ -116,41 +123,62 @@ export class UserService {
     })
     const list = users.map((item) => ({ ...item }))
 
-    return responseSuccess({ list, count })
+    return { list, count }
   }
 
-  async findByUsername(username: string) {
+  async findByEmail(email: string) {
     try {
-      return await this.userRepo.findOne({
-        where: { username },
-        select: ['username', 'password'],
+      const user = await this.userRepo.findOne({
+        where: { email }
       })
-    } catch (err) {
-      console.log(err)
+      return user
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
+  /** 获取当前登录用户的详情信息 */
+  async findUserInfo(id: number) {
+    try {
+      const user = await this.userRepo.findOne({
+        where: { id },
+        // 明确指定要查询的字段
+        select: [
+          'id',
+          'avatar',
+          'email',
+          'username',
+          'nickName',
+          'phone',
+          'remark',
+          'sex',
+          'createTime',
+          'updateTime',
+        ],
+      })
+      return user
+    } catch (error) {
+      throw new Error(error.message)
     }
   }
 
-  async findUserInfo(id: number) {
-    const user = await this.userRepo.findOne({
-      where: { id },
-    })
-    return responseSuccess({ ...user })
-  }
-
   async getUserWithRoles(id: number) {
-    const user = await this.userRepo.findOne({
-      where: { id },
-      relations: {
-        userRoles: {
-          role: true,
+    try {
+      const user = await this.userRepo.findOne({
+        where: { id },
+        relations: {
+          userRoles: {
+            role: true,
+          },
         },
-      },
-    })
+      })
 
-    return responseSuccess({
+      return {
       ...user,
-      roles: user.userRoles.map((ur) => ur.role),
-    })
+        roles: user.userRoles.map((ur) => ur.role),
+      }
+    } catch (error) {
+      throw new Error(error.message)
+    }
   }
 
   async assignRoles(userId: number, roleIds: number[]) {
@@ -173,13 +201,13 @@ export class UserService {
 
     // 保存更新后的用户
     const savedUser = await this.userRepo.save(user)
-    return responseSuccess(savedUser)
+    return responseSuccess('', savedUser)
   }
 
   async resetPassword(id: number, password: string) {
     const user = await this.userRepo.findOne({ where: { id } })
     user.password = hashSync(password)
     await this.userRepo.save(user)
-    return true
+    return null
   }
 }
