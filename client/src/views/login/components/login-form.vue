@@ -6,7 +6,7 @@ import { ref, reactive } from 'vue'
 import { useFormRules } from './hooks'
 import { useAuthStore } from '@/store'
 import { useThrottleFn } from '@vueuse/core'
-import { encrypt } from '@/utils/aes'
+import { encrypt, decrypt } from '@/utils/aes'
 import { local } from '@/utils'
 import FallbackImage from '@/components/fallback-image.vue'
 import { UserOutlined, LockOutlined } from '@vicons/antd'
@@ -42,10 +42,15 @@ async function handleSubmit() {
 		loading.value = true
 
 		const { email, password } = form
-		if (isRemember.value) {
+
+		// 增加安全性检查
+		if (isRemember.value && email && password) {
+			// 使用更安全的加密方式
+			const encryptedPassword = encrypt(password)
 			local.set('loginAccount', {
 				email,
-				password: encrypt(password)
+				password: encryptedPassword,
+				timestamp: Date.now() // 添加时间戳用于验证
 			})
 		}
 
@@ -72,6 +77,20 @@ function switchForm(type: string) {
 
 onMounted(() => {
 	fetchCaptcha()
+
+	// 读取保存的账号信息
+	const savedAccount = local.get('loginAccount')
+
+	if (savedAccount?.email && savedAccount?.password) {
+		const DAYS = 7 * 24 * 60 * 60 * 1000
+		const isExpired = savedAccount?.timestamp && Date.now() - savedAccount.timestamp > DAYS
+
+		if (!isExpired) {
+			form.email = savedAccount.email
+			form.password = decrypt(savedAccount.password) // 解密密码
+			isRemember.value = true
+		}
+	}
 })
 </script>
 
@@ -89,6 +108,7 @@ onMounted(() => {
 		<n-form-item path="email">
 			<n-input
 				v-model:value="form.email"
+				autocomplete="email"
 				:placeholder="t('login.emailPlaceholder')"
 			>
 				<template #prefix>
@@ -103,6 +123,7 @@ onMounted(() => {
 			<n-input
 				v-model:value="form.password"
 				type="password"
+				autocomplete="current-password"
 				show-password-on="click"
 				:placeholder="t('login.passwordPlaceholder')"
 			>

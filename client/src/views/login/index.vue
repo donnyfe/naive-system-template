@@ -46,7 +46,7 @@ const formComponents = {
 	</div>
 
 	<footer class="fixed bottom-0 w-full py-2 text-center text-white">
-		网站正在建设中……
+		网站正在建设中
 	</footer>
 	</div>
 </template>

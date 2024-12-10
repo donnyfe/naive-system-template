@@ -51,6 +51,14 @@ export const useAuthStore = defineStore('auth-store', {
 			return res
 		},
 
+		async getUserInfo() {
+			const { success, data } = await queryUserInfo()
+			if (!success) return
+
+			this.userInfo = data
+			local.set('userInfo', data)
+		},
+
 		/** 处理登录返回的数据 */
 		async handleLoginInfo(loginData: LoginData) {
 			// 记录token和用户信息

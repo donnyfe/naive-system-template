@@ -5,7 +5,7 @@ export class RegisterUserDto {
   @Length(6, 20, {
     message: `用户名长度必须是$constraint1到$constraint2之间，当前传递的值是$value`,
   })
-  username: string;
+  email: string;
 
   @IsString()
   @Length(6, 20, { message: `密码长度必须是$constraint1到$constraint2之间` })
@@ -15,7 +15,7 @@ export class RegisterUserDto {
 export class LoginDto {
   @IsString()
   @IsNotEmpty({ message: '用户名不能为空' })
-  username: string;
+  email: string;
 
   @IsString()
   @IsNotEmpty({ message: '密码不能为空' })
