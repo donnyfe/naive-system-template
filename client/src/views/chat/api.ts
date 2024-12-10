@@ -8,7 +8,7 @@ import http, { httpStream, type Result } from '@/http/request'
  */
 
 /** 新增对话 */
-export async function createChat(params: Chat) {
+export async function createChat(params?: Chat) {
 	return http.post<Result<Chat>>('/api/chat/create', params)
 }
 

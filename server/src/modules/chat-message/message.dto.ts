@@ -26,7 +26,7 @@ export class CreateMessageDto {
 }
 
 export class UpdateMessageDto extends CreateMessageDto {
-  @ApiProperty({ required: true, description: '发送者' })
+  @ApiProperty({ required: true, description: '消息Id' })
   @IsString()
   messageId: string
 }

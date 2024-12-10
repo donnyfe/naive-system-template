@@ -4,8 +4,8 @@ import { Response } from 'express'
 import { ChatService } from '@/modules/chat/chat.service'
 import { MessageService } from '@/modules/chat-message/message.service'
 import { ChatDto, CreateChatDto, UpdateChatDto } from './chat.dto'
-import { responseSuccess } from '@/utils'
 import { CreateMessageDto, UpdateMessageDto } from '../chat-message/message.dto'
+import { Sse } from '@nestjs/common'
 
 @Controller('chat')
 export class ChatController {
@@ -17,8 +17,7 @@ export class ChatController {
   @UseGuards(AuthGuard('jwt'))
   @Get('token')
   async getAccessToken() {
-    const token = await this.chatService.getToken()
-    return responseSuccess(token, 'success')
+    return await this.chatService.getToken()
   }
 
   /**
@@ -27,8 +26,7 @@ export class ChatController {
   @UseGuards(AuthGuard('jwt'))
   @Post('create')
   async createChat(@Body() chat: CreateChatDto, @Request() req: any) {
-    const res = await this.chatService.create(chat, req)
-    return responseSuccess(res)
+    return await this.chatService.create(chat, req)
   }
 
   /**
@@ -41,8 +39,7 @@ export class ChatController {
   @UseGuards(AuthGuard('jwt'))
   @Post('update')
   async updateChat(@Body() chat: UpdateChatDto) {
-    const res = await this.chatService.update(chat)
-    return responseSuccess(res)
+    return await this.chatService.update(chat)
   }
 
   /**
@@ -54,8 +51,7 @@ export class ChatController {
   @UseGuards(AuthGuard('jwt'))
   @Post('remove/:chatId')
   async removeChat(@Param('chatId') chatId: string) {
-    const res = await this.chatService.remove(chatId)
-    return responseSuccess(res)
+    return await this.chatService.remove(chatId)
   }
 
   /**
@@ -67,8 +63,7 @@ export class ChatController {
   @Post('clear')
   async clearChat(@Request() req: any) {
     const username = req.user.username
-    const res = await this.chatService.clear(username)
-    return responseSuccess(res)
+    return await this.chatService.clear(username)
   }
 
   /**
@@ -80,8 +75,7 @@ export class ChatController {
   @UseGuards(AuthGuard('jwt'))
   @Get(':chatId')
   async find(@Param('chatId') chatId: string) {
-    const res = await this.chatService.find(chatId)
-    return responseSuccess(res)
+    return await this.chatService.find(chatId)
   }
 
   /**
@@ -94,8 +88,8 @@ export class ChatController {
   @Post('list')
   async findList(@Request() req: any) {
     const username = req.user.username
-    const res = await this.chatService.findList(username)
-    return responseSuccess(res)
+    const result = await this.chatService.findList(username)
+    return result
   }
 
   /**
@@ -108,7 +102,7 @@ export class ChatController {
   @UseGuards(AuthGuard('jwt'))
   @Post('message/create')
   async createMessage(@Body() message: CreateMessageDto) {
-    return responseSuccess(await this.messageService.create(message))
+    return await this.messageService.create(message)
   }
 
   /**
@@ -120,8 +114,7 @@ export class ChatController {
   @UseGuards(AuthGuard('jwt'))
   @Post('message/remove/:messageId')
   async removeMessage(@Param('messageId') messageId: string) {
-    await this.messageService.remove(messageId)
-    return responseSuccess()
+    return await this.messageService.remove(messageId)
   }
 
   /**
@@ -133,8 +126,7 @@ export class ChatController {
   @UseGuards(AuthGuard('jwt'))
   @Post('message/clear/:chatId')
   async clearMessage(@Param('chatId') chatId: string) {
-    await this.messageService.clear(chatId)
-    return responseSuccess()
+    return await this.messageService.clear(chatId)
   }
 
   /**
@@ -147,36 +139,16 @@ export class ChatController {
   @UseGuards(AuthGuard('jwt'))
   @Post('message/update')
   async updateMessage(@Body() message: UpdateMessageDto) {
-    const res = await this.messageService.update(message)
-    return responseSuccess(res)
+    return await this.messageService.update(message)
   }
 
   /**
-   * 对话
+   * 提交对话
    */
   @UseGuards(AuthGuard('jwt'))
   @Post('submit')
+  @Sse()
   async submit(@Body() chatDto: ChatDto, @Res() res: Response) {
-    res.setHeader('Connection', 'keep-alive')
-    res.setHeader('Cache-Control', 'no-cache')
-    res.setHeader('Content-Type', 'text/event-stream;charset=utf-8')
-    res.setHeader('X-Content-Type-Options', 'nosniff')
-
-    try {
-      const content = await this.chatService.submit(chatDto)
-      const lines = content
-        .toString()
-        .split('\n')
-        .filter((line) => line.trim() !== '')
-
-      for (const line of lines) {
-        const message = line.replace(/^data: /, '')
-        const parsed = JSON.parse(message)
-        res.write(`${parsed.result}`)
-      }
-      res.send()
-    } catch (err) {
-      console.log(err)
-    }
+    return await this.chatService.submit(chatDto, res)
   }
 }

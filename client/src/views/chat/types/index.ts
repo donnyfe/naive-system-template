@@ -16,7 +16,7 @@ export interface Message {
 	chatId: string
 	sender: string
 	previousId?: string
-	messageId: string
+	messageId?: string
 	messageText: string
 	completed?: number
 }

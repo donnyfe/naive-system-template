@@ -2,7 +2,6 @@ import { Body, Controller, Post, UseGuards, Request, Param } from '@nestjs/commo
 import { AuthGuard } from '@nestjs/passport'
 import { ApiTags } from '@nestjs/swagger'
 import { PromptService } from './prompt.service'
-import { responseSuccess } from '@/utils'
 import { CreatePromptDto, UpdatePromptDto } from './prompt.dto'
 
 @ApiTags('prompt') // 添加 swagger 接口标签
@@ -11,7 +10,7 @@ export class PromptController {
   constructor(private readonly promptService: PromptService) {}
 
   /**
-   * 添加
+   * 添加指令
    *
    * @param prompt
    * @param req
@@ -20,12 +19,12 @@ export class PromptController {
   @UseGuards(AuthGuard('jwt'))
   @Post('create')
   async create(@Body() prompt: CreatePromptDto, @Request() req: any) {
-    const res = await this.promptService.create(prompt, req)
-    return responseSuccess(res)
+    await this.promptService.create(prompt, req)
+    return
   }
 
   /**
-   * 移除
+   * 移除指令
    *
    * @param prompt
    * @param req
@@ -35,12 +34,11 @@ export class PromptController {
   @Post('remove/:promptId')
   async remove(@Param('promptId') promptId: string) {
     await this.promptService.remove(promptId)
-
-    return responseSuccess(null)
+    return null
   }
 
   /**
-   * 编辑
+   * 编辑指令
    *
    * @param prompt
    * @param req
@@ -49,12 +47,12 @@ export class PromptController {
   @UseGuards(AuthGuard('jwt'))
   @Post('update')
   async update(@Body() prompt: UpdatePromptDto) {
-    const res = await this.promptService.update(prompt)
-    return responseSuccess(res)
+    await this.promptService.update(prompt)
+    return null
   }
 
   /**
-   * 列表
+   * 查询列表
    *
    * @param req
    * @returns
@@ -63,7 +61,6 @@ export class PromptController {
   @Post('list')
   async findList(@Request() req: any) {
     const username = req.user.username
-    const res = await this.promptService.findList(username)
-    return responseSuccess(res)
+    return await this.promptService.findList(username)
   }
 }

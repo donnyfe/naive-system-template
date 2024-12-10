@@ -117,6 +117,9 @@ importers:
       eslint-plugin-vue:
         specifier: ^9.29.1
         version: 9.29.1(eslint@9.13.0(jiti@1.21.6))
+      fetch-event-source:
+        specifier: link:@types/@microsoft/fetch-event-source
+        version: link:@types/@microsoft/fetch-event-source
       globals:
         specifier: ^15.11.0
         version: 15.11.0

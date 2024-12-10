@@ -14,30 +14,38 @@ export class PromptService {
   ) {}
 
   /**
-   * 新增
+   * 新增指令
    *
    * @param prompt 信息
    * @return 结果
    */
   async create(prompt: CreatePromptDto, req: any) {
-    const newPrompt = {
-      promptId: uuidv4(),
+    try {
+      const newPrompt = {
+        promptId: uuidv4(),
       username: req.user.username,
       ...prompt,
     }
-    return this.promptRepo.save(newPrompt)
+      return await this.promptRepo.save(newPrompt)
+    } catch (error) {
+      throw new Error(`Failed to create prompt: ${error.message}`)
+    }
   }
 
   /**
-   * 修改指令状态
+   * 软删除，修改指令状态
    *
    * @param prompt 对话信息
    * @return 结果
    */
   async remove(promptId: string) {
-    const entity = await this.findOne(promptId)
+    try {
+      const entity = await this.findOne(promptId)
     entity.delFlag = 1
-    return this.promptRepo.save(entity)
+      return await this.promptRepo.save(entity)
+    } catch (error) {
+      throw new Error(`Failed to remove prompt: ${error.message}`)
+    }
   }
 
   /**
@@ -47,11 +55,14 @@ export class PromptService {
    * @return 结果
    */
   async update(prompt: UpdatePromptDto) {
-    const entity = await this.findOne(prompt.promptId)
-    entity.title = prompt.title
-    entity.content = prompt.content
-
-    return this.promptRepo.save(entity)
+    try {
+      const entity = await this.findOne(prompt.promptId)
+      entity.title = prompt.title
+      entity.content = prompt.content
+      return await this.promptRepo.save(entity)
+    } catch (error) {
+      throw new Error(`Failed to update prompt: ${error.message}`)
+    }
   }
 
   /**
@@ -59,14 +70,22 @@ export class PromptService {
    * @param id
    * @returns
    */
-  findOne(id: string): Promise<PromptEntity> {
-    return this.promptRepo.findOneBy({ promptId: id })
+  async findOne(id: string): Promise<PromptEntity> {
+    try {
+      return await this.promptRepo.findOneBy({ promptId: id })
+    } catch (error) {
+      throw new Error(`Failed to find prompt: ${error.message}`)
+    }
   }
 
-  findByPromptId(promptId: string): Promise<PromptEntity> {
-    return this.promptRepo.findOne({
-      where: { promptId, delFlag: 0 },
-    })
+  async findByPromptId(promptId: string): Promise<PromptEntity> {
+    try {
+      return await this.promptRepo.findOne({
+        where: { promptId, delFlag: 0 },
+      })
+    } catch (error) {
+      throw new Error(`Failed to find prompt: ${error.message}`)
+    }
   }
 
   /**
@@ -75,9 +94,13 @@ export class PromptService {
    * @returns
    */
   async findList(username: string) {
-    return this.promptRepo.find({
-      where: { delFlag: 0, username },
-      order: { createTime: 'DESC' },
-    })
+    try {
+      return await this.promptRepo.find({
+        where: { delFlag: 0, username },
+        order: { createTime: 'DESC' },
+      })
+    } catch (error) {
+      throw new Error(`Failed to find prompt list: ${error.message}`)
+    }
   }
 }

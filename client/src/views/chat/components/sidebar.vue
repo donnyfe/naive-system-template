@@ -8,7 +8,8 @@ import {
 	ChatbubblesOutline,
 	CheckmarkOutline,
 	CloseOutline,
-	TrashOutline
+	TrashOutline,
+	ChatbubbleEllipsesOutline
 } from '@vicons/ionicons5'
 
 const dialog = useDialog()
@@ -63,6 +64,10 @@ function isActive(chatId: string | undefined) {
 }
 
 function handleClear() {
+	if (!chatStore.chatList.length) {
+		message.warning('当前没有对话')
+		return
+	}
 	dialog.warning({
 		title: '清空',
 		content: '您确定要清空对话吗',
@@ -75,130 +80,243 @@ function handleClear() {
 		}
 	})
 }
+
+// 添加新的动画相关的计算属性
+const listTransition = computed(() => ({
+	enter: 'transition-all duration-300 ease-out',
+	leave: 'transition-all duration-200 ease-in',
+	enterFrom: 'opacity-0 -translate-x-4',
+	enterTo: 'opacity-100 translate-x-0',
+	leaveFrom: 'opacity-100 translate-x-0',
+	leaveTo: 'opacity-0 -translate-x-4'
+}))
 </script>
 
 <template>
-	<div
-		v-if="sidebarVisible"
-		class="w-260px h-full flex flex-col transition-all dark:bg-dark border-r border-r-#dedede dark:border-r-#eaeaea"
-	>
-		<div class="flex flex-row justify-between items-center p-4">
-			<div class="flex items-center text-gray-500">
-				<n-icon size="22" class="mx-2">
-					<ChatbubblesOutline />
-				</n-icon>
-				<h2 class="px-5 text-medium font-medium text-slate-600 dark:text-slate-200">
-					{{ $t('chat.chatList') }}
-				</h2>
-			</div>
-			<n-button
-				class="w-10 h-10 bg-[var(--primary-color)] dark:bg-dark hover:bg-slate-200 rounded"
-				@click="hideChatSidebar"
-			>
-				<template #icon>
-					<n-icon>
-						<MenuFoldOutlined />
+	<n-card
+		:bordered="true"
+		class="rounded-xl shadow-md slidebar w-280px overflow-hidden"
+		:class="[
+			sidebarVisible
+				? 'translate-x-0 opacity-100'
+				: '-translate-x-full opacity-0'
+		]">
+
+		<div
+			class="h-full flex flex-col bg-white/90 dark:bg-dark/90
+					 backdrop-blur-xl border-r border-gray-100/50 dark:border-gray-800/50
+					 transition-all duration-300 ease-out"
+
+		>
+			<div class="flex-none px-4 h-16 flex items-center justify-between
+						backdrop-blur-sm border-b border-gray-100/50 dark:border-gray-800/50">
+				<div class="flex items-center gap-2.5 text-gray-800 dark:text-gray-100">
+					<n-icon size="24" class="text-primary-500">
+						<ChatbubblesOutline />
 					</n-icon>
-				</template>
-			</n-button>
-		</div>
+					<span class="text-[16px] font-medium tracking-wide">{{ $t('chat.chatList') }}</span>
 
-		<div class="p-4">
-			<n-button class="w-full h-10 rounded-2 dark:bg-dark" type="primary" @click="handleAdd">
-				<template #icon>
-					<n-icon>
-						<AddCircleOutline />
+					<n-icon
+						size="24"
+						class="text-primary-500"
+						@click="handleAdd"
+					>
+						<AddCircleOutline class="cursor-pointer" />
 					</n-icon>
-				</template>
-				{{ $t('chat.createChat') }}
-			</n-button>
-		</div>
-
-		<n-scrollbar>
-			<div class="flex flex-col w-full gap-3 p-4">
-				<div v-for="(item, index) of chatList" :key="index" class="w-full">
-					<n-input
-						v-if="item.isEdit"
-						v-model:value="item.chatName"
-						class="items-center w-full h-11"
-					>
-						<template #suffix>
-							<n-icon
-								size="14"
-								class="mr-2 text-blue-800 cursor-pointer hover:text-gray-500"
-								@click="handleEdit(item, false, $event)"
-							>
-								<CheckmarkOutline />
-							</n-icon>
-
-							<n-icon
-								size="14"
-								class="text-blue-800 cursor-pointer hover:text-gray-500"
-								@click="item.isEdit = false"
-							>
-								<CloseOutline />
-							</n-icon>
-						</template>
-					</n-input>
-
-					<n-button
-						v-else
-						class="w-full h-11 justify-start hover:bg-#fff rounded-2"
-						:class="isActive(item.chatId) && ['selected']"
-						@click="handleSelect(item)"
-					>
-						<template #icon>
-							<n-icon size="14">
-								<ChatboxOutline />
-							</n-icon>
-						</template>
-
-						<n-ellipsis
-							:tooltip="false"
-							class="text-12.5px"
-							:class="isActive(item.chatId) && ['w-40', 'text-left', 'selected']"
-						>
-							{{ item.chatName }}
-						</n-ellipsis>
-
-						<div v-if="isActive(item.chatId)" class="flex">
-							<n-icon
-								size="14"
-								class="mr-1 text-gray-500 dark:color-gray-3 cursor-pointer"
-								@click="handleEdit(item, true, $event)"
-							>
-								<EditOutlined />
-							</n-icon>
-
-							<n-popconfirm placement="top" @positive-click="handleDelete(item, $event)">
-								<template #trigger>
-									<n-icon size="14" class="text-gray-500 dark:color-gray-3 cursor-pointer">
-										<CloseOutline />
-									</n-icon>
-								</template>
-								{{ $t('chat.removeConfirm') }}
-							</n-popconfirm>
-						</div>
-					</n-button>
 				</div>
-			</div>
-		</n-scrollbar>
 
-		<div class="p-4">
-			<n-button class="w-full gap-3 rounded-2" type="primary" @click="handleClear">
-				<template #icon>
-					<n-icon size="14">
-						<TrashOutline />
-					</n-icon>
+				<n-button
+					quaternary
+					circle
+					class="text-gray-500 hover:text-gray-700 dark:text-gray-400
+							 dark:hover:text-gray-200 transition-colors"
+					@click="hideChatSidebar"
+				>
+					<template #icon>
+						<n-icon><MenuFoldOutlined /></n-icon>
+					</template>
+				</n-button>
+			</div>
+
+			<n-scrollbar class="flex-1">
+				<template v-if="!chatList.length">
+					<div class="flex flex-col items-center justify-center h-[calc(100vh-280px)]">
+						<n-empty
+							class="animate-fade-in"
+							:description="$t('chat.noChats')"
+						>
+							<template #icon>
+								<div class="text-5xl text-gray-300 mb-2">
+									<n-icon>
+										<ChatbubbleEllipsesOutline />
+									</n-icon>
+								</div>
+							</template>
+							<template #extra>
+								<n-button
+									type="primary"
+									class="mt-4 px-6 rounded-lg transition-colors hover:opacity-90"
+									@click="handleAdd"
+								>
+									{{ $t('chat.createChat') }}
+								</n-button>
+							</template>
+						</n-empty>
+					</div>
 				</template>
-				{{ $t('chat.clearChat') }}
-			</n-button>
+
+				<div class="flex flex-col gap-2 p-3">
+					<TransitionGroup
+						:enter-active-class="listTransition.enter"
+						:leave-active-class="listTransition.leave"
+						:enter-from-class="listTransition.enterFrom"
+						:enter-to-class="listTransition.enterTo"
+						:leave-from-class="listTransition.leaveFrom"
+						:leave-to-class="listTransition.leaveTo"
+					>
+						<div v-for="item in chatList" :key="item.chatId">
+							<n-input
+								v-if="item.isEdit"
+								v-model:value="item.chatName"
+								size="large"
+								class="h-10 rounded-full"
+							>
+								<template #suffix>
+									<div class="flex gap-1.5 mr-1">
+										<n-button
+											quaternary
+											circle
+											size="small"
+											class="hover:text-primary-600 transition-colors"
+											@click="handleEdit(item, false, $event)"
+										>
+											<template #icon>
+												<n-icon><CheckmarkOutline /></n-icon>
+											</template>
+										</n-button>
+										<n-button
+											quaternary
+											circle
+											size="small"
+											class="hover:text-gray-600 transition-colors"
+											@click="item.isEdit = false"
+										>
+											<template #icon>
+												<n-icon><CloseOutline /></n-icon>
+											</template>
+										</n-button>
+									</div>
+								</template>
+							</n-input>
+
+							<n-button
+								v-else
+								block
+								text
+								class="h-12 px-3 justify-start rounded-full transition-all duration-300
+										 hover:(bg-primary/8 transform translate-x-1)
+										 dark:hover:bg-gray-800/80 group"
+								:class="isActive(item.chatId) &&
+										 'bg-primary/12 text-primary-600 shadow-sm shadow-primary/10'"
+								@click="handleSelect(item)"
+							>
+								<div class="flex items-center gap-3 flex-1 min-w-0">
+									<n-icon size="18" class="flex-none">
+										<ChatboxOutline />
+									</n-icon>
+
+									<div class="flex-1 w-60%">
+										<n-ellipsis
+											:tooltip="false"
+											class="text-[14px] font-medium w-full"
+										>
+											{{ item.chatName }}
+										</n-ellipsis>
+									</div>
+
+									<div class="flex-none flex justify-end gap-1.5 opacity-0
+												 group-hover:opacity-100 transition-all duration-300"
+									>
+										<n-button
+											quaternary
+											circle
+											size="small"
+											class="hover:text-primary-600 transition-colors"
+											@click="handleEdit(item, true, $event)"
+										>
+											<template #icon>
+												<n-icon><EditOutlined /></n-icon>
+											</template>
+										</n-button>
+
+										<n-popconfirm
+											placement="top"
+											@positive-click="handleDelete(item, $event)"
+										>
+											<template #trigger>
+												<n-button
+													quaternary
+													circle
+													size="small"
+													class="hover:text-error transition-colors"
+												>
+													<template #icon>
+														<n-icon><CloseOutline /></n-icon>
+													</template>
+												</n-button>
+											</template>
+											{{ $t('chat.removeConfirm') }}
+										</n-popconfirm>
+									</div>
+								</div>
+							</n-button>
+						</div>
+					</TransitionGroup>
+				</div>
+			</n-scrollbar>
+
+			<div class="flex-none p-4 border-t border-gray-100/50 dark:border-gray-800/50">
+				<n-button
+					block
+					type="default"
+					class="h-8 rounded-xl font-medium transition-all duration-300
+
+							 transform hover:-translate-y-0.5
+							 shadow hover:shadow-lg"
+					@click="handleClear"
+				>
+					<template #icon>
+						<n-icon class="mr-1.5 text-[18px]"><TrashOutline /></n-icon>
+					</template>
+					{{ $t('chat.clearChat') }}
+				</n-button>
+			</div>
 		</div>
-	</div>
+	</n-card>
+
 </template>
 
 <style lang="scss" scoped>
-.selected {
-	color: var(--n-primary-color);
-}
+	.n-button.selected {
+		color: var(--n-primary-color);
+		background-color: rgba(var(--n-primary-color-rgb), 0.1);
+	}
+
+	.slidebar {
+		position: absolute;
+		left: 10px;
+		top: 10px;
+		bottom: 10px;
+		z-index: 100;
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+
+		:deep(.n-card__content) {
+			padding: 0;
+		}
+
+		// :deep(.n-input__input-el) {
+		// 	height: 100%;
+		// }
+	}
 </style>

@@ -1,13 +1,13 @@
 import type { Chat, Message } from '@/views/chat/types'
 import {
 	clearChat,
-	createChat,
+	createChat as createChatApi,
 	createMessage,
 	queryChat,
-	queryChatList,
+	queryChatList as queryChatListApi,
 	removeChat,
 	updateChat,
-	updateMessage
+	updateMessage as updateMessageApi
 } from '@/views/chat/api'
 import { defineStore } from 'pinia'
 
@@ -32,7 +32,7 @@ export const useChatStore = defineStore('chat-store', {
 		 */
 		async createChat(params?: Chat) {
 			try {
-				await createChat(params)
+				await createChatApi(params)
 				this.queryChatList()
 				this.chat = null
 			} catch (error) {
@@ -70,7 +70,7 @@ export const useChatStore = defineStore('chat-store', {
 		 * 查询对话
 		 */
 		async queryChatList() {
-			const res = await queryChatList()
+			const res = await queryChatListApi()
 
 			const list: Chat[] = res.data || []
 
@@ -114,10 +114,10 @@ export const useChatStore = defineStore('chat-store', {
 		async updateMessage(message: Message) {
 
 			try {
-				await updateMessage(message)
+				await updateMessageApi(message)
 				this.queryMessage(message.chatId)
 			} catch (error) {
-				console.error('--------- updateMessage error ----------:', error)
+				console.error(error)
 			}
 		},
 

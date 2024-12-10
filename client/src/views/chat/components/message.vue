@@ -18,6 +18,9 @@ const textRef = ref<HTMLElement>()
 const messageRef = ref<HTMLElement>()
 const isAi = ref(props.item.sender === 'assistant')
 
+// 添加过渡动画控制
+const showActions = ref(false)
+
 function handleRegenerate() {
 	messageRef.value?.scrollIntoView()
 	emit('regenerate', props.item)
@@ -34,20 +37,27 @@ async function handleCopy() {
 </script>
 
 <template>
-	<div ref="messageRef" class="message w-full">
-		<div class="w-full flex justify-start px-12 pr-18 py-4">
-			<div class="w-32px h-32px mr-16px">
+	<div ref="messageRef" class="message w-full transition-all">
+		<div class="w-full flex justify-start px-4 sm:px-8 py-3 mb-4">
+			<div class="w-8 h-8 sm:w-10 sm:h-10 mr-3 sm:mr-4 flex-shrink-0">
 				<ChatAvatar visible :type="item.sender" />
 			</div>
 
-			<div class="w-auto max-w-full">
-				<div
-					class="w-auto max-w-full px-4 py-2 rounded-xl border border-gray-200 bg-#fff dark:bg-dark"
+			<div class="flex-grow max-w-[85%]" @mouseenter="showActions = true" @mouseleave="showActions = false">
+				<n-card
+					:bordered="false"
+					class="message-bubble relative rounded-xl shadow-sm"
+					:class="[
+						isAi
+							? 'bg-gray-50 dark:bg-gray-800'
+							: 'bg-primary-50 dark:bg-primary-900'
+					]"
 				>
-					<n-space v-if="!item.messageText">
-						<n-spin :size="10" />
-						<span class="color-gray-400">{{ $t('chat.thinking') }}</span>
+					<n-space v-if="!item.messageText" align="center" class="px-1">
+						<n-spin size="small" />
+						<span class="text-gray-400 text-sm">{{ $t('chat.thinking') }}</span>
 					</n-space>
+
 					<Text
 						v-else
 						ref="textRef"
@@ -55,40 +65,59 @@ async function handleCopy() {
 						:text="item?.messageText"
 						:loading="loading"
 					/>
-				</div>
 
-				<div
-					v-if="isAi && !loading"
-					class="w-full flex flex-row items-center justify-between py-2 pb-0 border-gray-200"
-				>
-					<n-button
-						:bordered="false"
-						class="w-5 h-5 text-gray-500 dark:text-gray-400"
-						@click="handleRegenerate"
-					>
-						<template #icon>
-							<n-icon size="14">
-								<Refresh />
-							</n-icon>
-						</template>
-						{{ $t('chat.regenerate') }}
-					</n-button>
+					<div
+						v-if="isAi && !loading"
+						class="action-buttons absolute -bottom-8 right-0"
 
-					<n-button
-						:bordered="false"
-						class="w-5 h-5 text-gray-500 dark:text-gray-400"
-						@click="handleCopy"
 					>
-						<template #icon>
-							<n-icon size="14">
-								<CopyOutline />
-							</n-icon>
-						</template>
-					</n-button>
-				</div>
+						<n-space>
+							<n-button
+								size="tiny"
+								quaternary
+								class="!text-gray-500 hover:!text-primary"
+								@click="handleRegenerate"
+							>
+								<template #icon>
+									<n-icon><Refresh /></n-icon>
+								</template>
+								<span class="text-xs">{{ $t('chat.regenerate') }}</span>
+							</n-button>
+
+							<n-button
+								size="tiny"
+								quaternary
+								class="!text-gray-500 hover:!text-primary"
+								@click="handleCopy"
+							>
+								<template #icon>
+									<n-icon><CopyOutline /></n-icon>
+								</template>
+							</n-button>
+						</n-space>
+					</div>
+				</n-card>
 			</div>
 		</div>
 	</div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.message-bubble {
+	transition: all 0.2s ease-in-out;
+
+	&:hover {
+		transform: translateY(-1px);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+	}
+}
+
+.action-buttons {
+	transition: all 0.2s ease-in-out;
+}
+
+:deep(.n-card) {
+	--n-border-radius: 1rem;
+	--n-padding: 0.75rem 1rem;
+}
+</style>

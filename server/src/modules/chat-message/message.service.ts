@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { MessageEntity } from './message.entity'
 import { CreateMessageDto, UpdateMessageDto } from './message.dto'
 
+
 @Injectable()
 export class MessageService {
   constructor(
@@ -28,7 +29,11 @@ export class MessageService {
     entity.completed = message.completed
     entity.createTime = new Date()
 
-    return this.messagegRepo.save(entity)
+    try {
+      return await this.messagegRepo.save(entity)
+    } catch (error) {
+      throw new Error(`Failed to create message: ${error.message}`)
+    }
   }
 
   /**
@@ -40,7 +45,7 @@ export class MessageService {
   async remove(messageId: string) {
     const entity = await this.findOne(messageId)
     entity.delFlag = 1
-    return this.messagegRepo.save(entity)
+    return await this.messagegRepo.save(entity)
   }
 
   /**
@@ -60,10 +65,16 @@ export class MessageService {
    * @return 结果
    */
   async update(message: UpdateMessageDto) {
-    const entity = await this.findOne(message.messageId)
-    entity.messageText = message.messageText
-    entity.completed = message.completed
-    return this.messagegRepo.save(entity)
+    try {
+      const entity = await this.findOne(message.messageId)
+      entity.messageText = message.messageText
+      entity.completed = message.completed
+
+      const res = await this.messagegRepo.save(entity)
+      return res
+    } catch (error) {
+      throw new Error(`Failed to update message: ${error.message}`)
+    }
   }
 
   /**
@@ -71,14 +82,21 @@ export class MessageService {
    * @param id
    * @returns
    */
-  findOne(id: string): Promise<MessageEntity> {
-    return this.messagegRepo.findOneBy({ messageId: id })
+  async findOne(id: string): Promise<MessageEntity> {
+    return await this.messagegRepo.findOneBy({ messageId: id })
   }
 
-  findByMessageId(messageId: string): Promise<MessageEntity> {
-    return this.messagegRepo.findOne({
+  /**
+   * 根据messageId获取消息
+   *
+   * @param messageId
+   * @returns
+   */
+  async findByMessageId(messageId: string): Promise<MessageEntity> {
+    const message = await this.messagegRepo.findOne({
       where: { messageId, delFlag: 0 },
     })
+    return message
   }
 
   /**
