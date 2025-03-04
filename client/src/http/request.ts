@@ -8,6 +8,7 @@ import { $t } from '@/il8n'
 import { local } from '@/utils/storage'
 import axios from 'axios'
 import { stringify } from 'qs'
+import { refreshToken } from '@/views/login/api'
 
 declare module 'axios' {
 	// 拓展axios请求配置
@@ -34,19 +35,19 @@ export interface Result<T> {
 	success: boolean
 }
 
-
-type ErrorStatus = keyof typeof ERROR_MESSAGE_MAP
 type ErrorCode = keyof typeof ERROR_CODE
 
 
 const REFRESH_CONFIG = {
   isRefreshing: false, // 是否正在刷新
-  retryQueue: [] // 重试队列
+  retryQueue: [] as ((token: string) => void)[] // 重试队列
 }
 
 /** 请求不成功各种状态的错误 */
 const ERROR_DEFAULT_MESSAGE = $t('http.defaultTip')
-const ERROR_MESSAGE_MAP = {
+
+
+const ERROR_CODE = {
 	400: $t('http.400'),
 	401: $t('http.401'),
 	403: $t('http.403'),
@@ -58,11 +59,7 @@ const ERROR_MESSAGE_MAP = {
 	502: $t('http.502'),
 	503: $t('http.503'),
 	504: $t('http.504'),
-	505: $t('http.505')
-}
-
-const ERROR_CODE = {
-	...ERROR_MESSAGE_MAP,
+	505: $t('http.505'),
 	10001: $t('http.10001'),
 	10002: $t('http.10002'),
 	10005: $t('http.10005'),
@@ -109,7 +106,7 @@ class Http {
 				return config
 			},
 			(error: AxiosError) => {
-				$message.error(error.message)
+				$message.error(`请求失败: ${error.message}`)
 				return Promise.reject(error)
 			}
 		)
@@ -120,13 +117,8 @@ class Http {
 		this.axiosInstance.interceptors.response.use(
 			async (response) => {
 				const { data, status } = response
-				if (status !== 200) {
-					data.success = false
-					$message.error(data.message)
-					return Promise.reject(data)
-				} else {
-					data.success = data.code === 200
-				}
+
+				data.success = status === 200 && data.code === 200
 
 				// 处理授权异常
 				this.handleAuthError(data)
@@ -139,96 +131,52 @@ class Http {
 				const { response, config } = error
 
 				if (response?.status === 401) {
+
+					// 刷新token
 					if (!REFRESH_CONFIG.isRefreshing) {
-						// 刷新token
 						REFRESH_CONFIG.isRefreshing = true
 
 						try {
 								// 调用刷新token接口
 							const newToken = await this.refreshToken()
 
-							// 更新token
-							local.set('accessToken', newToken)
-
 							// 重试队列中的请求
 							REFRESH_CONFIG.retryQueue.forEach(cb => cb(newToken))
 							REFRESH_CONFIG.retryQueue = []
 
 							// 重试当前请求
-							config.headers.Authorization = `Bearer ${newToken}`
-							return this.axiosInstance(config)
+							if (config) {
+								config.headers.Authorization = `Bearer ${newToken}`
+								return this.retryRequest(config)
+							}
 						} catch (err) {
 							// 刷新失败,清空token并跳转登录页
 							local.remove('accessToken')
-							window.location.href = '/login'
+							local.remove('refreshToken')
+							window.location.href = '#/login'
 							return Promise.reject(err)
 						} finally {
 							REFRESH_CONFIG.isRefreshing = false
 						}
 					} else {
-						// 添加到重试队列
+						// 将请求加入重试队列
 						return new Promise(resolve => {
 							REFRESH_CONFIG.retryQueue.push((token: string) => {
-								config.headers.Authorization = `Bearer ${token}`
-								resolve(this.axiosInstance(config))
+								if (config) {
+									config.headers.Authorization = `Bearer ${token}`
+									resolve(this.retryRequest(config))
+								}
 							})
 						})
 					}
 				}
 
-				$message.error(response?.data?.message)
-				Promise.reject(error)
+				if ((response?.data as any).message) {
+					$message.error((response?.data as any).message)
+				}
+				return Promise.reject(error)
 			}
 		)
-	}
-
-	// 处理请求头
-	resolveRequestHeader(config: InternalAxiosRequestConfig) {
-		// 根据请求的路由判断是否白名单内，非白名单需加token令牌
-		if (!this.whiteList.includes(config.url as string)) {
-			config.headers.Authorization = `Bearer ${local.get('accessToken') || ''}`
-		}
-
-		if (config.isUpload) {
-			config.headers['Content-Type'] = 'multipart/form-data'
-		}
-
-		if (config.isJson === false) {
-			config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-		}
-		return config
-	}
-
-
-
-	// 处理请求数据
-	resolveRequestData(config: InternalAxiosRequestConfig) {
-		return config
-	}
-
-	private async refreshToken(): Promise<string> {
-		const refreshToken = local.get('refreshToken')
-		const res = await this.axiosInstance.post('/auth/refresh', {
-			refreshToken
-		})
-		return res.data.accessToken
-	}
-
-	// 重试请求
-	private async retryRequest(config: InternalAxiosRequestConfig) {
-		config.retryCount = config.retryCount ?? 0
-		const { isRetry, retryCount, retryInterval } = config
-
-		if (isRetry && retryCount < 3) {
-			config.retryCount++
-
-			// 重试延迟
-			await new Promise((resolve) => {
-				setTimeout(resolve, retryInterval || 1000)
-			})
-
-			return this.axiosInstance(config)
-		}
 	}
 
 	// 处理授权异常
@@ -256,14 +204,70 @@ class Http {
 	}
 
 	// 处理网络异常
-	handleNetworkError(status: ErrorStatus) {
+	handleNetworkError(status: ErrorCode) {
 		const errMsg: string = status
-			? ERROR_MESSAGE_MAP[status] || ERROR_DEFAULT_MESSAGE
+			? ERROR_CODE[status] || ERROR_DEFAULT_MESSAGE
 			: '无法连接到服务器！'
 		$message.error(errMsg)
 	}
 
+	// 处理请求头
+	resolveRequestHeader(config: InternalAxiosRequestConfig) {
+		// 根据请求的路由判断是否白名单内，非白名单需加token令牌
+		if (!this.whiteList.includes(config.url as string)) {
+			config.headers.Authorization = `Bearer ${local.get('accessToken') || ''}`
+		}
 
+		if (config.isUpload) {
+			config.headers['Content-Type'] = 'multipart/form-data'
+		}
+
+		if (config.isJson === false) {
+			config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+		}
+		return config
+	}
+
+	// 处理请求数据
+	resolveRequestData(config: InternalAxiosRequestConfig) {
+		return config
+	}
+
+	// 刷新token
+	private async refreshToken(): Promise<string> {
+		const token = local.get('refreshToken')
+
+		try {
+			const res = await refreshToken({
+				refreshToken: token
+			})
+
+			const { accessToken, refreshToken: newRefreshToken } = res.data
+			local.set('accessToken', accessToken)
+			local.set('refreshToken', newRefreshToken)
+
+			return accessToken
+		} catch (error) {
+			throw new Error('刷新token失败')
+		}
+	}
+
+	// 重试请求
+	private async retryRequest(config: InternalAxiosRequestConfig) {
+		config.retryCount = config.retryCount ?? 0
+		const { isRetry = true, retryCount, retryLimit = 3, retryInterval = 1000 } = config
+
+		if (isRetry && retryCount < retryLimit) {
+			config.retryCount++
+			// 重试延迟
+			await new Promise((resolve) => {
+				setTimeout(resolve, retryInterval)
+			})
+
+			return this.axiosInstance(config)
+		}
+		return Promise.reject(new Error('Max retry count exceeded'))
+	}
 
 	async get<T>(url: string, params?: object, config?: InternalAxiosRequestConfig): Promise<T> {
 		return this.axiosInstance.get(url, { params, ...config })

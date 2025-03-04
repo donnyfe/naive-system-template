@@ -2,7 +2,7 @@ import type { Result } from '@/http/request'
 import type { LoginData, LoginParam } from '@/views/login/types'
 import { router } from '@/router'
 import { local } from '@/utils'
-import { login as doLogin, register as doRegister, queryUserInfo, getVerifyCode as doGetVerifyCode} from '@/views/login/api'
+import { login, register, queryUserInfo, getVerifyCode, refreshToken} from '@/views/login/api'
 import { useRouteStore } from './router'
 import { useTabStore } from './tab'
 
@@ -29,21 +29,22 @@ export const useAuthStore = defineStore('auth-store', {
 		/** 获取验证码 */
 		getVerifyCode(params: { email: string }) {
 			return new Promise(async (resolve) => {
-				const res = await doGetVerifyCode(params.email)
+				const res = await getVerifyCode(params.email)
 				resolve(res)
 			})
 		},
+
 		/** 注册 */
 		async register(email: string, password: string): Promise<Result<any>> {
 			return new Promise(async (resolve) => {
-				const res = await doRegister({ email, password })
+				const res = await register({ email, password })
 				resolve(res)
 			})
 		},
 
 		/** 用户登录 */
 		async login(params: LoginParam) {
-			const res = await doLogin(params)
+			const res = await login(params)
 			if (res.success) {
 				// 处理登录信息
 				await this.handleLoginInfo(res.data)
@@ -51,6 +52,15 @@ export const useAuthStore = defineStore('auth-store', {
 			return res
 		},
 
+		/** 刷新token */
+		async refreshToken() {
+			const res = await refreshToken({
+				refreshToken: local.get('refreshToken')
+			})
+			return res
+		},
+
+		/** 获取用户信息 */
 		async getUserInfo() {
 			const { success, data } = await queryUserInfo()
 			if (!success) return
@@ -63,6 +73,7 @@ export const useAuthStore = defineStore('auth-store', {
 		async handleLoginInfo(loginData: LoginData) {
 			// 记录token和用户信息
 			local.set('accessToken', loginData.accessToken)
+			local.set('refreshToken', loginData.refreshToken)
 			this.token = loginData.accessToken
 
 			const { success, data } = await queryUserInfo()

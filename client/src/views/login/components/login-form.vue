@@ -109,6 +109,7 @@ onMounted(() => {
 			<n-input
 				v-model:value="form.email"
 				autocomplete="email"
+				clearable
 				:placeholder="t('login.emailPlaceholder')"
 			>
 				<template #prefix>
@@ -125,6 +126,7 @@ onMounted(() => {
 				type="password"
 				autocomplete="current-password"
 				show-password-on="click"
+				clearable
 				:placeholder="t('login.passwordPlaceholder')"
 			>
 				<template #prefix>
@@ -140,6 +142,7 @@ onMounted(() => {
 				<n-input
 					class="flex-1"
 					v-model:value="form.captcha"
+					clearable
 					:placeholder="t('login.captchaPlaceholder')"
 					@keyup.enter="handleSubmit"
 				/>

@@ -2,7 +2,7 @@
 import { useAuthStore } from '@/store'
 import { reactive, ref } from 'vue'
 import { CheckmarkOutline, CloseOutline } from '@vicons/ionicons5'
-import { updateUser, getUserInfo } from '@/views/system/users/api'
+import { updateUser} from '@/views/system/users/api'
 
 type EditableFields = keyof typeof isEditing
 

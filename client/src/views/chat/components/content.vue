@@ -2,19 +2,16 @@
 	lang="ts"
 	setup
 >
-import type { PopoverInst } from 'naive-ui'
+
 import type { ChatParams, Message, Prompt } from '../types'
 import { useScroll } from '@/hooks'
 import { useChatStore } from '@/store/chat'
-import { usePromptStore } from '@/store/prompt'
 import {
 	ChatbubblesOutline,
-	GridOutline,
 	PaperPlaneOutline,
 	StopCircleOutline
 } from '@vicons/ionicons5'
 import ChatMessage from './message.vue'
-import ChatPrompt from './prompt.vue'
 import { local } from '@/utils'
 import { fetchEventSource, EventStreamContentType } from '@microsoft/fetch-event-source'
 
@@ -27,27 +24,24 @@ const loading = ref<boolean>(false)
 
 const chatStore = useChatStore()
 
-const sidebarVisible = computed(() => {
-	return chatStore.showSidebar
-})
-
 // 显示对话记录侧边栏
 function showChatSidebar() {
-	chatStore.showSidebar = true
+	chatStore.showSidebar = !chatStore.showSidebar
 }
 
-const popoverPromptRef = ref<PopoverInst | null>(null)
-const promptStore = usePromptStore()
-const prompt = ref<string>('')
+const prompt = computed(() => chatStore.prompt)
+const promptList = computed(() => chatStore.promptList)
 
 // 输入‘/’弹出指令
 const promptOptions = computed(() => {
 	if (prompt.value.startsWith('/')) {
-		const promptList = promptStore.promptList
-		if (promptList.length === 0) {
-			promptStore.getPromptList()
+
+		if (promptList.value.length === 0) {
+			$message.warning('暂无指令, 请点击指令中心新建指令')
+			return []
 		}
-		return promptList
+
+		return promptList.value
 			.filter((item: Prompt) =>
 				item.content.toLowerCase().includes(prompt.value.substring(1).toLowerCase())
 			)
@@ -63,10 +57,9 @@ const promptOptions = computed(() => {
 })
 
 // 选择指令
-function onSelectPrompt(item: Prompt) {
-	prompt.value = item.content
-	popoverPromptRef.value?.setShow(false)
-}
+// function onSelectPrompt(item: Prompt) {
+// 	prompt.value = item.content
+// }
 
 const chat = computed(() => chatStore.chat)
 const chatId = ref<string | undefined>(chatStore.activeId)
@@ -149,7 +142,7 @@ async function handleSubmit() {
 const processedMsgIds = new Set<string>()
 
 async function submitChat(answer: Message) {
-	prompt.value = ''
+	chatStore.prompt = ''
 	loading.value = true
 
 	const chatId = chatStore.activeId
@@ -188,7 +181,13 @@ async function submitChat(answer: Message) {
 				console.error(msg)
 				return
 			}
+
+			if (answer.completed === 1) {
+				return
+			}
+
 			if (!msg.data) return
+
 			try {
 				let message = JSON.parse(msg.data)
 
@@ -264,75 +263,86 @@ async function handleStop() {
 		loading.value = false
 	}
 }
+
+function handleClick(tag: string) {
+	console.log(tag)
+	switch (tag) {
+		case '指令中心':
+			chatStore.showPromptSidebar = !chatStore.showPromptSidebar
+			break
+	}
+}
 </script>
 
 <template>
-<div class="relative wh-full flex overflow-hidden bg-light dark:bg-dark transition-colors duration-300">
-	<div class="absolute z-10 w-full flex items-center justify-between px-6 py-2.5 bg-white/80 dark:bg-dark/80 backdrop-blur border-b border-gray-200 dark:border-gray-800">
-		<div class="flex gap-3">
-			<n-button
-				class="w-10 h-10 rounded-xl bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-				@click="showChatSidebar"
+
+	<div class="h-full flex flex-1 flex-col overflow-hidden bg-light dark:bg-dark transition-colors duration-300">
+		<!-- header -->
+		<div class="flex items-center justify-between px-6 py-2.5  backdrop-blur border-gray-200 dark:border-gray-800">
+			<div class="flex gap-3">
+				<n-button
+					class="w-10 h-10 rounded-xl bg-white dark:bg-dark hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+					@click="showChatSidebar"
+				>
+					<template #icon>
+						<n-icon>
+							<ChatbubblesOutline />
+						</n-icon>
+					</template>
+				</n-button>
+			</div>
+		</div>
+
+		<!-- content -->
+		<div class="flex-1 min-h-0">
+			<div
+				id="scrollRef"
+				ref="scrollRef"
+				class="h-full overflow-x-hidden overflow-y-auto px-4"
 			>
-				<template #icon>
-					<n-icon>
-						<ChatbubblesOutline />
-					</n-icon>
-				</template>
-			</n-button>
-		</div>
-
-		<div class="flex items-center gap-2">
-			<n-popover
-				ref="popoverPromptRef"
-				trigger="click"
-				placement="bottom-end"
-				:width="400"
-			>
-				<template #trigger>
-					<n-button
-						type="primary"
-						class="rounded-xl  hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-					>
-						{{ $t('chat.selectPrompt') }}
-					</n-button>
-				</template>
-				<ChatPrompt @select-prompt="onSelectPrompt" />
-			</n-popover>
-		</div>
-	</div>
-
-	<div class="w-full flex flex-col flex-1 overflow-hidden pt-20">
-		<div
-			id="scrollRef"
-			ref="scrollRef"
-			class="w-full h-full overflow-x-hidden overflow-y-auto px-4"
-		>
-			<template v-if="!chat?.messages?.length">
-				<div class="flex flex-col justify-center h-full items-center space-y-4">
-					<div class="text-4xl font-bold text-gray-800 dark:text-gray-200">
-						{{ $t('chat.title') }}
+				<template v-if="!chat?.messages?.length">
+					<div class="flex flex-col justify-center h-full items-center space-y-4">
+						<div class="text-4xl font-bold text-gray-800 dark:text-gray-200">
+							{{ $t('chat.title') }}
+						</div>
+						<div class="text-base text-gray-500 dark:text-gray-400">
+							{{ $t('chat.intro') }}
+						</div>
 					</div>
-					<div class="text-base text-gray-500 dark:text-gray-400">
-						{{ $t('chat.intro') }}
-					</div>
-				</div>
-			</template>
-			<template v-else>
-				<ChatMessage
-					v-for="(item, index) of chat?.messages"
-					:key="index"
-					:item="item.messageId === answer?.messageId ? (answer as Message) : item"
-					:loading="item.completed === 0"
-					@regenerate="onRegenerate"
-				/>
-			</template>
+				</template>
+				<template v-else>
+					<ChatMessage
+						v-for="(item, index) of chat?.messages"
+						:key="index"
+						:item="item.messageId === answer?.messageId ? (answer as Message) : item"
+						:loading="item.completed === 0"
+						@regenerate="onRegenerate"
+					/>
+				</template>
+			</div>
 		</div>
 
-		<div class="w-full py-4 px-4 bg-white/80 dark:bg-dark/80 backdrop-blur border-t border-gray-200 dark:border-gray-800">
+		<!-- footer -->
+		<div class="py-4 px-4 bg-white/80 dark:bg-dark/80 backdrop-blur shadow-md border-gray-200 dark:border-gray-800">
 			<div class="max-w-4xl mx-auto">
+
+				<div class="flex flex-wrap gap-2 mb-2">
+					<n-tag
+						v-for="tag in ['指令中心']"
+						:key="tag"
+						:bordered="true"
+						type="primary"
+						size="small"
+						round
+						class="cursor-pointer hover:bg-primary hover:text-white transition-colors"
+						@click="handleClick(tag)"
+					>
+						{{ tag }}
+					</n-tag>
+				</div>
+
 				<n-auto-complete
-					v-model:value="prompt"
+					v-model:value="chatStore.prompt"
 					class="w-full"
 					:options="promptOptions"
 				>
@@ -385,10 +395,11 @@ async function handleStop() {
 			</div>
 		</div>
 	</div>
-</div>
+
+	<!-- <ChatPrompt @select-prompt="onSelectPrompt" /> -->
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 :deep(.n-input) {
 	--n-border-radius: 12px;
 }

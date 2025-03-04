@@ -1,9 +1,8 @@
-import { mergeConfig, loadEnv } from 'vite'
+import { mergeConfig } from 'vite'
 import { useImageminPlugin, useVisualizerPlugin } from './plugins'
 import baseConfig from './vite.config.base'
-import { deployToServer } from '@idonnyfe/vite-plugin-workflow'
+import { deployToServer } from '@idonnyfe/vite-plugin-deploy-to-server'
 
-const env = loadEnv('production', process.cwd(), '')
 
 export default mergeConfig(
 	{
@@ -16,13 +15,10 @@ export default mergeConfig(
 			// 分析报告
 			useVisualizerPlugin(),
 
+			// 部署到服务器
 			deployToServer({
-				host: env.SSH_HOST,
-				port: Number(env.SSH_PORT) || 22,
-				username: env.SSH_USERNAME,
-				password: env.SSH_PASSWORD,
-				localPath: env.SSH_LOCAL_PATH,
-				remotePath: env.SSH_REMOTE_PATH
+				remotePath: '/root/web/admin/client',
+				localPath: 'dist',
 			})
 		],
 		build: {

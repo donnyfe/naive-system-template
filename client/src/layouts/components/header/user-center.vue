@@ -44,7 +44,7 @@ function handleSelect(key: string | number) {
 	} else if (key === 'userCenter') {
 		router.push({ path: '/user-center' })
 	} else if (key === 'loginOut') {
-		window.$dialog?.info({
+		window.$dialog?.warning({
 			title: t('app.loginOutTitle'),
 			content: t('app.loginOutContent'),
 			positiveText: t('common.confirm'),

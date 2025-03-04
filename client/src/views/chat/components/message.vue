@@ -40,7 +40,7 @@ async function handleCopy() {
 	<div ref="messageRef" class="message w-full transition-all">
 		<div class="w-full flex justify-start px-4 sm:px-8 py-3 mb-4">
 			<div class="w-8 h-8 sm:w-10 sm:h-10 mr-3 sm:mr-4 flex-shrink-0">
-				<ChatAvatar visible :type="item.sender" />
+				<ChatAvatar visible :type="item.sender === 'assistant' ? 'assistant' : 'user'" />
 			</div>
 
 			<div class="flex-grow max-w-[85%]" @mouseenter="showActions = true" @mouseleave="showActions = false">

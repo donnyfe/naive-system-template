@@ -20,6 +20,6 @@
 		"isolatedModules": true,
 		"skipLibCheck": true
 	},
-	"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue", "build/**/*.ts", "unocss.config.ts", ".tmp/views/content copy.vue"],
+	"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue", "build/**/*.ts", "unocss.config.ts"],
 	"exclude": ["node_modules", "dist"]
 }

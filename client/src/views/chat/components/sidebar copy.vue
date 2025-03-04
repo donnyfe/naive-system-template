@@ -3,7 +3,6 @@ import type { Chat } from '../types'
 import { useChatStore } from '@/store/chat'
 import { EditOutlined, MenuFoldOutlined } from '@vicons/antd'
 import {
-	Search,
 	ChatboxOutline,
 	ChatbubblesOutline,
 	CheckmarkOutline,
@@ -90,27 +89,6 @@ const listTransition = computed(() => ({
 	leaveFrom: 'opacity-100 translate-x-0',
 	leaveTo: 'opacity-0 -translate-x-4'
 }))
-
-// 添加搜索相关的响应式变量
-const searchInputRef = ref<HTMLElement | null>(null)
-const searchText = ref('')
-const isFocused = ref(false)
-
-// 添加搜索过滤的计算属性
-const filteredChatList = computed(() => {
-	if (!searchText.value) return chatList.value
-
-	return chatList.value.filter(chat =>
-		chat.chatName.toLowerCase().includes(searchText.value.toLowerCase())
-	)
-})
-
-// 添加搜索框失焦处理
-function handleSearchBlur() {
-	if (!searchText.value) {
-		isFocused.value = false
-	}
-}
 </script>
 
 <template>
@@ -119,12 +97,12 @@ function handleSearchBlur() {
 		:class="[sidebarVisible ? 'w-240px' : 'w-0']">
 
 		<div
-			class="slidebar-content w-240px px-3 h-full flex flex-col bg-white/90 dark:bg-dark/90
+			class="slidebar-content w-240px h-full flex flex-col bg-white/90 dark:bg-dark/90
 					 backdrop-blur-xl border-r border-gray-100/50 dark:border-gray-800/50
 					 transition-all duration-300 ease-out"
 
 		>
-			<div class="flex-none h-16 flex items-center justify-between
+			<div class="flex-none px-4 h-16 flex items-center justify-between
 						backdrop-blur-sm border-b border-gray-100/50 dark:border-gray-800/50">
 				<div class="flex items-center gap-2.5 text-gray-800 dark:text-gray-100">
 					<n-icon size="24" class="text-primary-500">
@@ -147,39 +125,9 @@ function handleSearchBlur() {
 				</n-button>
 			</div>
 
-			<div class="w-full py-2 flex items-center gap-2 overflow-hidden">
-				<n-button
-					type="primary"
-					size="small"
-					class="flex-1 px-6 rounded-lg transition-margin duration-300 hover:opacity-90"
-					:class="{ '-ml-full': isFocused, 'ml-0': !isFocused }"
-					@click="handleAdd"
-				>
-					{{ $t('chat.createChat') }}
-				</n-button>
-
-				<n-input
-					ref="searchInputRef"
-					v-model:value="searchText"
-					type="text"
-					size="small"
-					placeholder="搜索对话"
-					class="search-input transition-width duration-300 rounded-lg cursor-pointer"
-					:class="{ 'w-full!': isFocused, 'w-36px!': !isFocused }"
-					@focus="isFocused = true"
-					@blur="handleSearchBlur"
-				>
-					<template #prefix>
-						<n-icon>
-							<Search />
-						</n-icon>
-					</template>
-				</n-input>
-			</div>
-
 			<n-scrollbar class="flex-1">
 				<template v-if="!chatList.length">
-					<div class="flex flex-col items-center justify-center h-[calc(100vh-350px)]">
+					<div class="flex flex-col items-center justify-center h-[calc(100vh-280px)]">
 						<n-empty
 							class="animate-fade-in"
 							:description="$t('chat.noChats')"
@@ -191,11 +139,30 @@ function handleSearchBlur() {
 									</n-icon>
 								</div>
 							</template>
+							<template #extra>
+								<n-button
+									type="primary"
+									size="small"
+									class="mt-4 px-6 rounded-lg transition-colors hover:opacity-90"
+									@click="handleAdd"
+								>
+									{{ $t('chat.createChat') }}
+								</n-button>
+							</template>
 						</n-empty>
 					</div>
 				</template>
 
-				<div class="flex flex-col gap-2">
+				<div class="flex flex-col gap-2 p-3">
+					<n-button
+						type="primary"
+						size="small"
+						class="px-6 rounded-lg transition-colors hover:opacity-90"
+						@click="handleAdd"
+					>
+						{{ $t('chat.createChat') }}
+					</n-button>
+
 					<TransitionGroup
 						:enter-active-class="listTransition.enter"
 						:leave-active-class="listTransition.leave"
@@ -204,7 +171,7 @@ function handleSearchBlur() {
 						:leave-from-class="listTransition.leaveFrom"
 						:leave-to-class="listTransition.leaveTo"
 					>
-						<div v-for="item in filteredChatList" :key="item.chatId">
+						<div v-for="item in chatList" :key="item.chatId">
 							<n-input
 								v-if="item.isEdit"
 								v-model:value="item.chatName"
@@ -243,7 +210,7 @@ function handleSearchBlur() {
 								v-else
 								block
 								text
-								class="h-10 justify-start rounded-lg transition-all duration-300
+								class="h-12 px-3 justify-start rounded-lg transition-all duration-300
 										 hover:(bg-primary/8 transform translate-x-1)
 										 dark:hover:bg-gray-800/80 group"
 								:class="isActive(item.chatId) &&
@@ -305,7 +272,7 @@ function handleSearchBlur() {
 				</div>
 			</n-scrollbar>
 
-			<div class="flex-none py-3 border-t border-gray-100/50 dark:border-gray-800/50">
+			<div class="flex-none p-4 border-t border-gray-100/50 dark:border-gray-800/50">
 				<n-tooltip placement="top">
 					<template #trigger>
 						<n-button
@@ -325,6 +292,7 @@ function handleSearchBlur() {
 			</div>
 		</div>
 	</div>
+
 </template>
 
 <style lang="scss" scoped>
@@ -349,11 +317,5 @@ function handleSearchBlur() {
 		z-index: 10;
 		opacity: 1;
 		transition: opacity 0.2s;
-	}
-
-	.search-input {
-		&:deep(.n-input) {
-			background: transparent;
-		}
 	}
 </style>

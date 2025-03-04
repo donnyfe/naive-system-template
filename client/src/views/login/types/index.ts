@@ -12,4 +12,6 @@ export type RegisterParam = Omit<LoginParam, 'captcha'>
 export interface LoginData {
 	/** 访问toekn */
 	accessToken: string
+	/** 刷新token */
+	refreshToken: string
 }
