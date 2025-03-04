@@ -28,7 +28,7 @@ export class RoleService {
     try {
       const role = this.roleRepo.create(roleDto)
       await this.roleRepo.save(role)
-      return responseSuccess(null, '角色创建成功')
+      return responseSuccess('角色创建成功')
     } catch (err) {
       return responseFail(500, '角色创建失败')
     }
@@ -53,7 +53,7 @@ export class RoleService {
     try {
       const newRole = this.roleRepo.merge(role, roleDto)
       await this.roleRepo.save(newRole)
-      return responseSuccess(null, '角色更新成功')
+      return responseSuccess('角色更新成功')
     } catch (err) {
       return responseFail(500, '角色更新失败')
     }
@@ -70,7 +70,7 @@ export class RoleService {
 
     try {
       await this.roleRepo.delete(id)
-      return responseSuccess(null, '角色删除成功')
+      return responseSuccess('角色删除成功')
     } catch (err) {
       return responseFail(500, '角色删除失败')
     }
@@ -106,7 +106,7 @@ export class RoleService {
       take: pageSize,
     })
 
-    return responseSuccess(null, {
+    return responseSuccess('', {
       list: roles,
       total,
     })
@@ -124,7 +124,7 @@ export class RoleService {
       }))
       await this.userRoleRepo.save(userRoles)
 
-      return responseSuccess(null, '角色分配成功')
+      return responseSuccess('角色分配成功')
     } catch (err) {
       return responseFail(500, '角色分配失败')
     }
@@ -135,6 +135,6 @@ export class RoleService {
       where: { userId },
       relations: ['role'],
     })
-    return responseSuccess(null, userRoles.map((ur) => ur.role))
+    return responseSuccess('', userRoles.map((ur) => ur.role))
   }
 }

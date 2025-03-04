@@ -33,7 +33,7 @@ export class UploadService {
    */
   async getUploadId() {
     const uploadId = generateUUID()
-    return responseSuccess(null, { uploadId })
+    return responseSuccess('', { uploadId })
   }
 
   /**
@@ -48,7 +48,7 @@ export class UploadService {
     }
     let result = await this.saveFileLocal(file)
 
-    return responseSuccess(null, result)
+    return responseSuccess('', result)
   }
 
   /**
@@ -113,7 +113,7 @@ export class UploadService {
       }
     } else {
     }
-    return responseSuccess(null, chunkList)
+    return responseSuccess('', chunkList)
   }
 
   /**
@@ -181,7 +181,7 @@ export class UploadService {
       size: stats.size,
       ...result,
     })
-    return responseSuccess(null, result)
+    return responseSuccess('', result)
   }
 
   /**
@@ -258,7 +258,7 @@ export class UploadService {
       }
     }
     let progress = Math.ceil((uploadedSize / query.totalSize) * 100)
-    return responseSuccess(null, { progress })
+    return responseSuccess('', { progress })
   }
 
   /**

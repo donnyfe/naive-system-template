@@ -4,9 +4,10 @@ import { LoggerOptions } from './logger.interface'
 
 @Global()
 @Module({
-  providers: [LoggerService],
+  providers: [LoggerService,],
   exports: [LoggerService],
 })
+
 export class LoggerModule {
   static forRoot(options: LoggerOptions): DynamicModule {
     return {

@@ -1,6 +1,4 @@
 import 'dotenv/config'
-// 导入基础部署类和具体实现类
-// import { NpmDeploy } from './NpmDeploy.js'
 import { ServerDeploy } from './ServerDeploy.mjs'
 
 // 部署管理器
@@ -44,7 +42,7 @@ const serverOptions = {
     '.tmp', // 忽略 .tmp 目录
     '*.tmp', // 忽略所有临时文件
     '.vscode', // 忽略 vscode 配置目录
-    '.env', // 忽略环境变量文件
+    // '.env', // 忽略环境变量文件
     'scripts', // 忽略脚本目录
     'uploads', // 忽略上传目录
     'src', // 忽略源码目录

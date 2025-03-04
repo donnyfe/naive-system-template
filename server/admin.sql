@@ -16,14 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Current Database: `admin`
---
-
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `admin` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-
-USE `admin`;
-
---
 -- Table structure for table `chat`
 --
 
@@ -47,6 +39,7 @@ CREATE TABLE `chat` (
 
 LOCK TABLES `chat` WRITE;
 /*!40000 ALTER TABLE `chat` DISABLE KEYS */;
+INSERT INTO `chat` VALUES ('abe24d27-d036-4387-bc13-ef966549fbc1','新建对话','vj62mfz4',0,'2024-12-10 16:30:55.583000','2024-12-10 16:30:55.583000');
 /*!40000 ALTER TABLE `chat` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -181,19 +174,19 @@ DROP TABLE IF EXISTS `sys_user`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sys_user` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '用户ID',
-  `username` varchar(30) NOT NULL COMMENT '用户账号',
+  `username` varchar(30) DEFAULT NULL COMMENT '用户名',
   `password` varchar(200) NOT NULL COMMENT '用户登录密码',
   `nickName` varchar(30) DEFAULT NULL COMMENT '用户昵称',
   `avatar` varchar(255) DEFAULT NULL COMMENT '头像地址',
   `sex` char(1) DEFAULT NULL COMMENT '性别',
   `phone` varchar(11) DEFAULT NULL COMMENT '手机号码',
-  `email` varchar(50) DEFAULT NULL COMMENT '邮箱',
+  `email` varchar(50) NOT NULL COMMENT '邮箱',
   `remark` varchar(50) DEFAULT NULL COMMENT '备注',
   `createTime` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '创建时间',
   `updateTime` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `IDX_9e7164b2f1ea1348bc0eb0a7da` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -202,6 +195,7 @@ CREATE TABLE `sys_user` (
 
 LOCK TABLES `sys_user` WRITE;
 /*!40000 ALTER TABLE `sys_user` DISABLE KEYS */;
+INSERT INTO `sys_user` VALUES (1,'developer','$2a$10$b2dkRTSQkgU2W6Uhr7Zpw.fAiD9QkY7GU2teOodf5VI6YcPw7xG9e',NULL,'https://t12.baidu.com/it/u=3348289712,228342409&fm=30&app=106&f=JPEG?w=100&h=100&s=BD8C38724F236524097581DA0000C0B1',NULL,NULL,'donnyfe@foxmail.com',NULL,'2024-12-10 14:09:45.269299','2024-12-10 17:43:15.000000');
 /*!40000 ALTER TABLE `sys_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -267,4 +261,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-19 15:16:03
+-- Dump completed on 2024-12-12  0:46:35

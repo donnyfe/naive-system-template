@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config'
 import { LoggerService } from '@/core/logger/logger.service'
 import { GlobalExceptionFilter } from '@/common/filters/global-exception.filter'
 import { TransformInterceptor } from '@/common/interceptors/transform.interceptor'
-import { RequestLoggingInterceptor } from '@/common/interceptors/logger.interceptor'
+// import { LoggerInterceptor } from '@/common/interceptors/logger.interceptor'
 import { HttpCacheInterceptor } from '@/common/interceptors/cache.interceptor'
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor'
 
@@ -16,7 +16,7 @@ export const setupGlobal = (app: INestApplication) => {
     // 静态资源缓存拦截器
     new HttpCacheInterceptor(app.get(Reflector)),
     // 请求日志拦截器
-    new RequestLoggingInterceptor(app.get(LoggerService)),
+    // new LoggerInterceptor(app.get(LoggerService)),
     // 请求超时拦截器
     new TimeoutInterceptor()
   )
@@ -35,8 +35,6 @@ export const setupGlobal = (app: INestApplication) => {
   // 注册全局过滤器
   app.useGlobalFilters(
     // 全局异常过滤器
-    new GlobalExceptionFilter(
-      app.get(ConfigService),
-      app.get(LoggerService)),
+    new GlobalExceptionFilter(app.get(ConfigService), app.get(LoggerService)),
   )
 }

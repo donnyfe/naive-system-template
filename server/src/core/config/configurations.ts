@@ -17,6 +17,8 @@ export const redisConfig = registerAs('redis', () => ({
   db: parseInt(process.env.REDIS_DB, 10) || 0,
   prefix: process.env.REDIS_PREFIX || 'sess:',
   ttl: parseInt(process.env.REDIS_TTL, 10) || 86400,
+  tokenTTL: parseInt(process.env.REDIS_TOKEN_TTL, 10) || 86400 * 3,
+  refreshTokenTTL: parseInt(process.env.REDIS_REFRESH_TOKEN_TTL, 10) || 86400 * 7,
 }))
 
 export const httpConfig = registerAs('http', () => ({
@@ -32,14 +34,14 @@ export const httpConfig = registerAs('http', () => ({
 export const securityConfig = registerAs('security', () => ({
   allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || '*',
   jwt: {
-    secret: process.env.JWT_SECRET,
-    expiresIn: process.env.JWT_EXPIRES_IN || '1h',
-    refreshSecret: process.env.JWT_REFRESH_SECRET,
+    secret: process.env.JWT_SECRET || 'jwt_secret',
+    expiresIn: process.env.JWT_EXPIRES_IN || '3d',
+    refreshSecret: process.env.JWT_REFRESH_SECRET || 'jwt_refresh_secret',
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
   },
   csrf: {
-    key: process.env.CSRF_KEY,
-    secret: process.env.CSRF_SECRET,
+    key: process.env.CSRF_KEY || 'csrf_key',
+    secret: process.env.CSRF_SECRET || 'csrf_secret',
   },
   session: {
     name: process.env.SESSION_NAME || 'sess',

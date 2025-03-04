@@ -49,7 +49,7 @@ export class UserService {
       return responseFail(500, '用户注册失败')
     }
 
-    return responseSuccess(null, '用户注册成功')
+    return responseSuccess('用户注册成功')
   }
 
   async create(userDto: CreateUserDto) {
@@ -80,7 +80,7 @@ export class UserService {
 
       return responseFail(500, '用户创建失败')
     }
-    return responseSuccess(null, '用户创建成功')
+    return responseSuccess('用户创建成功')
   }
 
   async remove(id: number) {

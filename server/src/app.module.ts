@@ -19,10 +19,10 @@ import { PromptModule } from './modules/chat-prompt/prompt.module'
     SharedModule,
     /* 健康检查模块 */
     HealthModule,
-    /* 调度模块 */
-    ScheduleModule,
     /* 上传模块 */
     UploadModule,
+    /* 调度模块 */
+    ScheduleModule,
     /* 认证模块 */
     AuthModule,
     /* 用户模块 */

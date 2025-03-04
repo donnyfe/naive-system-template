@@ -7,23 +7,26 @@ import helmet from 'helmet'
 export const setupHelmet = async (app: INestApplication, isProduction: boolean) => {
   app.use(
     helmet({
+      // 允许跨域资源共享
+      // crossOriginResourcePolicy: isProduction ? { policy: 'same-origin' } : false,
+      crossOriginResourcePolicy: false,
       // 允许页面加载任何来源的资源
       crossOriginEmbedderPolicy: false,
       // 控制跨源打开器策略
-      crossOriginOpenerPolicy: {
-        // 生产环境: same-origin - 资源只能被同源页面加载
-        // 开发环境: unsafe-none - 允许跨源通信,方便调试
-        policy: isProduction ? 'same-origin' : 'unsafe-none',
-      },
-      crossOriginResourcePolicy: isProduction ? { policy: 'same-origin' } : false,
+      crossOriginOpenerPolicy: false,
+      // crossOriginOpenerPolicy: {
+      //   // 生产环境: same-origin - 资源只能被同源页面加载
+      //   // 开发环境: unsafe-none - 允许跨源通信,方便调试
+      //   policy: isProduction ? 'same-origin' : 'unsafe-none',
+      // },
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'"], // 默认源
-          scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"], // 允许脚本源
-          styleSrc: ["'self'", "'unsafe-inline'"], // 允许样式源
+          scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'https:'], // 允许https的外部脚本源
+          styleSrc: ["'self'", "'unsafe-inline'", 'https:'], // 允许https的外部样式源
           imgSrc: ["'self'", 'data:', 'https:'], // 允许图片源
-          connectSrc: ["'self'"], // 允许连接源
-          fontSrc: ["'self'"], // 允许字体源
+          connectSrc: ["'self'", 'https:', 'wss:', 'ws:'], // 允许WebSocket连接
+          fontSrc: ["'self'", 'https:', 'data:'], // 允许字体源
           objectSrc: ["'none'"], // 禁止对象源
           mediaSrc: ["'self'"], // 允许媒体源
           frameSrc: ["'none'"], // 禁止iframe嵌入

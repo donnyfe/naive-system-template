@@ -10,7 +10,7 @@ import { EmailService } from '@/core/email/email.service'
 import { responseFail } from '@/utils'
 import { NoCache } from '@/common/decorators/no-cache.decorator'
 
-@ApiTags('认证')
+@ApiTags('认证授权')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -27,16 +27,16 @@ export class AuthController {
       return responseFail(400, '缺少email参数')
     }
 
-    // TODO: 验证email格式
+    // 验证email格式
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
       return responseFail(400, '无效的email格式')
     }
 
-    // TODO: 生成验证码并发送邮件
+    // 生成验证码并发送邮件
     const code = this.generateVerifyCode(4)
 
-    this.logger.debug('获取邮箱验证码', 'auth.getVerifyCode', { email, code })
+    this.logger.debug('获取邮箱验证码', 'AuthController.getVerifyCode', { email, code })
     await this.emailService.getVerifyCode(email, code)
     return null
   }
@@ -66,17 +66,21 @@ export class AuthController {
 
     // 确保session存在
     if (!req.session) {
-      this.logger.error('系统错误:会话未初始化', null, 'captcha.create')
-      return responseFail(500, '系统错误:会话未初始化')
+      this.logger.error('会话未初始化', 'AuthController.createCaptcha')
+      return responseFail(500, '会话未初始化')
     }
 
     // 显式检查验证码文本
     if (!captcha.text) {
-      this.logger.error('验证码生成失败', null, 'captcha.create')
+      this.logger.error('验证码生成失败', 'AuthController.createCaptcha')
       return responseFail(500, '验证码生成失败')
     }
 
+    // 增加session存储日志
+    this.logger.debug('验证码已存储', 'AuthController.createCaptcha', { code: req.session.code })
+
     req.session.code = captcha.text
+    req.session.codeExpireTime = Date.now() + 5 * 60 * 1000 // 5分钟过期
 
     res.type('image/svg+xml')
     res.send(captcha.data)
@@ -92,18 +96,24 @@ export class AuthController {
   @Post('login')
   @UseGuards(LocalGuard)
   async login(@Req() req: any, @Body() body) {
+
     if (!req.session) {
-      this.logger.error('系统错误:会话未初始化', null, 'auth.login')
-      return responseFail(500, '系统错误:会话未初始化')
+      this.logger.error('会话未初始化', null, 'AuthController.login')
+      return responseFail(500, '会话未初始化')
     }
 
     if (!req.session.code) {
-      this.logger.error('系统错误:验证码未找到', null, 'auth.login')
-      return responseFail(500, '验证码已失效,请重新刷新')
+      this.logger.error('验证码读取失败', null, 'AuthController.login')
+      return responseFail(500, '验证码读取失败')
+    }
+
+    // 增加验证码过期检查
+    if (req.session?.codeExpireTime && Date.now() > req.session.codeExpireTime) {
+      return responseFail(500, '验证码已过期,请重新获取')
     }
 
     if (req.session?.code?.toLocaleLowerCase() !== body.captcha?.toLocaleLowerCase()) {
-      this.logger.error('验证码错误', null, 'auth.login')
+      this.logger.error('验证码错误', null, 'AuthController.login')
       return responseFail(500, '验证码错误')
     }
 
@@ -113,16 +123,15 @@ export class AuthController {
       return responseFail(500, '用户未注册')
     }
 
-    this.logger.log('用户登录', 'auth.login', { data: req.session })
+    this.logger.log('用户登录', 'AuthController.login', { data: req.session })
 
     return this.authService.login(req.user, req.session?.code)
   }
 
   @ApiOperation({ summary: '刷新token' })
-  @Get('refreshToken')
-  @UseGuards(JwtGuard)
-  async refreshToken(@Req() req: any) {
-    return this.authService.generateToken(req.user)
+  @Post('refreshToken')
+  async refreshToken(@Body() body: { refreshToken: string }) {
+    return this.authService.refreshToken(body.refreshToken)
   }
 
   @ApiOperation({ summary: '退出登录' })

@@ -21,7 +21,6 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
         poolSize: configService.get<number>('database.poolSize'),
         retryAttempts: 3,
         retryDelay: 3000,
-        keepConnectionAlive: true,
         autoLoadEntities: true,
         timezone: '+08:00'
       }),

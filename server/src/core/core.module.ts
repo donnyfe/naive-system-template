@@ -10,6 +10,8 @@ import { LoggerModule } from '@/core/logger/logger.module'
 import * as configs from './config/configurations'
 import { EmailModule } from './email/email.module'
 
+const isProduction = process.env.NODE_ENV === 'production'
+
 @Module({
   imports: [
     // 应用配置
@@ -21,12 +23,14 @@ import { EmailModule } from './email/email.module'
     }),
     // 日志
     LoggerModule.forRoot({
-      json: true,
-      logLevel: ['log', 'error', 'warn', 'debug'],
+      json: isProduction,
+      logLevel: isProduction
+        ? ['log', 'error', 'warn']
+        : ['log', 'error', 'warn', 'debug', 'verbose'],
       file: {
         enabled: true,
-        path: 'logs/app.log',
-        maxFiles: 30,
+        path: process.env.LOG_PATH || 'logs', // 可配置的日志路径
+        maxFiles: '30d', // 保留30天的日志
         maxSize: '20m',
       },
       requestLogging: {
@@ -64,7 +68,6 @@ import { EmailModule } from './email/email.module'
         // },
       }),
     }),
-
     // 数据库
     DatabaseModule,
     // Redis

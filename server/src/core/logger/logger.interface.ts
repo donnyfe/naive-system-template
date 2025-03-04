@@ -9,7 +9,7 @@ export interface LoggerOptions {
   file?: {
     enabled: boolean;
     path: string;
-    maxFiles?: number;
+    maxFiles?: string;
     maxSize?: string;
   };
 
