@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from 'uuid'
 import { MessageEntity } from './message.entity'
 import { CreateMessageDto, UpdateMessageDto } from './message.dto'
 
-
 @Injectable()
 export class MessageService {
   constructor(

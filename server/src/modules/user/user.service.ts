@@ -129,7 +129,7 @@ export class UserService {
   async findByEmail(email: string) {
     try {
       const user = await this.userRepo.findOne({
-        where: { email }
+        where: { email },
       })
       return user
     } catch (error) {
@@ -173,7 +173,7 @@ export class UserService {
       })
 
       return {
-      ...user,
+        ...user,
         roles: user.userRoles.map((ur) => ur.role),
       }
     } catch (error) {

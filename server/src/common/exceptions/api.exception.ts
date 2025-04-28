@@ -21,12 +21,7 @@ export class ApiException extends HttpException {
    */
   protected timestamp: number
 
-  constructor(
-    err: ErrInfo,
-    message?: string,
-    status?: HttpStatus,
-    details?: Record<string, any>
-  ) {
+  constructor(err: ErrInfo, message?: string, status?: HttpStatus, details?: Record<string, any>) {
     // 构造基础错误信息
     const errMessage = message ?? err.message ?? String(err.code)
     super(errMessage, status ?? HttpStatus.BAD_REQUEST)

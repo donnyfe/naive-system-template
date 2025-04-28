@@ -11,11 +11,7 @@ export class CacheService {
   }
 
   async set(key: string, value: any, ttl?: number): Promise<void> {
-    await this.redisService.set(
-      key,
-      JSON.stringify(value),
-      ttl,
-    )
+    await this.redisService.set(key, JSON.stringify(value), ttl)
   }
 
   async del(key: string): Promise<void> {
@@ -24,11 +20,7 @@ export class CacheService {
 
   // 添加缓存装饰器
   static Cacheable(prefix: string, ttl?: number) {
-    return function (
-      target: any,
-      propertyKey: string,
-      descriptor: PropertyDescriptor,
-    ) {
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
       const originalMethod = descriptor.value
       descriptor.value = async function (...args: any[]) {
         const cacheService = this.cacheService as CacheService

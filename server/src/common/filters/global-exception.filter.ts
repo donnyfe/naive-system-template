@@ -1,4 +1,11 @@
-import { ExceptionFilter, Catch, ArgumentsHost, UnauthorizedException, HttpException, HttpStatus } from '@nestjs/common'
+import {
+  ExceptionFilter,
+  Catch,
+  ArgumentsHost,
+  UnauthorizedException,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common'
 import { Request, Response } from 'express'
 import { ConfigService } from '@nestjs/config'
 import { LoggerService } from '@/core/logger/logger.service'
@@ -65,9 +72,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   ) {}
 
   catch(exception: unknown, host: ArgumentsHost) {
-    console.log('-------------exception-----------> ')
-    console.log(exception)
-    console.log('--------------------------------')
     const ctx = host.switchToHttp()
     const response = ctx.getResponse<Response>()
     const request = ctx.getRequest<Request>()
@@ -99,7 +103,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   }
 
   private getErrorDetails(exception: unknown) {
-
     if (exception instanceof UnauthorizedException) {
       return {
         status: HttpStatus.UNAUTHORIZED,

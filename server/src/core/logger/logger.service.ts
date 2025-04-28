@@ -14,7 +14,6 @@ export class LoggerService implements NestLoggerService {
   }
 
   private initLogger() {
-
     // 通用日志格式
     const commonFormat = winston.format.combine(
       winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),

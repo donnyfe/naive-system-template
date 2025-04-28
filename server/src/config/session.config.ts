@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config'
 import session from 'express-session'
 import { RedisStore } from 'connect-redis'
 
-
 /**
  * 设置session
  * @param app

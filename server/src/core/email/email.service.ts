@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { MailerService, type ISendMailOptions } from '@nestjs-modules/mailer'
 import { RedisService } from '@/core/redis/redis.service'
 import { LoggerService } from '@/core/logger/logger.service'
-import { responseFail, responseSuccess } from '@/utils'
+import { responseFail } from '@/utils'
 
 @Injectable()
 export class EmailService {

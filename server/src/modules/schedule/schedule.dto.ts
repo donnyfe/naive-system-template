@@ -37,7 +37,6 @@ export class CreateScheduleDto {
   maxRetries?: number
 }
 
-
 export class UpdateScheduleDto {
   @ApiProperty({ description: '定时任务名称', required: false })
   @IsOptional()

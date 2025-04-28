@@ -1,4 +1,12 @@
-import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from 'typeorm'
 import { ChatEntity } from '../chat/chat.entity'
 
 @Index('chat_message_chat_id_foreign', ['chatId'], {})

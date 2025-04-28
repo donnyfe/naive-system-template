@@ -1,8 +1,8 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { DatabaseService } from './database.service';
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { Module } from '@nestjs/common'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { DatabaseService } from './database.service'
+import { TypeOrmModuleOptions } from '@nestjs/typeorm'
 
 @Module({
   imports: [
@@ -22,7 +22,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
         retryAttempts: 3,
         retryDelay: 3000,
         autoLoadEntities: true,
-        timezone: '+08:00'
+        timezone: '+08:00',
       }),
     }),
   ],

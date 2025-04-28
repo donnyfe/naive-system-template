@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common'
 
 @Injectable()
 export class SharedService {
@@ -10,42 +10,42 @@ export class SharedService {
       id: id || 'id',
       parentId: parentId || 'parentId',
       childrenList: children || 'children',
-    };
+    }
 
-    const childrenListMap = {};
-    const nodeIds = {};
-    const tree = [];
+    const childrenListMap = {}
+    const nodeIds = {}
+    const tree = []
 
     for (const d of data) {
-      const parentId = d[config.parentId];
+      const parentId = d[config.parentId]
       if (childrenListMap[parentId] == null) {
-        childrenListMap[parentId] = [];
+        childrenListMap[parentId] = []
       }
-      nodeIds[d[config.id]] = d;
-      childrenListMap[parentId].push(d);
+      nodeIds[d[config.id]] = d
+      childrenListMap[parentId].push(d)
     }
 
     for (const d of data) {
-      const parentId = d[config.parentId];
+      const parentId = d[config.parentId]
       if (nodeIds[parentId] == null) {
-        tree.push(d);
+        tree.push(d)
       }
     }
 
     for (const t of tree) {
-      adaptToChildrenList(t);
+      adaptToChildrenList(t)
     }
 
     function adaptToChildrenList(o) {
       if (childrenListMap[o[config.id]] !== null) {
-        o[config.childrenList] = childrenListMap[o[config.id]];
+        o[config.childrenList] = childrenListMap[o[config.id]]
       }
       if (o[config.childrenList]) {
         for (const c of o[config.childrenList]) {
-          adaptToChildrenList(c);
+          adaptToChildrenList(c)
         }
       }
     }
-    return tree;
+    return tree
   }
 }

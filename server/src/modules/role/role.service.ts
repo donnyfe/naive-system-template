@@ -77,7 +77,6 @@ export class RoleService {
   }
 
   async findAll(query: GetRoleListDto) {
-
     const pageNumber = query.pageNumber || 1
     const pageSize = query.pageSize || 10
 
@@ -135,6 +134,9 @@ export class RoleService {
       where: { userId },
       relations: ['role'],
     })
-    return responseSuccess('', userRoles.map((ur) => ur.role))
+    return responseSuccess(
+      '',
+      userRoles.map((ur) => ur.role),
+    )
   }
 }

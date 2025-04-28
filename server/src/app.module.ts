@@ -10,7 +10,6 @@ import { UserModule } from './modules/user/user.module'
 import { ChatModule } from './modules/chat/chat.module'
 import { PromptModule } from './modules/chat-prompt/prompt.module'
 
-
 @Module({
   imports: [
     /* 核心模块 */

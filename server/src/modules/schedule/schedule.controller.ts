@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common'
+import { Controller, Post, Put, Delete, Body, Param } from '@nestjs/common'
 import { ScheduleService } from './schedule.service'
 import { CreateScheduleDto, UpdateScheduleDto } from './schedule.dto'
 

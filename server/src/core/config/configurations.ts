@@ -1,8 +1,6 @@
 import { registerAs } from '@nestjs/config'
 
-
 export const databaseConfig = registerAs('database', () => {
-
   const config = {
     type: process.env.DATABASE_TYPE,
     host: process.env.DATABASE_HOST,
@@ -14,13 +12,9 @@ export const databaseConfig = registerAs('database', () => {
     logging: process.env.DATABASE_LOGGING === 'true',
     poolSize: parseInt(process.env.DATABASE_POOL_SIZE, 10),
   }
-  console.log('-------------------------------')
-  console.log('--- config: ---', config)
-  console.log(process.env.DATABASE_USERNAME, process.env.DATABASE_PASSWORD)
-  console.log('-------------------------------')
+
   return config
 })
-
 
 export const redisConfig = registerAs('redis', () => ({
   url: process.env.REDIS_URL,
@@ -87,7 +81,11 @@ export const uploadConfig = registerAs('upload', () => ({
   serveRoot: process.env.UPLOAD_SERVE_ROOT || '/static',
   maxSize: parseInt(process.env.UPLOAD_MAX_SIZE, 10) || 5242880,
   maxFiles: parseInt(process.env.UPLOAD_MAX_FILES, 10) || 10,
-  allowedTypes: process.env.UPLOAD_ALLOWED_TYPES?.split(',') || ['image/*', 'video/*', 'application/pdf'],
+  allowedTypes: process.env.UPLOAD_ALLOWED_TYPES?.split(',') || [
+    'image/*',
+    'video/*',
+    'application/pdf',
+  ],
 }))
 
 export const emailConfig = registerAs('email', () => ({
@@ -95,10 +93,9 @@ export const emailConfig = registerAs('email', () => ({
   from: process.env.EMAIL_FROM,
 }))
 
-
 export const baiduConfig = registerAs('baidu', () => ({
   qianfanApiKey: process.env.QIANFAN_API_KEY,
-  qianfanApiSecret: process.env.QIANFAN_API_SECRET
+  qianfanApiSecret: process.env.QIANFAN_API_SECRET,
 }))
 
 export const initialConfig = registerAs('initial', () => ({

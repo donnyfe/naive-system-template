@@ -245,7 +245,9 @@ export class UploadService {
 
     if (fs.existsSync(chunkDirPath)) {
       // 读取切片
-      const chunks = fs.readdirSync(chunkDirPath).filter((filename) => filename.includes(query.hash))
+      const chunks = fs
+        .readdirSync(chunkDirPath)
+        .filter((filename) => filename.includes(query.hash))
       if (chunks.length > 0) {
         uploadedSize = chunks
           .map((chunk) => {
@@ -271,7 +273,8 @@ export class UploadService {
       return originalname
     }
     const fileNameArr = originalname.split('.')
-    fileNameArr[fileNameArr.length - 2] = `${fileNameArr[fileNameArr.length - 2]}_${new Date().getTime()}`
+    fileNameArr[fileNameArr.length - 2] =
+      `${fileNameArr[fileNameArr.length - 2]}_${new Date().getTime()}`
     return fileNameArr.join('.')
   }
 }

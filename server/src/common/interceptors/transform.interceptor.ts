@@ -1,4 +1,10 @@
-import { CallHandler, ExecutionContext, HttpStatus, Injectable, NestInterceptor } from '@nestjs/common'
+import {
+  CallHandler,
+  ExecutionContext,
+  HttpStatus,
+  Injectable,
+  NestInterceptor,
+} from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { Observable, map } from 'rxjs'
 import { Request, Response } from 'express'
@@ -26,11 +32,10 @@ export interface ErrorResponse extends ApiResult<null> {
 // 统一响应类型
 export type ApiResponse<T> = SuccessResponse<T> | ErrorResponse
 
-
 // 装饰器将类标记为可被NestJS框架注入的服务
 @Injectable()
 export class TransformInterceptor<T> implements NestInterceptor<ApiResponse<T>> {
-  constructor(private reflector: Reflector) { }
+  constructor(private reflector: Reflector) {}
 
   // 接收 ExecutionContext 和 CallHandler，并返回一个 Observable<Data>
   intercept(context: ExecutionContext, next: CallHandler<any>): Observable<ApiResponse<T>> {
@@ -41,7 +46,6 @@ export class TransformInterceptor<T> implements NestInterceptor<ApiResponse<T>> 
     if (request.method === 'POST' && response.statusCode === HttpStatus.CREATED) {
       response.status(HttpStatus.OK)
     }
-
 
     return next.handle().pipe(
       // 转换成功响应

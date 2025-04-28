@@ -1,6 +1,5 @@
 import { PagingDto } from '@/common/dto'
-import { ApiProperty, OmitType } from '@nestjs/swagger'
-import { Exclude } from 'class-transformer'
+import { ApiProperty } from '@nestjs/swagger'
 import { IsEmail, IsMobilePhone, IsNotEmpty, IsOptional, IsString, Length } from 'class-validator'
 
 // 创建用户数据对象

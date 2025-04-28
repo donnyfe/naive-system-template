@@ -4,9 +4,7 @@ import { SharedService } from './shared.service'
 @Global()
 @Module({
   imports: [],
-  providers: [
-    SharedService,
-  ],
+  providers: [SharedService],
   exports: [SharedService],
 })
 export class SharedModule {}

@@ -96,7 +96,6 @@ export class AuthController {
   @Post('login')
   @UseGuards(LocalGuard)
   async login(@Req() req: any, @Body() body) {
-
     if (!req.session) {
       this.logger.error('会话未初始化', null, 'AuthController.login')
       return responseFail(500, '会话未初始化')

@@ -12,14 +12,6 @@ import * as configs from './config/configurations'
 import { EmailModule } from './email/email.module'
 
 const isProduction = process.env.NODE_ENV === 'production'
-console.log('-------------------------------')
-// console.log('--- 1 process.cwd(): ---', process.cwd())
-console.log('--- 2 dirname: ---', __dirname)
-console.log('--- 3 env:  ---', path.join(__dirname, `../../.env.${process.env.NODE_ENV}`))
-
-console.log(
-  '--- 4 resolve: ---',
-  path.resolve(__dirname, `../../.env.${process.env.NODE_ENV}`))
 
 @Module({
   imports: [
@@ -90,5 +82,3 @@ console.log(
   exports: [ConfigModule, DatabaseModule, RedisModule, HttpClientModule, EmailModule],
 })
 export class CoreModule {}
-
-

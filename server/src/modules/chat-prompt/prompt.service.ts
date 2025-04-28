@@ -23,9 +23,9 @@ export class PromptService {
     try {
       const newPrompt = {
         promptId: uuidv4(),
-      username: req.user.username,
-      ...prompt,
-    }
+        username: req.user.username,
+        ...prompt,
+      }
       return await this.promptRepo.save(newPrompt)
     } catch (error) {
       throw new Error(`Failed to create prompt: ${error.message}`)
@@ -41,7 +41,7 @@ export class PromptService {
   async remove(promptId: string) {
     try {
       const entity = await this.findOne(promptId)
-    entity.delFlag = 1
+      entity.delFlag = 1
       return await this.promptRepo.save(entity)
     } catch (error) {
       throw new Error(`Failed to remove prompt: ${error.message}`)

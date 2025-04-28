@@ -1,15 +1,15 @@
-import { IsDateString, IsNumberString, IsObject, IsOptional, IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsDateString, IsNumberString, IsObject, IsOptional, IsString } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger'
 
 /**
  * 时间区间对象
  */
 export class DateParamsDTO {
   @IsDateString()
-  beginTime: string;
+  beginTime: string
 
   @IsDateString()
-  endTime: string;
+  endTime: string
 }
 
 /**
@@ -18,11 +18,11 @@ export class DateParamsDTO {
 export class PagingDto {
   @ApiProperty({ required: false })
   @IsNumberString()
-  pageNumber: number;
+  pageNumber: number
 
   @ApiProperty({ required: false })
   @IsNumberString()
-  pageSize: number;
+  pageSize: number
 
   /**
    * 时间区间
@@ -30,7 +30,7 @@ export class PagingDto {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsObject()
-  params?: DateParamsDTO;
+  params?: DateParamsDTO
 
   /**
    * 排序字段
@@ -38,7 +38,7 @@ export class PagingDto {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
-  orderByColumn?: string;
+  orderByColumn?: string
 
   /**
    * 排序规则
@@ -46,5 +46,5 @@ export class PagingDto {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
-  isAsc?: 'ascending' | 'descending';
+  isAsc?: 'ascending' | 'descending'
 }

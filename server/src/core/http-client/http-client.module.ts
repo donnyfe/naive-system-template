@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
-import { HttpModule } from '@nestjs/axios';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { HttpClientService } from './http-client.service';
+import { Module } from '@nestjs/common'
+import { HttpModule } from '@nestjs/axios'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import { HttpClientService } from './http-client.service'
 
 @Module({
   imports: [

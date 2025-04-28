@@ -6,10 +6,7 @@ import { ScheduleController } from './schedule.controller'
 import { ScheduleEntity } from './schedule.entity'
 
 @Module({
-  imports: [
-    NestScheduleModule.forRoot(),
-    TypeOrmModule.forFeature([ScheduleEntity]),
-  ],
+  imports: [NestScheduleModule.forRoot(), TypeOrmModule.forFeature([ScheduleEntity])],
   controllers: [ScheduleController],
   providers: [ScheduleService],
   exports: [ScheduleService],

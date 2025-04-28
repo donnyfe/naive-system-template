@@ -29,5 +29,4 @@ export const ErrorInfo = {
   ERR_30003: { code: 30003, message: '文件上传失败' },
 } as const
 
-
 export type ErrInfo = ValueOf<typeof ErrorInfo>

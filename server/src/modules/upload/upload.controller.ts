@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Query, UploadedFile, UseInterceptors, HttpCode } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Query,
+  UploadedFile,
+  UseInterceptors,
+  HttpCode,
+} from '@nestjs/common'
 import { UploadService } from './upload.service'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { ApiTags, ApiOperation, ApiBody, ApiQuery } from '@nestjs/swagger'

@@ -18,7 +18,7 @@ export const setupGlobal = (app: INestApplication) => {
     // 请求日志拦截器
     // new LoggerInterceptor(app.get(LoggerService)),
     // 请求超时拦截器
-    new TimeoutInterceptor()
+    new TimeoutInterceptor(),
   )
 
   // 注册全局管道

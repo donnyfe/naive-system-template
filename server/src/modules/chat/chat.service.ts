@@ -11,7 +11,6 @@ import { ChatEntity } from './chat.entity'
 import { MessageEntity } from '../chat-message/message.entity'
 import { ChatDto, CreateChatDto, UpdateChatDto } from './chat.dto'
 
-
 @Injectable()
 export class ChatService {
   apiKey: string

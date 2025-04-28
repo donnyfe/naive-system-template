@@ -68,17 +68,17 @@ export class HttpCacheInterceptor implements NestInterceptor {
     for (const [pattern, strategy] of Object.entries(this.cacheConfig)) {
       try {
         // 处理catch-all segments
-        const normalizedPattern = pattern.replace(/\[\.\.\.(.*?)\]/g, '*'); // 将[...param]转换为*
-        const matchFn = match(normalizedPattern);
+        const normalizedPattern = pattern.replace(/\[\.\.\.(.*?)\]/g, '*') // 将[...param]转换为*
+        const matchFn = match(normalizedPattern)
         if (matchFn(path)) {
-          return strategy;
+          return strategy
         }
       } catch (error) {
-        console.warn(`Invalid path pattern: ${pattern}`, error);
-        continue;
+        console.warn(`Invalid path pattern: ${pattern}`, error)
+        continue
       }
     }
-    return null;
+    return null
   }
 
   // 基于响应内容生成ETag
@@ -99,36 +99,36 @@ export class HttpCacheInterceptor implements NestInterceptor {
 
   // 判断是否需要跳过缓存
   private shouldSkipCache(path: string, strategy: any): boolean {
-    if (!strategy) return true;
+    if (!strategy) return true
 
     // 检查排除路径
     if (strategy.exclude) {
       const isExcluded = strategy.exclude.some((pattern: string) => {
         try {
-          const normalizedPattern = pattern.replace(/\[\.\.\.(.*?)\]/g, '*');
-          const matchFn = match(normalizedPattern);
-          return matchFn(path) !== false;
+          const normalizedPattern = pattern.replace(/\[\.\.\.(.*?)\]/g, '*')
+          const matchFn = match(normalizedPattern)
+          return matchFn(path) !== false
         } catch {
-          return false;
+          return false
         }
-      });
-      if (isExcluded) return true;
+      })
+      if (isExcluded) return true
     }
 
     // 检查包含路径
     if (strategy.include) {
       const isIncluded = strategy.include.some((pattern: string) => {
         try {
-          const normalizedPattern = pattern.replace(/\[\.\.\.(.*?)\]/g, '*');
-          const matchFn = match(normalizedPattern);
-          return matchFn(path) !== false;
+          const normalizedPattern = pattern.replace(/\[\.\.\.(.*?)\]/g, '*')
+          const matchFn = match(normalizedPattern)
+          return matchFn(path) !== false
         } catch {
-          return false;
+          return false
         }
-      });
-      return !isIncluded;
+      })
+      return !isIncluded
     }
 
-    return false;
+    return false
   }
 }

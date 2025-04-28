@@ -1,7 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm'
 import { ScheduleStatus, ScheduleType } from './types'
 
-
 @Entity('schedule_tasks')
 export class ScheduleEntity {
   @PrimaryGeneratedColumn('uuid')
