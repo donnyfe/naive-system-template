@@ -1,0 +1,1 @@
+import{h as e}from"./index-DqO_OEbo.js";const a=async s=>e.get("/api/user/list",s),r=async s=>e.post("/api/user/create",s),c=async s=>e.patch(`/api/user/${s.id}`,s),o=async s=>e.delete(`/api/user/${s}`);export{r as c,a as q,o as r,c as u};
