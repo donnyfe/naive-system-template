@@ -17,7 +17,7 @@ export default mergeConfig(
 
 			// 部署到服务器
 			deployToServer({
-				remotePath: '/root/web/admin/client',
+				remotePath: '/root/admin/client',
 				localPath: 'dist',
 			})
 		],

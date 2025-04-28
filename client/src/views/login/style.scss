@@ -1,71 +1,39 @@
-.login-modal-form {
-  @apply w-full flex flex-col mx-auto;
-	min-height: inherit;
-
-	@media (max-width: 768px) {
-		@apply w-[92%] min-h-[480px] mx-4 p-6;
-		max-width: none;
-	}
-
-	@media (max-width: 480px) {
-		@apply min-h-[450px] p-4;
-	}
+.form-wrapper {
+  @apply
+		w-full
+		max-w-md
+		mx-auto
+		p-8
+		rounded-xl
+		bg-white
+		dark:bg-dark;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 
   .form-title {
-    @apply text-2xl font-medium text-center mb-2 text-white;
-
-		@media (max-width: 768px) {
-      @apply text-xl mb-6;
-    }
+  	@apply  mb-0 dark:text-gray-200;
   }
 
-	.n-form {
-		@apply flex-1 flex flex-col text-white;
-
-		// 表单项间距
-    :deep(.n-form-item) {
-      @apply mb-0;
-
-      @media (max-width: 768px) {
-        @apply mb-4;
-      }
-
-      &:last-child {
-        @apply mb-0;
-      }
-    }
-
-		:deep(.n-input) {
-			@apply h-11 rounded-lg text-white;
-			background: rgba(255, 255, 255, 0.05);
-			border: 1px solid rgba(255, 255, 255, 0.1);
-			transition: all 0.3s ease;
-
-			&:hover, &:focus {
-				background: rgba(255, 255, 255, 0.1);
-				border-color: rgba(255, 255, 255, 0.2);
-			}
-		}
-
-		:deep(.n-input__input-el) {
-			color: #fff;
-		}
-
-		// 按钮样式
-		:deep(.n-button) {
-			@apply h-11 rounded-lg;
-
-			@media (max-width: 768px) {
-				@apply h-10;
-			}
-
-			// &[type="primary"] {
-			// 	@apply bg-primary hover:bg-primary-dark;
-			// }
-		}
+	.n-form-item {
+		height: 80px;
 	}
 
-  :deep(.n-checkbox) {
-    @apply text-sm;
+  .form-input {
+    @apply
+			rounded-lg
+
+			bg-gray-50
+			dark:bg-gray-900
+			border
+			border-gray-200
+			dark:border-gray-700;
+  }
+
+	.checkbox-text {
+		@apply text-sm dark:text-gray-200;
+	}
+
+  .submit-btn {
+    @apply rounded-lg font-medium h-10 dark:text-white;
   }
 }

@@ -95,113 +95,124 @@ onMounted(() => {
 </script>
 
 <template>
-<div class="login-form login-modal-form">
-	<n-h2 class="form-title">
+<div class="login-form form-wrapper">
+	<n-h1 class="form-title">
 		{{ $t('login.signInTitle') }}
-	</n-h2>
-	<n-form
-		ref="formRef"
-		:model="form"
-		:rules="rules"
-		size="large"
-	>
-		<n-form-item path="email">
-			<n-input
-				v-model:value="form.email"
-				autocomplete="email"
-				clearable
-				:placeholder="t('login.emailPlaceholder')"
-			>
-				<template #prefix>
-					<n-icon>
-						<UserOutlined />
-					</n-icon>
-				</template>
-			</n-input>
-		</n-form-item>
+	</n-h1>
 
-		<n-form-item path="password">
-			<n-input
-				v-model:value="form.password"
-				type="password"
-				autocomplete="current-password"
-				show-password-on="click"
-				clearable
-				:placeholder="t('login.passwordPlaceholder')"
-			>
-				<template #prefix>
-					<n-icon>
-						<LockOutlined />
-					</n-icon>
-				</template>
-			</n-input>
-		</n-form-item>
+  <n-form ref="formRef" :model="form" :rules="rules" size="large">
+    <n-form-item path="email" class="form-item">
+      <n-input
+        v-model:value="form.email"
+        autocomplete="email"
+        clearable
+        :placeholder="t('login.emailPlaceholder')"
+        class="form-input"
+      >
+        <template #prefix>
+          <n-icon class="input-icon">
+            <UserOutlined />
+          </n-icon>
+        </template>
+      </n-input>
+    </n-form-item>
 
-		<n-form-item path="captcha">
-			<div class="w-full h-full flex flex-row justify-between items-center">
-				<n-input
-					class="flex-1"
-					v-model:value="form.captcha"
-					clearable
-					:placeholder="t('login.captchaPlaceholder')"
-					@keyup.enter="handleSubmit"
-				/>
-				<div class="w-28 h-full items-center ml-4">
-					<FallbackImage
-						class="w-full h-full max-h-44px rounded cursor-pointer"
-						:src="captchaUrl"
-						:alt="t('login.captcha')"
-						@click="fetchCaptcha"
-					/>
-				</div>
-			</div>
-		</n-form-item>
+    <n-form-item path="password" class="form-item">
+      <n-input
+        v-model:value="form.password"
+        type="password"
+        autocomplete="current-password"
+        show-password-on="click"
+        clearable
+        :placeholder="t('login.passwordPlaceholder')"
+        class="form-input"
+      >
+        <template #prefix>
+          <n-icon class="input-icon">
+            <LockOutlined />
+          </n-icon>
+        </template>
+      </n-input>
+    </n-form-item>
 
-		<div class="flex justify-between mb-4 text-white flex-center">
-			<n-checkbox v-model:checked="isRemember">
-				<span class="text-white">{{ t('login.rememberMe') }}</span>
-			</n-checkbox>
-			<!-- <n-button
-				text
-				class="text-white"
-				@click="switchForm('resetPasswordForm')"
-			>
-				{{ t('login.forgotPassword') }}
-			</n-button> -->
-		</div>
+    <n-form-item path="captcha" class="form-item">
+      <div class="captcha-container">
+        <n-input
+          class="captcha-input form-input flex-1"
+          v-model:value="form.captcha"
+          clearable
+          :placeholder="t('login.captchaPlaceholder')"
+          @keyup.enter="handleSubmit"
+        />
+        <div class="captcha-image-wrapper">
+          <FallbackImage
+            class="captcha-image"
+            :src="captchaUrl"
+            :alt="t('login.captcha')"
+            @click="fetchCaptcha"
+          />
+        </div>
+      </div>
+    </n-form-item>
 
-		<n-button
-			class="text-white rounded-lg"
-			block
-			type="primary"
-			size="large"
-			:loading="loading"
-			@click="handleSubmit"
-		>
-			{{ t('login.signIn') }}
-		</n-button>
+    <div class="remember-container">
+      <n-checkbox v-model:checked="isRemember">
+        <span class="checkbox-text">{{ t('login.rememberMe') }}</span>
+      </n-checkbox>
+    </div>
 
-		<div class="mt-4 text-center text-white">
-			{{ t('login.noAccountText') }}
-			<n-button
-				text
-				:class="['text-[var(--n-text-color-pressed)]']"
-				@click="switchForm('registerForm')"
-			>
-				{{ t('login.signUp') }}
-					</n-button>
-				</div>
-				</n-form>
-	</div>
+    <div class="form-footer">
+      <n-button
+        class="submit-btn"
+        type="primary"
+        block
+        size="large"
+        :loading="loading"
+        @click="handleSubmit"
+      >
+        {{ t('login.signIn') }}
+      </n-button>
+
+      <div class="flex flex-justify-between pt-0">
+        <div class="text-left">
+          {{ t('login.noAccountText') }}
+          <n-button text @click="switchForm('registerForm')">
+            {{ t('login.signUp') }}
+          </n-button>
+        </div>
+        <n-button
+          text
+          class="forgot-password"
+          @click="switchForm('resetPasswordForm')"
+        >
+          {{ t('login.forgotPassword') }}
+        </n-button>
+      </div>
+    </div>
+  </n-form>
+</div>
 </template>
 
-<style
-	lang="scss"
-	scoped
->
-	@use '../style.scss' as *;
+<style lang="scss" scoped>
+@use '../style.scss' as *;
 
-	.captcha-img {
-		@apply w-28 h-full cursor-pointer ml-4 rounded;
-	}
+.remember-container {
+	@apply pt-6 pb-2;
+}
+
+.form-footer {
+	@apply flex flex-col gap-2;
+}
+
+.captcha-container {
+	@apply flex items-center gap-2;
+}
+
+.captcha-image-wrapper {
+	@apply flex-shrink-0;
+}
+
+.captcha-image {
+	@apply w-24 h-10 cursor-pointer;
+}
 </style>

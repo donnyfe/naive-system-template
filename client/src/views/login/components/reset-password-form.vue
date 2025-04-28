@@ -40,18 +40,21 @@ function switchForm(type: string) {
 </script>
 
 <template>
-<div class="reset-form login-modal-form">
-	<n-h2 class="form-title">
+<div class="reset-form form-wrapper">
+	<n-h1 class="form-title mb-0">
 		{{ t('login.resetPasswordTitle') }}
-	</n-h2>
+	</n-h1>
+
 	<n-form
 		ref="formRef"
+		class=""
 		:model="form"
 		:rules="rules"
 		size="large"
 	>
 		<n-form-item path="username">
 			<n-input
+				class="form-input"
 				v-model:value="form.username"
 				:placeholder="t('login.resetPasswordPlaceholder')"
 			>
@@ -65,6 +68,7 @@ function switchForm(type: string) {
 
 		<n-form-item path="email">
 			<n-input
+				class="form-input"
 				v-model:value="form.email"
 				:placeholder="t('login.emailPlaceholder')"
 			>
@@ -75,6 +79,7 @@ function switchForm(type: string) {
 				</template>
 			</n-input>
 		</n-form-item>
+
 		<n-button
 			block
 			type="primary"
@@ -85,7 +90,8 @@ function switchForm(type: string) {
 		>
 			{{ t('login.resetPassword') }}
 		</n-button>
-		<div class="mt-4 text-center">
+
+		<div class="mt-2 text-left">
 			{{ t('login.haveAccountText') }}
 			<n-button
 				text
@@ -99,9 +105,7 @@ function switchForm(type: string) {
 	</div>
 </template>
 
-<style
-	lang="scss"
-	scoped
->
-	@use '../style.scss' as *;
+<style lang="scss" scoped>
+@use '../style.scss' as *;
 </style>
+

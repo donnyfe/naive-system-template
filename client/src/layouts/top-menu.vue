@@ -5,7 +5,6 @@ import {
 	FullScreen,
 	Logo,
 	Menu,
-	Notices,
 	Search,
 	Setting,
 	TabBar,
@@ -31,7 +30,6 @@ const appStore = useAppStore()
 						<Menu mode="horizontal" responsive />
 						<div class="flex-y-center gap-1 h-full p-x-xl">
 							<Search />
-							<Notices />
 							<FullScreen />
 							<DarkModeSwitch />
 							<LangsSwitch />

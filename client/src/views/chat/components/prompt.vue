@@ -175,14 +175,6 @@ function handleSearchBlur() {
 				</div>
 			</div>
 
-			<!-- 分类标签页 -->
-			<!-- <n-tabs v-model:value="activeTab" class="px-2 pt-2">
-				<n-tab-pane name="all" tab="全部" />
-				<n-tab-pane name="custom" tab="自定义" />
-				<n-tab-pane name="office" tab="办公助理" />
-				<n-tab-pane name="ai" tab="AI 作画" />
-			</n-tabs> -->
-
 			<!-- 主体内容区 -->
 			<template v-if="isAdd">
 				<div class="flex-1 overflow-auto pt-4">

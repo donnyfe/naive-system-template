@@ -2,7 +2,7 @@ export const staticRoutes: RowRoute[] = [
 	{
 		name: 'chat',
 		path: '/chat',
-		title: '聊天助理',
+		title: '聊天助手',
 		requiresAuth: true,
 		icon: 'icon-park-outline:user',
 		menuType: 'page',

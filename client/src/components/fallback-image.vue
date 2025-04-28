@@ -24,10 +24,7 @@ function handleError() {
 </script>
 
 <template>
-<div
-	:class="class"
-	class="relative overflow-hidden"
->
+<div class="relative overflow-hidden">
 	<n-spin
 		v-if="isLoading"
 		size="small"

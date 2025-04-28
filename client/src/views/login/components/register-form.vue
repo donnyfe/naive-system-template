@@ -87,10 +87,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-<div class="register-form login-modal-form">
-	<n-h2 class="form-title">
+<div class="register-form form-wrapper">
+	<n-h1 class="form-title">
 		{{ t('login.registerTitle') }}
-	</n-h2>
+	</n-h1>
+
 	<n-form
 		ref="formRef"
 		:model="form"
@@ -99,6 +100,7 @@ onUnmounted(() => {
 	>
 		<n-form-item path="email">
 			<n-input
+				class="form-input"
 				v-model:value="form.email"
 				:placeholder="t('login.emailPlaceholder')"
 			>
@@ -112,6 +114,7 @@ onUnmounted(() => {
 
 		<n-form-item path="password">
 			<n-input
+				class="form-input"
 				v-model:value="form.password"
 				type="password"
 				show-password-on="click"
@@ -128,7 +131,7 @@ onUnmounted(() => {
 		<n-form-item path="captcha">
 			<div class="w-full h-full flex flex-row justify-between items-center">
 				<n-input
-					class="flex-1"
+					class="flex-1 form-input"
 					v-model:value="form.captcha"
 					:placeholder="t('login.captchaPlaceholder')"
 					:maxlength="6"
@@ -140,9 +143,9 @@ onUnmounted(() => {
 					</template>
 				</n-input>
 
-				<div class="w-120px h-full items-center ml-4">
+				<div class="w-120px h-full items-center ml-4 h-8">
 					<n-button
-						class="w-120px h-44px"
+						class="captcha-button"
 						type="primary"
 						:disabled="countdown > 0"
 						:loading="countdown > 0"
@@ -154,18 +157,8 @@ onUnmounted(() => {
 			</div>
 		</n-form-item>
 
-		<n-checkbox
-			v-model:checked="isRead"
-			class="mb-4 items-center"
-		>
-			<span class="text-white">{{ t('login.readAndAgree') }}</span>
-			<n-button
-				text
-				:class="['text-[var(--n-text-color-pressed)]']"
-			>{{ t('login.userAgreement') }}</n-button>
-		</n-checkbox>
 		<n-button
-			class="text-white rounded-lg"
+			class="text-white rounded-lg mt-6"
 			block
 			type="primary"
 			size="large"
@@ -175,23 +168,47 @@ onUnmounted(() => {
 			{{ t('login.signUp') }}
 		</n-button>
 
-		<div class="mt-4 text-center text-white">
-			{{ t('login.haveAccountText') }}
-			<n-button
-				text
-				:class="['text-[var(--n-text-color-pressed)]']"
-				@click="switchForm('loginForm')"
+		<div class="flex justify-between pt-2">
+			<n-checkbox
+				v-model:checked="isRead"
+				class="pb-1 items-center"
 			>
-				{{ t('login.signIn') }}
-			</n-button>
+				<span class="">{{ t('login.readAndAgree') }}</span>
+				<n-text
+					text
+					:class="['text-[var(--n-text-color-pressed)]']"
+				>《{{ t('login.userAgreement') }}》</n-text>
+			</n-checkbox>
+
+			<div class="text-right">
+				{{ t('login.haveAccountText') }}
+				<n-text
+					text
+					:class="['text-[var(--n-text-color-pressed)]']"
+					@click="switchForm('loginForm')"
+				>
+					{{ t('login.signIn') }}
+				</n-text>
+			</div>
 		</div>
+
 	</n-form>
 	</div>
 </template>
 
-<style
-	lang="scss"
-	scoped
->
-	@use '../style.scss' as *;
+<style lang="scss" scoped>
+@use '../style.scss' as *;
+
+.captcha-button {
+	@apply w-120px h-40px dark:text-white;
+}
+
+.form-footer {
+	@apply flex justify-between pt-2;
+}
+
+.agreement-checkbox {
+	@apply pb-1 items-center;
+}
 </style>
+
