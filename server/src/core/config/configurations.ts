@@ -1,16 +1,26 @@
 import { registerAs } from '@nestjs/config'
 
-export const databaseConfig = registerAs('database', () => ({
-  type: process.env.DATABASE_TYPE || 'mysql',
-  host: process.env.DATABASE_HOST,
-  port: parseInt(process.env.DATABASE_PORT, 10) || 3306,
-  username: process.env.DATABASE_USERNAME,
-  password: process.env.DATABASE_PASSWORD,
-  name: process.env.DATABASE_NAME,
-  synchronize: process.env.DATABASE_SYNC === 'true',
-  logging: process.env.DATABASE_LOGGING === 'true',
-  poolSize: parseInt(process.env.DATABASE_POOL_SIZE, 10) || 10,
-}))
+
+export const databaseConfig = registerAs('database', () => {
+
+  const config = {
+    type: process.env.DATABASE_TYPE,
+    host: process.env.DATABASE_HOST,
+    port: parseInt(process.env.DATABASE_PORT, 10),
+    username: process.env.DATABASE_USERNAME,
+    password: process.env.DATABASE_PASSWORD,
+    name: process.env.DATABASE_NAME,
+    synchronize: process.env.DATABASE_SYNC === 'true',
+    logging: process.env.DATABASE_LOGGING === 'true',
+    poolSize: parseInt(process.env.DATABASE_POOL_SIZE, 10),
+  }
+  console.log('-------------------------------')
+  console.log('--- config: ---', config)
+  console.log(process.env.DATABASE_USERNAME, process.env.DATABASE_PASSWORD)
+  console.log('-------------------------------')
+  return config
+})
+
 
 export const redisConfig = registerAs('redis', () => ({
   url: process.env.REDIS_URL,

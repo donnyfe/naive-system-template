@@ -8,7 +8,7 @@ export const validationSchema = Joi.object({
   // 数据库配置
   DATABASE_TYPE: Joi.string().valid('mysql', 'mongodb', 'postgres').default('mysql'),
   DATABASE_HOST: Joi.string().required(),
-  DATABASE_PORT: Joi.number().required(),
+  DATABASE_PORT: Joi.number().required().default(3306), // 注意：这里的默认值应该是一个数字，而不是一个字符串。如果使用字符串，Joi会将其视为一个字符串而不是一个数字。因此，你需要将默认值设置为一个数字，例如3306。
   DATABASE_USERNAME: Joi.string().required(),
   DATABASE_PASSWORD: Joi.string().required(),
   DATABASE_NAME: Joi.string().required(),

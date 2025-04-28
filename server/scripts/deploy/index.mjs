@@ -38,14 +38,21 @@ const serverOptions = {
   // 忽略文件，当files为空时，默认上传根目录所有文件，此时ignore生效
   ignore: [
     'node_modules', // 忽略 node_modules 目录
-    '.git', // 忽略 .git 目录
-    '.tmp', // 忽略 .tmp 目录
     '*.tmp', // 忽略所有临时文件
+    '.tmp', // 忽略 .tmp 目录
+    '.git', // 忽略 .git 目录
     '.vscode', // 忽略 vscode 配置目录
-    // '.env', // 忽略环境变量文件
+    '.env', // 忽略环境变量文件
     'scripts', // 忽略脚本目录
     'uploads', // 忽略上传目录
     'src', // 忽略源码目录
+    'tsconfig.json',
+    'tsconfig.build.json',
+    'pnpm-lock.yaml',
+    '.prettierrc',
+    '.eslintrc.js',
+    '.gitignore',
+    'README.md',
   ],
   shell: [
     `cd ${process.env.SERVER_ROOT_PATH}`,
